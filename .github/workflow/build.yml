@@ -2,9 +2,9 @@ name: Bartap Global CI Pipeline
 on:
   push:
     branches:
-      - 'main'
+      - 'master'
       - 'development'
-    pull_request:
+  pull_request:
 jobs:
   build:
     name: Build
