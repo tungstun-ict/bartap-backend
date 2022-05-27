@@ -2,14 +2,21 @@ package com.tungstun.security.data.user;
 
 import com.tungstun.security.domain.user.User;
 import com.tungstun.security.domain.user.UserRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
 public class DefaultUserRepository implements UserRepository {
     private final SpringUserRepository repository;
 
     public DefaultUserRepository(SpringUserRepository repository) {
         this.repository = repository;
+    }
+
+    @Override
+    public void save(User user) {
+        repository.save(user);
     }
 
     @Override

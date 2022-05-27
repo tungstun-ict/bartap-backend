@@ -4,27 +4,20 @@ plugins {
     id 'java'
 }
 
-group = 'com.tungstun'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
-
 repositories {
     mavenCentral()
 }
+
 
 ext {
     set('springCloudVersion', "2021.0.1")
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.cloud:spring-cloud-gateway:3.0.5'
     implementation 'org.springframework.cloud:spring-cloud-gateway-server:3.1.0'
     implementation 'org.springframework.cloud:spring-cloud-gateway-webflux:3.0.5'
     implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j'
-
-    testImplementation 'io.projectreactor:reactor-test'
-//    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 dependencyManagement {
