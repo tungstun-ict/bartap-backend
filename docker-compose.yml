@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  gateway:
+    restart: always
+    build:
+      context: gateway
+      dockerfile: Dockerfile
+    ports:
+      - "12351:8080"
+
+#volumes:
+#          "postgres_stock_data:/var/lib/postgresql/data"
