@@ -13,7 +13,9 @@ import java.util.List;
 
 
 /**
- * Base exception handler class for bartap cluster
+ * Base exception handler class for bartap services<br>
+ * This handler handles all basic and shared exceptions that could be thrown.<br>
+ * This class can be extended to add extra Service specific Custom Exception handles<br>
  * */
 @ControllerAdvice
 @RestController

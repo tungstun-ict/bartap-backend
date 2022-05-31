@@ -8,7 +8,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Response class for thrown exceptions
+ * Response record used as response when exceptions are thrown.<br>
+ * Record contains time of exception handling, called path, the message and thrown errors<br>
  * */
 public record ExceptionResponse(
         ZonedDateTime timestamp,

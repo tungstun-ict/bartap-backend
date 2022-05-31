@@ -24,14 +24,14 @@ public class BarCommandHandler {
         return repository.save(new Bar(command.name(), command.address(), command.mail(), command.phoneNumber())).getId();
     }
 
-    public Long handle(@Valid UpdateBar command) {
+    public void handle(@Valid UpdateBar command) {
         Bar bar = repository.findById(command.id())
                 .orElseThrow(() -> new EntityNotFoundException(String.format("No bar found with id %s", command.id())));
         bar.setName(command.name());
         bar.setAddress(command.address());
         bar.setMail(command.mail());
         bar.setPhoneNumber(command.phoneNumber());
-        return repository.update(bar).getId();
+        repository.update(bar);
     }
 
     public void handle(@Valid DeleteBar command) {
