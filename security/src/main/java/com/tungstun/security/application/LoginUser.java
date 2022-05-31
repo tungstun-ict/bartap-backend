@@ -3,23 +3,21 @@ package com.tungstun.security.application;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-public class LoginUser {
-    @NotBlank(message = "Username cannot be blank")
-    private String username;
-    @NotBlank(message = "Username cannot be blank")
-    @Size(min = 5, max = 50, message = "Password must be between {min} and {max} characters long")
-    private String password;
-
+public record LoginUser(@NotBlank(message = "Username cannot be blank") String username,
+                        @Size(min = 5, max = 50, message = "Password must be between {min} and {max} characters long")
+                        @NotBlank(message = "Username cannot be blank") String password) {
     public LoginUser(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
-    public String getUsername() {
+    @Override
+    public String username() {
         return username;
     }
 
-    public String getPassword() {
+    @Override
+    public String password() {
         return password;
     }
 }

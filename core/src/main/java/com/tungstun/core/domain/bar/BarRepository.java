@@ -1,13 +1,7 @@
 package com.tungstun.core.domain.bar;
 
-import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import com.tungstun.sharedlibrary.persistence.CrudRepositoryFragment;
 
-public interface BarRepository {
-    Bar save(Bar bar);
-    Bar update(Bar bar);
-    void delete(Long id);
-
-    Optional<Bar> findById(Long id);
+public interface BarRepository extends CrudRepositoryFragment<Bar, Long> {
 }

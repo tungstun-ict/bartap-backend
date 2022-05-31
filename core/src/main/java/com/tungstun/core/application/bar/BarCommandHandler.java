@@ -21,20 +21,20 @@ public class BarCommandHandler {
     }
 
     public Long handle(@Valid CreateBar command) {
-        return repository.save(new Bar(command.name, command.address, command.mail, command.phoneNumber)).getId();
+        return repository.save(new Bar(command.name(), command.address(), command.mail(), command.phoneNumber())).getId();
     }
 
     public Long handle(@Valid UpdateBar command) {
-        Bar bar = repository.findById(command.id)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Not bar found with id %s", command.id)));
-        bar.setName(command.name);
-        bar.setAddress(command.address);
-        bar.setMail(command.mail);
-        bar.setPhoneNumber(command.phoneNumber);
+        Bar bar = repository.findById(command.id())
+                .orElseThrow(() -> new EntityNotFoundException(String.format("No bar found with id %s", command.id())));
+        bar.setName(command.name());
+        bar.setAddress(command.address());
+        bar.setMail(command.mail());
+        bar.setPhoneNumber(command.phoneNumber());
         return repository.update(bar).getId();
     }
 
     public void handle(@Valid DeleteBar command) {
-        repository.delete(command.id);
+        repository.delete(command.id());
     }
 }

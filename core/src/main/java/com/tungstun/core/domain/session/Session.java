@@ -11,6 +11,9 @@ public class Session {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(name = "bar_id")
+    private Long barId;
+
     @Column(name = "name")
     private String name;
 
@@ -23,14 +26,14 @@ public class Session {
     @Column(name = "locked", nullable = false)
     private boolean isLocked;
 
-    public static Session with(String name) {
-        return new Session(name, ZonedDateTime.now().toLocalDateTime());
+    public static Session with(Long barId, String name) {
+        return new Session(barId, name, ZonedDateTime.now().toLocalDateTime());
     }
 
     public Session() {
     }
 
-    private Session(String name, LocalDateTime creationDate) {
+    private Session(Long barId, String name, LocalDateTime creationDate) {
         this.name = name;
         this.creationDate = creationDate;
         this.isLocked = false;
@@ -69,5 +72,9 @@ public class Session {
 
     public boolean isLocked() {
         return isLocked;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

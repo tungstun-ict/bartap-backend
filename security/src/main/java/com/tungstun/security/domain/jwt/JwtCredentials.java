@@ -4,8 +4,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-//@Configuration
-//@ConfigurationProperties(prefix = "com.tungstun.bartap.security.jwt")
+@Configuration
+@ConfigurationProperties(prefix = "com.tungstun.bartap.security.jwt")
 public class JwtCredentials {
     protected String jwtSecret;
 

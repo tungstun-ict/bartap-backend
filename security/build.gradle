@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-//    implementation project(':sharedlibrary')
+    implementation project(':sharedlibrary')
 
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -20,7 +20,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
 //    implementation 'org.springframework.security:spring-security-oauth2-authorization-server'
     implementation 'com.auth0:java-jwt:3.19.2'
-//    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }
 
 tasks.named('test') {

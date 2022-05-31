@@ -6,7 +6,7 @@ import com.tungstun.security.domain.jwt.JwtTokenGenerator;
 import com.tungstun.security.domain.jwt.JwtValidator;
 import com.tungstun.security.domain.user.User;
 import com.tungstun.security.domain.user.UserRepository;
-import com.tungstun.security.exception.UserNotFoundException;
+import com.tungstun.sharedlibrary.exception.UserNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -51,8 +51,8 @@ public class UserService implements UserDetailsService {
     }
 
     public Map<String, String> loginUser(LoginUser command) throws LoginException {
-        User user = (User) loadUserByUsername(command.getUsername());
-        if (passwordEncoder.matches(command.getPassword(), user.getPassword())) {
+        User user = (User) loadUserByUsername(command.username());
+        if (passwordEncoder.matches(command.password(), user.getPassword())) {
             throw new LoginException("Incorrect password");
         }
 

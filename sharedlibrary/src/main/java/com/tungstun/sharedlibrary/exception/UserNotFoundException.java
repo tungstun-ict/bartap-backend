@@ -1,4 +1,4 @@
-package com.tungstun.security.exception;
+package com.tungstun.sharedlibrary.exception;
 
 public class UserNotFoundException extends RuntimeException{
     public UserNotFoundException(String message) {

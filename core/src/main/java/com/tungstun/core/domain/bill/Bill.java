@@ -1,6 +1,7 @@
 package com.tungstun.core.domain.bill;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "bill")
@@ -15,20 +16,19 @@ public class Bill {
     @Column(name = "session_id")
     private Long sessionId;
 
-//    @Column(name = "customer_id")
-//    private Long customer_id
+    @Column(name = "customer_id")
+    private Long customerId;
 
-//    @OneToMany(
-//            cascade = CascadeType.ALL,
-//            orphanRemoval = true
-//    )
-//    private List<Order> orders;
+    @Column(name = "total_rice")
+    private BigDecimal totalPrice;
+
 
     public Bill() { }
 
-    public Bill(boolean isPayed, Long sessionId) {
-        this.isPayed = isPayed;
+    public Bill(Long sessionId, Long customerId) {
         this.sessionId = sessionId;
+        this.customerId = customerId;
+        this.isPayed = false;
     }
 
     public Long getId() { return id; }
@@ -36,6 +36,16 @@ public class Bill {
     public Long getSessionId() {
         return sessionId;
     }
+
+    public boolean isPayed() { return isPayed; }
+
+    public void setPayed(boolean payed) { isPayed = payed; }
+
+//    public double calculateTotalPrice() {
+//        return this.orders.stream()
+//                .mapToDouble(order -> order.getProduct().getPrice() * order.getAmount())
+//                .sum();
+//    }
 
 //    public Long getCustomerId() { return customerId; }
 
@@ -49,15 +59,5 @@ public class Bill {
 //
 //    public boolean removeOrder(Order order){
 //        return this.orders.remove(order);
-//    }
-
-    public boolean isPayed() { return isPayed; }
-
-    public void setPayed(boolean payed) { isPayed = payed; }
-
-//    public double calculateTotalPrice() {
-//        return this.orders.stream()
-//                .mapToDouble(order -> order.getProduct().getPrice() * order.getAmount())
-//                .sum();
 //    }
 }
