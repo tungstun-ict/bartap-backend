@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "\"user\"")
@@ -29,6 +30,15 @@ public class User  implements UserDetails {
 
     @Column(name = "last_name")
     private String lastName;
+
+    @OneToMany
+    @JoinTable(
+            name = "users_bar_roles",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "bar_role_id", referencedColumnName = "id"))
+    private Collection<BarRole> roles;
 
     public User () {}
     public User(String username, String password, String mail, String firstName, String lastName) {

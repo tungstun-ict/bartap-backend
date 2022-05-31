@@ -1,23 +1,33 @@
+
 plugins {
-    id 'org.springframework.boot' version '2.6.7'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id 'application'
 }
+
+project.mainClassName = 'com.tungstun.gateway.GatewayApplication'
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
-
 
 ext {
     set('springCloudVersion', "2021.0.1")
 }
 
 dependencies {
-    implementation 'org.springframework.cloud:spring-cloud-gateway:3.0.5'
+    implementation 'org.springframework.cloud:spring-cloud-gateway:3.1.0'
     implementation 'org.springframework.cloud:spring-cloud-gateway-server:3.1.0'
-    implementation 'org.springframework.cloud:spring-cloud-gateway-webflux:3.0.5'
+    implementation 'org.springframework.cloud:spring-cloud-gateway-webflux:3.1.0'
     implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j'
+
+//    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+//    implementation 'org.springframework.boot:spring-boot-starter-security'
+//    implementation 'org.springframework.cloud:spring-cloud-security'
+//    implementation 'org.apache.tomcat.embed:tomcat.embed.core:9.0.62'
+
+//    implementation 'org.springframework.cloud:spring-boot-starter-actuator'
+//    implementation 'io.github.resilience4j:resilience4j-micrometer'
 }
 
 dependencyManagement {

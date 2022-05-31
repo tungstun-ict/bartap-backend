@@ -8,7 +8,6 @@ services:
     ports:
       - "12351:8080"
 
-
 #  zookeeper:
 #    image: bitnami/zookeeper:latest
 #    ports:

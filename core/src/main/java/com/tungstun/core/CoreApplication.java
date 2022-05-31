@@ -1,13 +1,12 @@
-package com.tunstun.sharedlibrary;
+package com.tungstun.core;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SharedlibraryApplication {
+public class CoreApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SharedlibraryApplication.class, args);
+        SpringApplication.run(CoreApplication.class, args);
     }
-
 }

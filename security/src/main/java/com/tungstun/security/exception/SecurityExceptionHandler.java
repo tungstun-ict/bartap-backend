@@ -1,6 +1,6 @@
 package com.tungstun.security.exception;
 
-import com.tunstun.sharedlibrary.exception.ExceptionResponse;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,9 +27,16 @@ public class SecurityExceptionHandler extends ResponseEntityExceptionHandler {
         return ExceptionResponse.with("Incorrect input", violationMessages);
     }
 
+    @ExceptionHandler(value = {JWTVerificationException.class})
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ExceptionResponse mainHandler(JWTVerificationException e) {
+        return ExceptionResponse.with("Incorrect input", e.getMessage());
+    }
+
     @ExceptionHandler(value = {Exception.class, RuntimeException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionResponse handleRuntimeException(RuntimeException e) {
-        return ExceptionResponse.with("Unexpected error", Collections.singletonList(e.getMessage()));
+        e.printStackTrace();
+        return ExceptionResponse.with("Unexpected error", e.getMessage());
     }
 }

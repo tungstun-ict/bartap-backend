@@ -1,4 +1,4 @@
-package com.tungstun.security.presentation;
+package com.tungstun.security.presentation.request;
 
 public record RegisterUserRequest(
         String username,

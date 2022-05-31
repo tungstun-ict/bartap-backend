@@ -1,15 +1,18 @@
 plugins {
     id 'java'
+    id 'application'
     id 'org.springframework.boot' version '2.6.7'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 subprojects {
     apply plugin: 'java'
+//    apply plugin: 'application'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
 
