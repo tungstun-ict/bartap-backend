@@ -3,9 +3,9 @@ package com.tungstun.security.presentation;
 import com.tungstun.security.application.LoginUser;
 import com.tungstun.security.application.RegisterUser;
 import com.tungstun.security.application.UserService;
-import com.tungstun.security.domain.jwt.JwtCredentials;
 import com.tungstun.security.presentation.request.LoginUserRequest;
 import com.tungstun.security.presentation.request.RegisterUserRequest;
+import com.tungstun.sharedlibrary.security.BarPreAuthorization;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,17 +19,14 @@ import java.util.Map;
 @RequestMapping("/authentication")
 public class AuthenticationController {
     private final UserService userService;
-    private final JwtCredentials c;
 
-    public AuthenticationController(UserService userService, JwtCredentials c) {
+    public AuthenticationController(UserService userService) {
         this.userService = userService;
-        this.c = c;
     }
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public void register(@RequestBody RegisterUserRequest request) {
-        System.out.println(c);
         userService.registerUser(new RegisterUser(
                 request.username(),
                 request.password(),
@@ -49,6 +46,7 @@ public class AuthenticationController {
         return ResponseEntity.ok().headers(responseHeaders).build();
     }
 
+    @BarPreAuthorization(id = "#accessToken")
     @RequestMapping("/refresh")
     @PostMapping
     public ResponseEntity<Void> refresh(@RequestHeader("access_token") String accessToken,
@@ -58,7 +56,6 @@ public class AuthenticationController {
         responseHeaders.setAll(authorization);
         return ResponseEntity.ok().headers(responseHeaders).build();
     }
-
 
     @RequestMapping("/verify")
     @PostMapping

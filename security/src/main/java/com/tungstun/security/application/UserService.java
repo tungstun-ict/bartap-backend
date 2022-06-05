@@ -3,10 +3,10 @@ package com.tungstun.security.application;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.tungstun.security.domain.jwt.JwtTokenGenerator;
-import com.tungstun.security.domain.jwt.JwtValidator;
 import com.tungstun.security.domain.user.User;
 import com.tungstun.security.domain.user.UserRepository;
 import com.tungstun.sharedlibrary.exception.UserNotFoundException;
+import com.tungstun.sharedlibrary.security.JwtValidator;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -52,7 +52,7 @@ public class UserService implements UserDetailsService {
 
     public Map<String, String> loginUser(LoginUser command) throws LoginException {
         User user = (User) loadUserByUsername(command.username());
-        if (passwordEncoder.matches(command.password(), user.getPassword())) {
+        if (!passwordEncoder.matches(command.password(), user.getPassword())) {
             throw new LoginException("Incorrect password");
         }
 
@@ -77,5 +77,4 @@ public class UserService implements UserDetailsService {
         }
         jwtValidator.verifyToken(accessToken);
     }
-
 }

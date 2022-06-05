@@ -1,8 +1,7 @@
-package com.tungstun.security.domain.jwt;
+package com.tungstun.sharedlibrary.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.stereotype.Component;
@@ -17,8 +16,8 @@ public class JwtValidator {
 
     private JWTVerifier getJwtVerifier() {
         return JWT.require(credentials.algorithm())
-                .withIssuer(credentials.jwtIssuer)
-                .withAudience(credentials.jwtAudience)
+                .withIssuer(credentials.getJwtIssuer())
+                .withAudience(credentials.getJwtAudience())
                 .withClaimPresence("sub")
                 .acceptLeeway(1)
                 .build();
@@ -27,8 +26,8 @@ public class JwtValidator {
     public DecodedJWT verifyToken(String token) {
         try {
             return getJwtVerifier().verify(token);
-        } catch (JWTVerificationException e){
-            throw new JWTVerificationException("Jwt not verified" + e.getLocalizedMessage(), e);
+        } catch (JWTVerificationException e) {
+            throw new NotAuthenticatedException("Invalid token", e);
         }
     }
 }

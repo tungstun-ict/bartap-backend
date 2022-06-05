@@ -1,9 +1,8 @@
 package com.tungstun.security.domain.jwt;
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import com.tungstun.sharedlibrary.security.JwtCredentials;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -19,25 +18,25 @@ public class JwtTokenGenerator {
     public String createAccessToken(String username) {
         try {
             return JWT.create()
-                    .withIssuer(credentials.jwtIssuer)
-                    .withAudience(credentials.jwtAudience)
-                    .withExpiresAt(new Date(System.currentTimeMillis() + credentials.jwtExpirationInMs))
+                    .withIssuer(credentials.getJwtIssuer())
+                    .withAudience(credentials.getJwtAudience())
+                    .withExpiresAt(new Date(System.currentTimeMillis() + credentials.getJwtExpirationInMs()))
                     .withSubject(username)
                     .sign(credentials.algorithm());
         } catch (JWTCreationException e) {
-            throw new JWTCreationException("Exception occurred during creation of a JWT", e);
+            throw new JWTCreationException("Exception occurred during the creation of an access token", e);
         }
     }
 
     public String createRefreshToken() {
         try {
             return JWT.create()
-                    .withIssuer(credentials.jwtIssuer)
-                    .withAudience(credentials.jwtAudience)
-                    .withExpiresAt(new Date(System.currentTimeMillis() + credentials.jwtRefreshExpirationInMs))
+                    .withIssuer(credentials.getJwtIssuer())
+                    .withAudience(credentials.getJwtAudience())
+                    .withExpiresAt(new Date(System.currentTimeMillis() + credentials.getJwtRefreshExpirationInMs()))
                     .sign(credentials.algorithm());
         } catch (JWTCreationException e) {
-            throw new JWTCreationException("Exception occurred during creation of a JWT", e);
+            throw new JWTCreationException("Exception occurred during the creation of th refresh token", e);
         }
     }
 }
