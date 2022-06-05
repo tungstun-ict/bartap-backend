@@ -5,7 +5,6 @@ import com.tungstun.security.application.RegisterUser;
 import com.tungstun.security.application.UserService;
 import com.tungstun.security.presentation.request.LoginUserRequest;
 import com.tungstun.security.presentation.request.RegisterUserRequest;
-import com.tungstun.sharedlibrary.security.BarPreAuthorization;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,8 +35,7 @@ public class AuthenticationController {
         ));
     }
 
-    @RequestMapping("/login")
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity<Void> login(@Valid @RequestBody LoginUserRequest loginRequest) throws LoginException {
         Map<String, String> authorization = this.userService.loginUser(
                 new LoginUser(loginRequest.username(), loginRequest.password()));
@@ -46,9 +44,7 @@ public class AuthenticationController {
         return ResponseEntity.ok().headers(responseHeaders).build();
     }
 
-    @BarPreAuthorization(id = "#accessToken")
-    @RequestMapping("/refresh")
-    @PostMapping
+    @PostMapping("/refresh")
     public ResponseEntity<Void> refresh(@RequestHeader("access_token") String accessToken,
                                         @RequestHeader("refresh_token") String refreshToken) {
         Map<String, String> authorization = this.userService.refreshUser(accessToken, refreshToken);
@@ -57,10 +53,9 @@ public class AuthenticationController {
         return ResponseEntity.ok().headers(responseHeaders).build();
     }
 
-    @RequestMapping("/verify")
-    @PostMapping
+    @PostMapping("/verify")
     public void verify(@RequestHeader("access_token") String accessToken,
-                        @RequestHeader("token_type") String tokenType) {
+                       @RequestHeader("token_type") String tokenType) {
         this.userService.verifyUser(accessToken, tokenType);
     }
 }
