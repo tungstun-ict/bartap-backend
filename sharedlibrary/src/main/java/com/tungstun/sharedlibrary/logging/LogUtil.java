@@ -1,4 +1,4 @@
-package com.tungstun.sharedlibrary.log;
+package com.tungstun.sharedlibrary.logging;
 
 import org.apache.commons.logging.Log;
 

@@ -1,1 +1,1 @@
-com.tungstun.sharedlibrary.security.BarPreAuthorizationProcessor
+com.tungstun.sharedlibrary.security.annotation.BarPreAuthorizationProcessor

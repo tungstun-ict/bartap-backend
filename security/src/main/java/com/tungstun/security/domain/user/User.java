@@ -4,14 +4,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "\"user\"")
-public class User  implements UserDetails {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -31,22 +29,25 @@ public class User  implements UserDetails {
     @Column(name = "last_name")
     private String lastName;
 
-    @OneToMany
-    @JoinTable(
-            name = "users_bar_roles",
-            joinColumns = @JoinColumn(
-                    name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "bar_role_id", referencedColumnName = "id"))
-    private Collection<BarRole> roles;
+    @SuppressWarnings("java:S1948")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Authorization> authorizations;
 
-    public User () {}
-    public User(String username, String password, String mail, String firstName, String lastName) {
+    public User() {
+    }
+
+    public User(String username, String password, String mail, String firstName, String lastName, List<Authorization> authorizations) {
         this.username = username;
         this.password = password;
         this.mail = mail;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.authorizations = authorizations;
+    }
+
+    public Map<String, String> getAuthorizations() {
+        return authorizations.stream()
+                .collect(Collectors.toMap(Authorization::getBarId, Authorization::getRole));
     }
 
     @Override
@@ -88,17 +89,18 @@ public class User  implements UserDetails {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) &&
-                Objects.equals(username, user.username) &&
-                Objects.equals(password, user.password) &&
-                Objects.equals(mail, user.mail) &&
-                Objects.equals(firstName, user.firstName) &&
-                Objects.equals(lastName, user.lastName);
+        User that = (User) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(username, that.username) &&
+                Objects.equals(password, that.password) &&
+                Objects.equals(mail, that.mail) &&
+                Objects.equals(firstName, that.firstName) &&
+                Objects.equals(lastName, that.lastName) &&
+                Objects.equals(authorizations, that.authorizations);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, mail, firstName, lastName);
+        return Objects.hash(id, username, password, mail, firstName, lastName, authorizations);
     }
 }

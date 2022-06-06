@@ -1,5 +1,6 @@
 package com.tungstun.sharedlibrary.exception;
 
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -18,9 +19,11 @@ public record ExceptionResponse(
         List<String> errors
 ) {
     private static String getCurrentHttpRequestUri() {
-        return RequestContextHolder.getRequestAttributes() instanceof ServletRequestAttributes servletRequestAttributes ?
-                servletRequestAttributes.getRequest().getRequestURI()
-                : "";
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        if (requestAttributes instanceof ServletRequestAttributes servletRequestAttributes) {
+            return servletRequestAttributes.getRequest().getRequestURI();
+        }
+        return "";
     }
 
     public static ExceptionResponse with(String message, List<String> errors) {

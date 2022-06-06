@@ -1,4 +1,4 @@
-package com.tungstun.sharedlibrary.security;
+package com.tungstun.sharedlibrary.security.annotation;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * Annotation processor that verifies the id arguments in all {@code BarPreAuthorization} annotations at build time.
  * */
-@SupportedAnnotationTypes({"com.tungstun.sharedlibrary.security.BarPreAuthorization"})
+@SupportedAnnotationTypes({"com.tungstun.sharedlibrary.security.annotation.BarPreAuthorization"})
 @SupportedSourceVersion(SourceVersion.RELEASE_17)
 public class BarPreAuthorizationProcessor extends AbstractProcessor {
     @Override

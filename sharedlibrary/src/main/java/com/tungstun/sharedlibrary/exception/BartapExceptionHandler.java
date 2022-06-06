@@ -1,7 +1,7 @@
 package com.tungstun.sharedlibrary.exception;
 
-import com.tungstun.sharedlibrary.security.NotAuthenticatedException;
-import com.tungstun.sharedlibrary.security.NotAuthorizedException;
+import com.tungstun.sharedlibrary.security.exception.NotAuthenticatedException;
+import com.tungstun.sharedlibrary.security.exception.NotAuthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

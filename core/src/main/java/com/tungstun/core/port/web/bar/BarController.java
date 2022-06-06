@@ -15,7 +15,6 @@ import com.tungstun.core.port.web.bar.response.BarResponse;
 import com.tungstun.sharedlibrary.security.BartapUserDetails;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -66,7 +65,7 @@ public class BarController {
     @ResponseStatus(HttpStatus.OK)
     public List<BarResponse> getOwnedBar(Authentication authentication) {
         BartapUserDetails userDetails = (BartapUserDetails) authentication.getPrincipal();
-        return queryHandler.handle(new GetOwnedBars(userDetails.getIdentity()))
+        return queryHandler.handle(new GetOwnedBars(userDetails.getId()))
                 .stream()
                 .map(this::mapToResponse)
                 .toList();

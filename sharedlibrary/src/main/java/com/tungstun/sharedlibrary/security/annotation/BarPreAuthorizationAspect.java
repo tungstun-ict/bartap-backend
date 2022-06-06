@@ -1,17 +1,17 @@
-package com.tungstun.sharedlibrary.security;
+package com.tungstun.sharedlibrary.security.annotation;
 
-import com.auth0.jwt.exceptions.JWTDecodeException;
-import com.auth0.jwt.interfaces.DecodedJWT;
+import com.tungstun.sharedlibrary.security.Authorization;
+import com.tungstun.sharedlibrary.security.BartapUserDetails;
+import com.tungstun.sharedlibrary.security.exception.NotAuthorizedException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.hibernate.procedure.NoSuchParameterException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.util.FieldUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,26 +25,30 @@ import java.util.List;
 @Aspect
 @Component
 public class BarPreAuthorizationAspect {
-    private final JwtValidator jwtValidator;
-
-    public BarPreAuthorizationAspect(JwtValidator jwtValidator) {
-        this.jwtValidator = jwtValidator;
-    }
-
-    @Pointcut("@annotation(BarPreAuthorization)")
+    @SuppressWarnings("java:S1186")
+    @Pointcut("@annotation(com.tungstun.sharedlibrary.security.annotation.BarPreAuthorization)")
     private void barPreAuthorizationAnnotation() {
     }
 
-    @Around("@annotation(BarPreAuthorization)")
+    @SuppressWarnings("java:S2201")
+    @Around("@annotation(com.tungstun.sharedlibrary.security.annotation.BarPreAuthorization)")
     public Object handleBarPreAuthorization(ProceedingJoinPoint pjp) throws Throwable {
         MethodSignature methodSignature = ((MethodSignature) pjp.getSignature());
         BarPreAuthorization annotation = methodSignature.getMethod().getAnnotation(BarPreAuthorization.class);
-
         String barId = extractBarId(annotation.id(), methodSignature, pjp);
-        String accessToken = getAccessToken();
-        DecodedJWT decodedJWT = jwtValidator.verifyToken(accessToken);
-        validateAuthorization(decodedJWT, barId, annotation.roles());
+        String[] roles = annotation.roles();
 
+        BartapUserDetails bartapUserDetails = (BartapUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+        List<Authorization> authorizations = bartapUserDetails.getAuthorizations();
+        if (authorizations != null) {
+            authorizations.stream()
+                    .filter(authorization -> authorization.barId().equals(barId))
+                    .filter(authorization -> Arrays.stream(roles).anyMatch(authorization.role()::equalsIgnoreCase))
+                    .findAny()
+                    .orElseThrow(() -> new NotAuthorizedException("User not authorized for action or resource"));
+        }
         return pjp.proceed();
     }
 
@@ -78,26 +82,5 @@ public class BarPreAuthorizationAspect {
         }
         Object argObject = pjp.getArgs()[parameterIndex];
         return FieldUtils.getFieldValue(argObject, fieldName).toString();
-
-    }
-
-    private String getAccessToken() {
-        ServletRequestAttributes sra = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (sra == null) throw new NotAuthorizedException("No request attributes bound to thread");
-        return sra.getRequest().getHeader("access_token");
-    }
-
-    private void validateAuthorization(DecodedJWT decodedJWT, String barId, String[] roles) {
-        try {
-            String authorization = (String) decodedJWT
-                    .getClaim("authorizations")
-                    .asMap()
-                    .get(barId);
-            if (authorization == null || Arrays.asList(roles).contains(authorization)) {
-                throw new NotAuthorizedException("User not authorized for action or resource");
-            }
-        } catch (JWTDecodeException e) {
-            throw new NotAuthorizedException("User not authorized for action or resource", e);
-        }
     }
 }

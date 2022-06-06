@@ -6,7 +6,7 @@ import com.tungstun.security.domain.jwt.JwtTokenGenerator;
 import com.tungstun.security.domain.user.User;
 import com.tungstun.security.domain.user.UserRepository;
 import com.tungstun.sharedlibrary.exception.UserNotFoundException;
-import com.tungstun.sharedlibrary.security.JwtValidator;
+import com.tungstun.sharedlibrary.security.jwt.JwtValidator;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.security.auth.login.LoginException;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Map;
 
 @Controller
@@ -46,7 +47,8 @@ public class UserService implements UserDetailsService {
                 encodedPassword,
                 command.getMail().strip(),
                 command.getFirstName(),
-                command.getLastName()
+                command.getLastName(),
+                new ArrayList<>()
         ));
     }
 
@@ -57,15 +59,16 @@ public class UserService implements UserDetailsService {
         }
 
         return Map.of("token_type", "bearer",
-                "access_token", jwtTokenGenerator.createAccessToken(user.getUsername()),
+                "access_token", jwtTokenGenerator.createAccessToken(user),
                 "refresh_token", jwtTokenGenerator.createRefreshToken());
     }
 
     public Map<String, String> refreshUser(String accessToken, String refreshToken) {
         jwtValidator.verifyToken(refreshToken);
         DecodedJWT jwtInfo = jwtValidator.verifyToken(accessToken);
-        String newAccessToken = jwtTokenGenerator.createAccessToken(jwtInfo.getSubject());
-        return Map.of("refresh_token", newAccessToken);
+        User bartapUserDetails = (User) loadUserByUsername(jwtInfo.getSubject());
+        String newAccessToken = jwtTokenGenerator.createAccessToken(bartapUserDetails);
+        return Map.of("access_token", newAccessToken);
     }
 
     public void verifyUser(String accessToken, String tokenType) {

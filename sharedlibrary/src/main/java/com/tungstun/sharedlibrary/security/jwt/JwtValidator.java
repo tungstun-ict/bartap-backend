@@ -1,9 +1,10 @@
-package com.tungstun.sharedlibrary.security;
+package com.tungstun.sharedlibrary.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.tungstun.sharedlibrary.security.exception.NotAuthenticatedException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -27,6 +28,7 @@ public class JwtValidator {
         try {
             return getJwtVerifier().verify(token);
         } catch (JWTVerificationException e) {
+            e.printStackTrace();
             throw new NotAuthenticatedException("Invalid token", e);
         }
     }

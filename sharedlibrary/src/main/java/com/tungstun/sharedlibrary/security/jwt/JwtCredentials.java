@@ -1,25 +1,37 @@
-package com.tungstun.sharedlibrary.security;
+package com.tungstun.sharedlibrary.security.jwt;
 
 import com.auth0.jwt.algorithms.Algorithm;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@ConfigurationProperties(prefix = "com.tungstun.bartap.security.jwt")
 public class JwtCredentials {
-    @Value("${com.tungstun.bartap.security.jwt.jwtsecret}")
     private String jwtSecret;
-
-    @Value("${com.tungstun.bartap.security.jwt.jwtExpirationInMs}")
     private Integer jwtExpirationInMs;
-
-    @Value("${com.tungstun.bartap.security.jwt.jwtRefreshExpirationInMs}")
     private Integer jwtRefreshExpirationInMs;
-
-    @Value("${com.tungstun.bartap.security.jwt.jwtAudience}")
     private String jwtAudience;
-
-    @Value("${com.tungstun.bartap.security.jwt.jwtIssuer}")
     private String jwtIssuer;
+
+    public void setJwtSecret(String jwtSecret) {
+        this.jwtSecret = jwtSecret;
+    }
+
+    public void setJwtExpirationInMs(Integer jwtExpirationInMs) {
+        this.jwtExpirationInMs = jwtExpirationInMs;
+    }
+
+    public void setJwtRefreshExpirationInMs(Integer jwtRefreshExpirationInMs) {
+        this.jwtRefreshExpirationInMs = jwtRefreshExpirationInMs;
+    }
+
+    public void setJwtAudience(String jwtAudience) {
+        this.jwtAudience = jwtAudience;
+    }
+
+    public void setJwtIssuer(String jwtIssuer) {
+        this.jwtIssuer = jwtIssuer;
+    }
 
     public Algorithm algorithm() {
         return Algorithm.HMAC256(jwtSecret);

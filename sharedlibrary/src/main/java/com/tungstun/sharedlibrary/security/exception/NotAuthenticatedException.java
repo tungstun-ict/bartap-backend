@@ -1,4 +1,4 @@
-package com.tungstun.sharedlibrary.security;
+package com.tungstun.sharedlibrary.security.exception;
 
 import org.springframework.security.core.AuthenticationException;
 
