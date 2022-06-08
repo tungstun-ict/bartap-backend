@@ -1,6 +1,6 @@
 package com.tungstun.security.config;
 
-import com.tungstun.sharedlibrary.security.filter.AuthenticationFilter;
+import com.tungstun.sharedlibrary.security.filter.JwtAuthenticationFilter;
 import com.tungstun.sharedlibrary.security.jwt.JwtValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 @Order(1000)
 public class SecurityWebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtValidator validator;
@@ -40,7 +39,7 @@ public class SecurityWebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, ignoredPaths).permitAll()
                 .anyRequest().permitAll()
                 .and()
-                .addFilter(new AuthenticationFilter(
+                .addFilter(new JwtAuthenticationFilter(
                         this.authenticationManager(),
                         validator,
                         ignoredPaths

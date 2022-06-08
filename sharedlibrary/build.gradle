@@ -13,9 +13,15 @@ dependencies {
     implementation 'com.auth0:java-jwt:3.19.2'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }
+
 java {
     withJavadocJar()
 }
-tasks.named('test') {
-    useJUnitPlatform()
+
+testing {
+    suites {
+        test {
+            useJUnitJupiter('5.7.2')
+        }
+    }
 }

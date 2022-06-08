@@ -10,7 +10,7 @@ public class JwtCredentials {
     private String jwtSecret;
     private Integer jwtExpirationInMs;
     private Integer jwtRefreshExpirationInMs;
-    private String jwtAudience;
+    private String[] jwtAudience;
     private String jwtIssuer;
 
     public void setJwtSecret(String jwtSecret) {
@@ -25,7 +25,7 @@ public class JwtCredentials {
         this.jwtRefreshExpirationInMs = jwtRefreshExpirationInMs;
     }
 
-    public void setJwtAudience(String jwtAudience) {
+    public void setJwtAudience(String[] jwtAudience) {
         this.jwtAudience = jwtAudience;
     }
 
@@ -49,7 +49,7 @@ public class JwtCredentials {
         return jwtRefreshExpirationInMs;
     }
 
-    public String getJwtAudience() {
+    public String[] getJwtAudience() {
         return jwtAudience;
     }
 

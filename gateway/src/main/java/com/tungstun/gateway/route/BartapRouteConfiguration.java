@@ -15,7 +15,6 @@ import java.time.Duration;
 
 @Component
 public class BartapRouteConfiguration {
-    private static final int REQUEST_RETRIES = 3;
     private static final int REQUEST_TIME_LIMIT = 3;
 
     private final RouteUriConfig routeUriConfig;
@@ -27,16 +26,41 @@ public class BartapRouteConfiguration {
     @Bean
     public RouteLocator gatewayRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route("bartap-api", r -> r.path("/api/**")
-                        .filters(filter -> filter
-                                .retry(REQUEST_RETRIES)
-                                .circuitBreaker(factory -> factory
-                                        .setName("bartap-circuit-breaker")
-                                        .setFallbackUri("forward:/bartap-fallback"))
-                        )
-                        .uri(routeUriConfig.getBartap()))
-                .route("bartap-api-swagger", r -> r.path("/swagger")
-                        .uri(routeUriConfig.getSwagger()))
+                .route("security", r -> r.path("/api/authentication**")
+                        .uri(routeUriConfig.getSecurity()))
+
+                .route("core", r -> r.path("/api/bars**")
+                        .uri(routeUriConfig.getCore()))
+                .route("core", r -> r.path("/api/session**")
+                        .uri(routeUriConfig.getCore()))
+                .route("core", r -> r.path("/api/bills**")
+                        .uri(routeUriConfig.getCore()))
+                .route("core", r -> r.path("/api/bars**")
+                        .uri(routeUriConfig.getCore()))
+
+                .route("person", r -> r.path("/api/person**")
+                        .uri(routeUriConfig.getPerson()))
+
+                .route("product", r -> r.path("/api/product**")
+                        .uri(routeUriConfig.getProduct()))
+                .route("product", r -> r.path("/api/categories**")
+                        .uri(routeUriConfig.getProduct()))
+
+                .route("order", r -> r.path("/api/order**")
+                        .uri(routeUriConfig.getOrder()))
+
+
+
+
+
+//                        .filters(filter -> filter
+//                                .retry(3)
+//                                .circuitBreaker(factory -> factory
+//                                        .setName("bartap-circuit-breaker")
+//                                        .setFallbackUri("forward:/bartap-fallback"))
+//                        )
+//                .route("bartap-api-swagger", r -> r.path("/swagger")
+//                        .uri(routeUriConfig.getSwagger()))
 
 //                .route("error", r -> r.path("/error/**")
 //                        .filters(fs -> fs.retry(5))

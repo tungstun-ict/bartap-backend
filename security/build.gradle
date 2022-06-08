@@ -1,6 +1,5 @@
 
 plugins {
-    id 'java'
     id 'application'
 }
 
@@ -22,6 +21,10 @@ dependencies {
     implementation 'com.auth0:java-jwt:3.19.2'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
+testing {
+    suites {
+        test {
+            useJUnitJupiter('5.7.2')
+        }
+    }
 }

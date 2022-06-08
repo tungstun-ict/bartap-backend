@@ -50,6 +50,10 @@ public class User implements UserDetails {
                 .collect(Collectors.toMap(Authorization::getBarId, Authorization::getRole));
     }
 
+    public Long getId() {
+        return id;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.emptyList();

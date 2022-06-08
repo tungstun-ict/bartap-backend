@@ -11,8 +11,7 @@ public class FallbackConfiguration {
 
     @Bean
     public RouterFunction<ServerResponse> fallbackRouterFunctions() {
-        return RouterFunctions.route(RequestPredicates.path("/bartap-fallback"),
-                this::handleBartapFallback);
+        return RouterFunctions.route(RequestPredicates.path("/bartap-fallback"), this::handleBartapFallback);
     }
 
     public Mono<ServerResponse> handleBartapFallback(ServerRequest request) {

@@ -23,6 +23,7 @@ public class JwtTokenGenerator {
                     .withAudience(credentials.getJwtAudience())
                     .withExpiresAt(new Date(System.currentTimeMillis() + credentials.getJwtExpirationInMs()))
                     .withSubject(user.getUsername())
+                    .withClaim("client_id", user.getId())
                     .withClaim("authorizations", user.getAuthorizations())
                     .sign(credentials.algorithm());
         } catch (JWTCreationException e) {

@@ -22,7 +22,6 @@ public class Authorization {
         this.role = role;
     }
 
-
     public Long getId() {
         return id;
     }

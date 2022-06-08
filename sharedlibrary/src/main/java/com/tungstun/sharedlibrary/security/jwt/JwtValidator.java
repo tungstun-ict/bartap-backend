@@ -19,7 +19,8 @@ public class JwtValidator {
         return JWT.require(credentials.algorithm())
                 .withIssuer(credentials.getJwtIssuer())
                 .withAudience(credentials.getJwtAudience())
-                .withClaimPresence("sub")
+                .withClaimPresence("client_id")
+                .withClaimPresence("authorizations")
                 .acceptLeeway(1)
                 .build();
     }

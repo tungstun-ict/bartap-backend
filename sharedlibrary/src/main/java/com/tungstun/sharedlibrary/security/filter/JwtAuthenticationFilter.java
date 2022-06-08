@@ -21,11 +21,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class AuthenticationFilter extends BasicAuthenticationFilter {
+public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
     private final JwtValidator validator;
     private final String[] ignoredPaths;
 
-    public AuthenticationFilter(AuthenticationManager authenticationManager, JwtValidator validator, String[] ignoredPaths) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtValidator validator, String[] ignoredPaths) {
         super(authenticationManager);
         this.validator = validator;
         this.ignoredPaths = ignoredPaths;
