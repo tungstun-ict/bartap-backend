@@ -1,0 +1,23 @@
+package com.tungstun.security.messaging.core.in;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.kafka.annotation.KafkaHandler;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Component;
+
+@Component
+@KafkaListener(id = "coreMessageListener", topics = "core")
+public class KafkaCoreMessageConsumer {
+    private static final Logger LOG = LoggerFactory.getLogger(KafkaCoreMessageConsumer.class);
+
+//    @KafkaHandler
+//    public void handleCoreMessage(CoreMessage o) {
+//        LOG.info("Received CoreMessage: {}", o);
+//    }
+
+    @KafkaHandler(isDefault = true)
+    public void unknown(Object o) {
+        LOG.warn("Received unknown: {}", o);
+    }
+}
