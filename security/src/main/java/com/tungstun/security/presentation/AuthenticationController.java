@@ -1,8 +1,6 @@
 package com.tungstun.security.presentation;
 
-import com.tungstun.security.application.LoginUser;
-import com.tungstun.security.application.RegisterUser;
-import com.tungstun.security.application.UserService;
+import com.tungstun.security.application.*;
 import com.tungstun.security.presentation.request.LoginUserRequest;
 import com.tungstun.security.presentation.request.RegisterUserRequest;
 import org.springframework.http.HttpHeaders;
@@ -47,7 +45,7 @@ public class AuthenticationController {
     @PostMapping("/refresh")
     public ResponseEntity<Void> refresh(@RequestHeader("access_token") String accessToken,
                                         @RequestHeader("refresh_token") String refreshToken) {
-        Map<String, String> authorization = this.userService.refreshUser(accessToken, refreshToken);
+        Map<String, String> authorization = this.userService.refreshUser(new RefreshAccessToken(accessToken, refreshToken));
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setAll(authorization);
         return ResponseEntity.ok().headers(responseHeaders).build();
@@ -56,6 +54,6 @@ public class AuthenticationController {
     @PostMapping("/verify")
     public void verify(@RequestHeader("access_token") String accessToken,
                        @RequestHeader("token_type") String tokenType) {
-        this.userService.verifyUser(accessToken, tokenType);
+        this.userService.verifyUser(new VerifyUser(accessToken, tokenType));
     }
 }

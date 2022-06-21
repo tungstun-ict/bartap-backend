@@ -17,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.security.auth.login.LoginException;
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
 @Controller
@@ -41,13 +42,13 @@ public class UserService implements UserDetailsService {
     }
 
     public void registerUser(@Valid RegisterUser command) {
-        String encodedPassword = passwordEncoder.encode(command.getPassword());
+        String encodedPassword = passwordEncoder.encode(command.password());
         userRepository.save(new User(
-                command.getUsername(),
+                command.username(),
                 encodedPassword,
-                command.getMail().strip(),
-                command.getFirstName(),
-                command.getLastName(),
+                command.mail().strip(),
+                command.firstName(),
+                command.lastName(),
                 new ArrayList<>()
         ));
     }
@@ -63,21 +64,21 @@ public class UserService implements UserDetailsService {
                 "refresh_token", jwtTokenGenerator.createRefreshToken());
     }
 
-    public Map<String, String> refreshUser(String accessToken, String refreshToken) {
-        jwtValidator.verifyToken(refreshToken);
-        DecodedJWT jwtInfo = jwtValidator.verifyToken(accessToken);
-        User bartapUserDetails = (User) loadUserByUsername(jwtInfo.getSubject());
-        String newAccessToken = jwtTokenGenerator.createAccessToken(bartapUserDetails);
-        return Map.of("access_token", newAccessToken);
+    public Map<String, String> refreshUser(RefreshAccessToken command) {
+        jwtValidator.verifyToken(command.refreshToken());
+        DecodedJWT accessTokenInfo = jwtValidator.verifyToken(command.accessToken());
+        User userDetails = (User) loadUserByUsername(accessTokenInfo.getSubject());
+        String newAccessToken = jwtTokenGenerator.createAccessToken(userDetails);
+        return Collections.singletonMap("access_token", newAccessToken);
     }
 
-    public void verifyUser(String accessToken, String tokenType) {
-        if (accessToken == null || accessToken.isEmpty()) {
+    public void verifyUser(VerifyUser command) {
+        if (command.accessToken() == null || command.accessToken().isEmpty()) {
             throw new JWTVerificationException("No access token present");
         }
-        if (!tokenType.equals("bearer")) {
+        if (!command.tokenType().equals("bearer")) {
             throw new JWTVerificationException("Wrong token type");
         }
-        jwtValidator.verifyToken(accessToken);
+        jwtValidator.verifyToken(command.accessToken());
     }
 }
