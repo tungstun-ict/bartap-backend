@@ -75,11 +75,20 @@ public class User implements UserDetails {
         return true;
     }
 
-//    public boolean removeAuthorization(Long barId) {
-//        //todo This removes ownership of bar, Check if its possible to un-own existing bar
-//        return authorizations.removeIf(authorization -> authorization.getBarId().equals(barId));
-//        // Todo Event (soft) Delete bar on remove of owner authorization
-//    }
+    public boolean revokeUserAuthorization(User user, Long barId) {
+        if (!isOwner(barId)) throw new NotAuthorizedException("User has to be Owner of bar to revoke authorize other users");
+        if (this.equals(user)) throw new IllegalArgumentException("Cannot revoke your own bar ownership authorization");
+        return user.revokeAuthorization(barId);
+    }
+
+    public boolean revokeOwnership(Long barId) {
+        if (!isOwner(barId)) throw new NotAuthorizedException("User has to be Owner to revoke ownership");
+        return revokeAuthorization(barId);
+    }
+
+    private boolean revokeAuthorization(Long barId) {
+        return authorizations.removeIf(authorization -> authorization.getBarId().equals(barId));
+    }
 
     public Map<Long, String> getAuthorizations() {
         return authorizations.stream()

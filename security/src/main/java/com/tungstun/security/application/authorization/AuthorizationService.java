@@ -37,5 +37,4 @@ public class AuthorizationService {
 
     // handle remove authorization (On remove auth(http) or delete bar(kafka))
 
-    // TODO: 21-6-2022 Store BarId objects
 }

@@ -17,20 +17,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserTest {
     private Long barId;
-    private User userWithBarAuth;
-    private User userWithoutBarAuth;
+    private User userWithAuthorization;
+    private User user;
 
     @BeforeEach
     void setUp() {
         barId = 123L;
-        userWithBarAuth = new User(
+        userWithAuthorization = new User(
                 "username",
                 "password",
                 "mail@mail.com",
                 "first",
                 "last",
                 new ArrayList<>(List.of(new Authorization(barId, Role.OWNER))));
-        userWithoutBarAuth = new User(
+        user = new User(
                 "username",
                 "password",
                 "mail@mail.com",
@@ -41,14 +41,14 @@ class UserTest {
 
     @Test
     void userWithAuthorization_ContainsAuthorization() {
-        String actualRole = userWithBarAuth.getAuthorizations().get(barId);
+        String actualRole = userWithAuthorization.getAuthorizations().get(barId);
 
         assertEquals(Role.OWNER.name(), actualRole);
     }
 
     @Test
     void userWithoutAuthorization_HasNoAuthorizations() {
-        Map<Long, String> auths = userWithoutBarAuth.getAuthorizations();
+        Map<Long, String> auths = user.getAuthorizations();
 
         assertTrue(auths.isEmpty());
     }
@@ -57,10 +57,10 @@ class UserTest {
     void addNewBarAuthorization_Successfully() {
         Long newBarId = 987L;
 
-        userWithoutBarAuth.newBarAuthorization(newBarId);
+        user.newBarAuthorization(newBarId);
 
-        assertTrue(userWithoutBarAuth.getAuthorizations().containsKey(newBarId));
-        assertEquals(Role.OWNER.name(), userWithoutBarAuth.getAuthorizations().get(newBarId));
+        assertTrue(user.getAuthorizations().containsKey(newBarId));
+        assertEquals(Role.OWNER.name(), user.getAuthorizations().get(newBarId));
     }
 
 //  Commented due to not having functionality to check if other use already owns bar in Domain layer
@@ -79,15 +79,15 @@ class UserTest {
     @ParameterizedTest
     @EnumSource(value = Role.class, names = {"BARTENDER", "CUSTOMER"})
     void authorizeUserForOwnedBar_DoesNotThrow(Role role) {
-        assertDoesNotThrow(() -> userWithBarAuth.authorizeUser(userWithoutBarAuth, barId, role));
+        assertDoesNotThrow(() -> userWithAuthorization.authorizeUser(user, barId, role));
     }
 
     @ParameterizedTest
     @EnumSource(value = Role.class, names = {"BARTENDER", "CUSTOMER"})
     void authorizeUserForOwnedBar_AuthorizesUserForBar(Role role) {
-        userWithBarAuth.authorizeUser(userWithoutBarAuth, barId, role);
+        userWithAuthorization.authorizeUser(user, barId, role);
 
-        String userTwoRole = userWithoutBarAuth.getAuthorizations().get(barId);
+        String userTwoRole = user.getAuthorizations().get(barId);
         assertEquals(role.name(), userTwoRole);
     }
 
@@ -101,11 +101,11 @@ class UserTest {
     @ParameterizedTest
     @MethodSource("provideRolesForChangingRoles")
     void updateAuthorizationOfUser_Successfully_AndDoesNotThrow(Role role, Role newRole) {
-        userWithBarAuth.authorizeUser(userWithoutBarAuth, barId, role);
+        userWithAuthorization.authorizeUser(user, barId, role);
 
-        assertDoesNotThrow(() -> userWithBarAuth.authorizeUser(userWithoutBarAuth, barId, newRole));
+        assertDoesNotThrow(() -> userWithAuthorization.authorizeUser(user, barId, newRole));
 
-        String user2Role = userWithoutBarAuth.getAuthorizations().get(barId);
+        String user2Role = user.getAuthorizations().get(barId);
         assertEquals(newRole.name(), user2Role);
     }
 
@@ -113,7 +113,7 @@ class UserTest {
     void authorizeUserForOwnedBarAsOwner_Throws() {
         assertThrows(
                 IllegalArgumentException.class,
-                () -> userWithBarAuth.authorizeUser(userWithoutBarAuth, barId, Role.OWNER)
+                () -> userWithAuthorization.authorizeUser(user, barId, Role.OWNER)
         );
     }
 
@@ -121,7 +121,7 @@ class UserTest {
     void authorizeUserForNotOwnedBarWithNoOwnedBars_Throws() {
         assertThrows(
                 NotAuthorizedException.class,
-                () -> userWithoutBarAuth.authorizeUser(userWithBarAuth, barId, Role.CUSTOMER)
+                () -> user.authorizeUser(userWithAuthorization, barId, Role.CUSTOMER)
         );
     }
 
@@ -131,17 +131,17 @@ class UserTest {
 
         assertThrows(
                 NotAuthorizedException.class,
-                () -> userWithBarAuth.authorizeUser(userWithoutBarAuth, notOwnedBarId, Role.CUSTOMER)
+                () -> userWithAuthorization.authorizeUser(user, notOwnedBarId, Role.CUSTOMER)
         );
     }
 
     @Test
     void authorizeUserForNotOwnedButRelatedBar_Throws() {
-        userWithBarAuth.authorizeUser(userWithoutBarAuth, barId, Role.BARTENDER);
+        userWithAuthorization.authorizeUser(user, barId, Role.BARTENDER);
 
         assertThrows(
                 NotAuthorizedException.class,
-                () -> userWithoutBarAuth.authorizeUser(userWithBarAuth, barId, Role.CUSTOMER)
+                () -> user.authorizeUser(userWithAuthorization, barId, Role.CUSTOMER)
         );
     }
 
@@ -149,7 +149,55 @@ class UserTest {
     void userAuthorizesItself_Throws() {
         assertThrows(
                 IllegalArgumentException.class,
-                () -> userWithBarAuth.authorizeUser(userWithBarAuth, barId, Role.CUSTOMER)
+                () -> userWithAuthorization.authorizeUser(userWithAuthorization, barId, Role.CUSTOMER)
+        );
+    }
+
+    @Test
+    void revokeAuthorizedUserAuthorization_RevokesAuthorization() {
+        userWithAuthorization.authorizeUser(user, barId, Role.CUSTOMER);
+
+        userWithAuthorization.revokeUserAuthorization(user, barId);
+
+        assertNull(user.getAuthorizations().get(barId));
+    }
+
+    @Test
+    void revokeUserAuthorizationWithNoAuthorization_Throws() {
+        assertThrows(
+                NotAuthorizedException.class,
+                () -> user.revokeUserAuthorization(userWithAuthorization, barId)
+        );
+    }
+
+    @Test
+    void revokeUserAuthorizationWithNoAuthorizationLevel_Throws() {
+        userWithAuthorization.authorizeUser(user, barId, Role.CUSTOMER);
+
+        assertThrows(
+                NotAuthorizedException.class,
+                () -> user.revokeUserAuthorization(userWithAuthorization, barId)
+        );
+    }
+
+    @Test
+    void revokeOwnUserAuthorization_Throws() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> userWithAuthorization.revokeUserAuthorization(userWithAuthorization, barId)
+        );
+    }
+
+    @Test
+    void revokeOwnership_Successfully() {
+        assertDoesNotThrow(() -> userWithAuthorization.revokeOwnership(barId));
+    }
+
+    @Test
+    void revokeOwnershipOfNotOwnedBar_Throws() {
+        assertThrows(
+                NotAuthorizedException.class,
+                () -> user.revokeOwnership(barId)
         );
     }
 }
