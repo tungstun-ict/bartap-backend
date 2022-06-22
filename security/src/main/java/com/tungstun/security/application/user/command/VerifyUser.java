@@ -1,4 +1,4 @@
-package com.tungstun.security.application;
+package com.tungstun.security.application.user.command;
 
 import javax.validation.constraints.NotBlank;
 

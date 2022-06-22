@@ -1,7 +1,11 @@
-package com.tungstun.security.application;
+package com.tungstun.security.application.user;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.tungstun.security.application.user.command.LoginUser;
+import com.tungstun.security.application.user.command.RefreshAccessToken;
+import com.tungstun.security.application.user.command.RegisterUser;
+import com.tungstun.security.application.user.command.VerifyUser;
 import com.tungstun.security.domain.jwt.JwtTokenGenerator;
 import com.tungstun.security.domain.user.User;
 import com.tungstun.security.domain.user.UserRepository;

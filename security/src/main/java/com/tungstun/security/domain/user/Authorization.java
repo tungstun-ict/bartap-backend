@@ -2,6 +2,8 @@ package com.tungstun.security.domain.user;
 
 import javax.persistence.*;
 
+import static javax.persistence.EnumType.STRING;
+
 @Entity
 @Table(name = "authorization")
 public class Authorization {
@@ -10,14 +12,15 @@ public class Authorization {
     private Long id;
 
     @Column(name = "bar_id")
-    private String barId;
+    private Long barId;
 
     @Column(name = "role")
-    private String role;
+    @Enumerated(STRING)
+    private Role role;
 
     public Authorization() {
     }
-    public Authorization(String barId, String role) {
+    public Authorization(Long barId, Role role) {
         this.barId = barId;
         this.role = role;
     }
@@ -26,23 +29,15 @@ public class Authorization {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getBarId() {
+    public Long getBarId() {
         return barId;
     }
 
-    public void setBarId(String barId) {
-        this.barId = barId;
-    }
-
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void updateRole(Role role) {
         this.role = role;
     }
 }

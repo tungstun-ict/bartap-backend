@@ -1,5 +1,6 @@
 package com.tungstun.security.domain.user;
 
+import com.tungstun.sharedlibrary.security.exception.NotAuthorizedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -45,9 +46,47 @@ public class User implements UserDetails {
         this.authorizations = authorizations;
     }
 
-    public Map<String, String> getAuthorizations() {
+    public boolean newBarAuthorization (Long barId) {
+        return addAuthorization(barId, Role.OWNER);
+    }
+
+    public boolean authorizeUser(User user, Long barId, Role role) {
+        if (!isOwner(barId)) throw new NotAuthorizedException("User has to be Owner of bar to authorize other users");
+        if (this.equals(user)) throw new IllegalArgumentException("Cannot change your own bar role");
+        if (role == Role.OWNER) throw new IllegalArgumentException("Cannot make an other person than yourself owner");
+        return user.addAuthorization(barId, role);
+    }
+
+    private boolean isOwner(Long barId) {
         return authorizations.stream()
-                .collect(Collectors.toMap(Authorization::getBarId, Authorization::getRole));
+                .filter(authorization -> authorization.getBarId().equals(barId))
+                .anyMatch(authorization -> authorization.getRole() == Role.OWNER);
+    }
+
+    private boolean addAuthorization(Long barId, Role role) {
+        authorizations.stream()
+                .filter(authorization -> authorization.getBarId().equals(barId))
+                .filter(authorization -> authorization.getRole() != (Role.OWNER)) // Cannot unmake yourself Owner
+                .findAny()
+                .ifPresentOrElse(
+                        authorization -> authorization.updateRole(role),
+                        () -> authorizations.add(new Authorization(barId, role))
+                );
+        return true;
+    }
+
+//    public boolean removeAuthorization(Long barId) {
+//        //todo This removes ownership of bar, Check if its possible to un-own existing bar
+//        return authorizations.removeIf(authorization -> authorization.getBarId().equals(barId));
+//        // Todo Event (soft) Delete bar on remove of owner authorization
+//    }
+
+    public Map<Long, String> getAuthorizations() {
+        return authorizations.stream()
+                .collect(Collectors.toMap(
+                        Authorization::getBarId,
+                        authorization -> authorization.getRole().name())
+                );
     }
 
     public Long getId() {
