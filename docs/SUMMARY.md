@@ -1,7 +1,7 @@
 # Table of contents
 
-* [Table of contents](../README.md)
+* [Documentation](../README.md)
 
 ## 📬 Kafka
 
-* [Overview](../kafka/overview.md)
+* [Overview](kafka/overview.md)
