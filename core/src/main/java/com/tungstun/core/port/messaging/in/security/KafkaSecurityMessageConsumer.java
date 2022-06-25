@@ -7,10 +7,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 @Component
-@KafkaListener(
-        id = "securityMessageListener",
-        topics = "security",
-        containerFactory = "coreSecurityListenerContainerFactory")
+@KafkaListener(id = "securityMessageListener", topics = "security")
 public class KafkaSecurityMessageConsumer {
     private static final Logger LOG = LoggerFactory.getLogger(KafkaSecurityMessageConsumer.class);
     

@@ -1,4 +1,4 @@
-package com.tungstun.core.port.messaging.in.security;
+package com.tungstun.core.port.messaging.config;
 
 import com.tungstun.core.port.messaging.in.security.messages.UserCreated;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -20,12 +20,12 @@ import java.util.Map;
 
 import static com.tungstun.common.messaging.MessagingUtils.createTypeMapping;
 
-@Configuration("coreSecurityConsumerConfig")
+@Configuration
 public class KafkaConsumerConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-    @Bean("coreSecurityListenerContainerFactory")
+    @Bean
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>>
     kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();

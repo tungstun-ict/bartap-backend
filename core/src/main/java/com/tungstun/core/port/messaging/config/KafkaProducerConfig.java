@@ -1,4 +1,4 @@
-package com.tungstun.core.port.messaging.out.core;
+package com.tungstun.core.port.messaging.config;
 
 import com.tungstun.core.port.messaging.in.security.messages.UserCreated;
 import org.apache.kafka.clients.producer.ProducerConfig;
