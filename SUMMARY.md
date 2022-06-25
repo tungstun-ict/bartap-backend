@@ -1,10 +1,8 @@
 # Table of contents
 
 * [Welcome!](README.md)
-* [Quick Start](quick-start.md)
 
-## Reference
+## Docs
 
-* [API Reference](reference/api-reference/README.md)
-  * [Pets](reference/api-reference/pets.md)
-  * [Users](reference/api-reference/users.md)
+* [Kafka](docs/kafka/README.md)
+  * [workings](docs/kafka/workings.md)
