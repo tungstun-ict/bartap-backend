@@ -4,6 +4,7 @@
   "root": "/docs",
   "author": "Jort Willemsen & Jona Leeflang",
   "structure": {
-    "summary": "docs/SUMMARY.md"
+    "summary": "docs/SUMMARY.md",
+    "readme": "README.md"
   }
 }
