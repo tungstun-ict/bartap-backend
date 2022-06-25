@@ -15,7 +15,7 @@ public class KafkaSecurityMessageProducer {
 
     private final KafkaTemplate<String, Object> template;
 
-    public KafkaSecurityMessageProducer(@Qualifier("securityTemplate") KafkaTemplate<String, Object> template) {
+    public KafkaSecurityMessageProducer(KafkaTemplate<String, Object> template) {
         this.template = template;
     }
 

@@ -7,10 +7,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 @Component
-@KafkaListener(
-        id = "coreMessageListener",
-        topics = "core",
-        containerFactory = "securityCoreListenerContainerFactory")
+@KafkaListener(id = "coreMessageListener", topics = "core")
 public class KafkaCoreMessageConsumer {
     private static final Logger LOG = LoggerFactory.getLogger(KafkaCoreMessageConsumer.class);
 

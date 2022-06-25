@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @Configuration
 @EnableWebSecurity
-@Order(991)
+@Order(999)
 @Primary
 public class CoreWebSecurityConfig extends WebSecurityConfigurerAdapter {
 

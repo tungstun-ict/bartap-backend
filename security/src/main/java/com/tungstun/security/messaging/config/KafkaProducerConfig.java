@@ -1,4 +1,4 @@
-package com.tungstun.security.messaging.out;
+package com.tungstun.security.messaging.config;
 
 import com.tungstun.security.messaging.out.message.UserCreated;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -20,17 +20,16 @@ import java.util.Map;
 
 import static com.tungstun.common.messaging.MessagingUtils.createTypeMapping;
 
-@Configuration("securityProducerConfig")
+@Configuration
 @EnableKafka
 public class KafkaProducerConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-    @Bean("securityTemplate")
+    @Bean
     public KafkaTemplate<String, Object> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
-
 
     public ProducerFactory<String, Object> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs(), new StringSerializer(), serializer());

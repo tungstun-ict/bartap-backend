@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-@Order(990)
+@Order(999)
 public class SecurityWebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtValidator validator;
     private final String[] ignoredPaths = {

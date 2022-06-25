@@ -1,4 +1,4 @@
-package com.tungstun.security.messaging.in.core;
+package com.tungstun.security.messaging.config;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -29,7 +29,7 @@ public class KafkaConsumerConfig {
 //                new FixedBackOff(1000L, 2));
 //    }
 
-    @Bean(name = "securityCoreListenerContainerFactory")
+    @Bean
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>>
     kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
