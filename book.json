@@ -1,10 +1,10 @@
 {
-  "title": "Bartao backend",
+  "title": "Bartap backend",
   "description": "Docs for the backend of bartap",
   "root": "/docs",
   "author": "Jort Willemsen & Jona Leeflang",
   "structure": {
-    "summary": "docs/SUMMARY.md",
-    "readme": "README.md"
+    "summary": "/SUMMARY.md",
+    "readme": "../README.md"
   }
 }
