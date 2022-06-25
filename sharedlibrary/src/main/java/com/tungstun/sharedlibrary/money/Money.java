@@ -8,6 +8,11 @@ import java.math.RoundingMode;
  * Value object to be used for monetary value.
  * */
 public record Money(BigDecimal amount, Currency currency) implements Comparable<Money>, Serializable {
+   private static final Currency defaultCurrency = new Currency("€", "EUR");
+    public Money(double amount) {
+        this(BigDecimal.valueOf(amount), defaultCurrency);
+    }
+
     public Money(BigDecimal amount, Currency currency) {
         this.amount = amount.setScale(2, RoundingMode.HALF_UP);
         this.currency = currency;
