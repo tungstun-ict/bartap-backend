@@ -15,8 +15,8 @@ public class DefaultUserRepository implements UserRepository {
     }
 
     @Override
-    public void save(User user) {
-        repository.save(user);
+    public User save(User user) {
+        return repository.save(user);
     }
 
     @Override
@@ -27,15 +27,5 @@ public class DefaultUserRepository implements UserRepository {
     @Override
     public Optional<User> findByUsername(String username) {
         return repository.findByUsername(username);
-    }
-
-    @Override
-    public Optional<User> findByMail(String mail) {
-        return repository.findByMail(mail);
-    }
-
-    @Override
-    public Optional<User> findByMailOrUsername(String mail, String username) {
-        return repository.findByMailOrUsername(mail, username);
     }
 }

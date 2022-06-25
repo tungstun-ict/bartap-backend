@@ -20,12 +20,12 @@ import java.util.Map;
 
 import static com.tungstun.sharedlibrary.messaging.MessagingUtils.createTypeMapping;
 
-@Configuration
+@Configuration("coreSecurityConsumerConfig")
 public class KafkaConsumerConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-    @Bean
+    @Bean("coreSecurityListenerContainerFactory")
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>>
     kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
@@ -34,16 +34,7 @@ public class KafkaConsumerConfig {
         return factory;
     }
 
-    @Bean
     public ConsumerFactory<String, Object> consumerFactory() {
-        return new DefaultKafkaConsumerFactory<>(
-                consumerConfigs(),
-                new ErrorHandlingDeserializer<>(new StringDeserializer()),
-                new ErrorHandlingDeserializer<>(new JsonDeserializer<>()));
-    }
-
-    @Bean
-    public Map<String, Object> consumerConfigs() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "security");
@@ -51,6 +42,11 @@ public class KafkaConsumerConfig {
         props.put(JsonDeserializer.TYPE_MAPPINGS, String.join(",",
                 createTypeMapping(UserCreated.class)
         ));
-        return props;
+
+        return new DefaultKafkaConsumerFactory<>(
+                props,
+                new ErrorHandlingDeserializer<>(new StringDeserializer()),
+                new ErrorHandlingDeserializer<>(new JsonDeserializer<>()));
     }
+
 }

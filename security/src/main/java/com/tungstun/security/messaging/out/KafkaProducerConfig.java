@@ -20,23 +20,22 @@ import java.util.Map;
 
 import static com.tungstun.sharedlibrary.messaging.MessagingUtils.createTypeMapping;
 
-@Configuration
+@Configuration("securityProducerConfig")
 @EnableKafka
 public class KafkaProducerConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-    @Bean
+    @Bean("securityTemplate")
     public KafkaTemplate<String, Object> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 
-    @Bean
+
     public ProducerFactory<String, Object> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs(), new StringSerializer(), serializer());
     }
 
-    @Bean
     public Map<String, Object> producerConfigs() {
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -48,7 +47,6 @@ public class KafkaProducerConfig {
         return props;
     }
 
-    @Bean
     public DelegatingByTypeSerializer serializer() {
         return new DelegatingByTypeSerializer(Map.of(
                 Integer.class, new IntegerSerializer(),

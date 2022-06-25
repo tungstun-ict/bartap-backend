@@ -29,7 +29,7 @@ public class KafkaConsumerConfig {
 //                new FixedBackOff(1000L, 2));
 //    }
 
-    @Bean(name = "securityListenerContainerFactory")
+    @Bean(name = "securityCoreListenerContainerFactory")
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>>
     kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
@@ -39,16 +39,7 @@ public class KafkaConsumerConfig {
         return factory;
     }
 
-    @Bean(name = "securityConsumerFactory")
     public ConsumerFactory<String, Object> consumerFactory() {
-        return new DefaultKafkaConsumerFactory<>(
-                consumerConfigs(),
-                new ErrorHandlingDeserializer<>(new StringDeserializer()),
-                new ErrorHandlingDeserializer<>(new JsonDeserializer<>()));
-    }
-
-    @Bean(name = "securityConsumerConfig")
-    public Map<String, Object> consumerConfigs() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "security");
@@ -56,6 +47,10 @@ public class KafkaConsumerConfig {
         props.put(JsonDeserializer.TYPE_MAPPINGS, String.join(",",
                 ""
         ));
-        return props;
+
+        return new DefaultKafkaConsumerFactory<>(
+                props,
+                new ErrorHandlingDeserializer<>(new StringDeserializer()),
+                new ErrorHandlingDeserializer<>(new JsonDeserializer<>()));
     }
 }

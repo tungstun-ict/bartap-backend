@@ -3,6 +3,7 @@ package com.tungstun.security.messaging.out;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -14,7 +15,7 @@ public class KafkaSecurityMessageProducer {
 
     private final KafkaTemplate<String, Object> template;
 
-    public KafkaSecurityMessageProducer(KafkaTemplate<String, Object> template) {
+    public KafkaSecurityMessageProducer(@Qualifier("securityTemplate") KafkaTemplate<String, Object> template) {
         this.template = template;
     }
 
@@ -31,7 +32,7 @@ public class KafkaSecurityMessageProducer {
         publish(String.valueOf(id), data);
     }
 
-    @Bean
+    @Bean("securityTopic")
     private NewTopic security() {
         return new NewTopic(TOPIC, 1, (short) 1);
     }
