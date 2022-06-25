@@ -1,19 +1,13 @@
 package com.tungstun.sharedlibrary.money;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 /**
  * Value object to be used for monetary value.
  * */
-public class Money implements Comparable<Money>{
-    private final BigDecimal amount;
-    private final Currency currency;
-
-    public Money(double amount, Currency currency) {
-        this(BigDecimal.valueOf(amount), currency);
-    }
-
+public record Money(BigDecimal amount, Currency currency) implements Comparable<Money>, Serializable {
     public Money(BigDecimal amount, Currency currency) {
         this.amount = amount.setScale(2, RoundingMode.HALF_UP);
         this.currency = currency;
@@ -25,14 +19,6 @@ public class Money implements Comparable<Money>{
 
     public Money decrease(double amount) {
         return new Money(this.amount.subtract(BigDecimal.valueOf(amount)) , currency);
-    }
-
-    public Currency getCurrency() {
-        return currency;
-    }
-
-    public double getAmount() {
-        return amount.doubleValue();
     }
 
     @Override

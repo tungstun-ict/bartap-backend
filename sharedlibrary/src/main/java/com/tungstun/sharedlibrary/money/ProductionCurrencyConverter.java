@@ -12,11 +12,11 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,18 +38,16 @@ public class ProductionCurrencyConverter implements CurrencyConverter {
 
     public ProductionCurrencyConverter(ConversionApiDetails apiDetails) {
         this.apiDetails = apiDetails;
-    }
-
-    @PostConstruct
-    private void loadConversions() throws IOException {
-        updateConversionRates();
+        new AsyncConversionRateUpdater(0, this);
     }
 
     @Override
     public Money convert(Money money, Currency currency) {
-        double moneyConversionRate = conversionRates.get(money.getCurrency().code());
+        double moneyConversionRate = conversionRates.get(money.currency().code());
         double newCurrencyConversionRate = conversionRates.get(currency.code());
-        double value =  money.getAmount() * (1 / moneyConversionRate) * newCurrencyConversionRate;
+        BigDecimal value =  money.amount()
+                .multiply(BigDecimal.valueOf(1 / moneyConversionRate))
+                .multiply(BigDecimal.valueOf(newCurrencyConversionRate));
         return new Money(value, currency);
     }
 
@@ -79,15 +77,11 @@ public class ProductionCurrencyConverter implements CurrencyConverter {
         }.getType();
         conversionRates = new Gson().fromJson(conversionsJson, doubleMapType);
 
-        new CurrencyConversionRefreshTimer(apiDetails.getUpdateDelay(), this);
+        new AsyncConversionRateUpdater(apiDetails.getUpdateDelay(), this);
     }
 
-    private record CurrencyConversionRefreshTimer(int interval, ProductionCurrencyConverter currencyConverter
-    ) implements Runnable {
-
-        private CurrencyConversionRefreshTimer(int interval, ProductionCurrencyConverter currencyConverter) {
-            this.interval = interval;
-            this.currencyConverter = currencyConverter;
+    private record AsyncConversionRateUpdater(int interval, ProductionCurrencyConverter currencyConverter) implements Runnable {
+        private AsyncConversionRateUpdater {
             new Thread(this).start();
         }
 

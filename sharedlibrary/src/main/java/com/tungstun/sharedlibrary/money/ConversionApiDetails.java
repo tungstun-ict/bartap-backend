@@ -18,7 +18,7 @@ public class ConversionApiDetails {
     private String apiKey;
     @Value("{com.tungstun.bartap.currency.conversion.base:EUR}")
     private String baseCurrency;
-    @Value("${com.tungstun.bartap.currency.conversion.apiUpdateDelay:86_400_000}")
+    @Value("${com.tungstun.bartap.currency.conversion.apiUpdateDelay:86400000}")
     private Integer updateDelayInMilliseconds;
 
     /**

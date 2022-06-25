@@ -15,6 +15,6 @@ import org.springframework.stereotype.Component;
 public class MockCurrencyConverter implements CurrencyConverter {
     @Override
     public Money convert(Money money, Currency currency) {
-        return new Money(money.getAmount(), currency);
+        return new Money(money.amount(), currency);
     }
 }
