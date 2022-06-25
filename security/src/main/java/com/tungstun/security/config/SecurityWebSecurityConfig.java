@@ -1,7 +1,7 @@
 package com.tungstun.security.config;
 
-import com.tungstun.sharedlibrary.security.filter.JwtAuthenticationFilter;
-import com.tungstun.sharedlibrary.security.jwt.JwtValidator;
+import com.tungstun.common.security.filter.JwtAuthenticationFilter;
+import com.tungstun.common.security.jwt.JwtValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;

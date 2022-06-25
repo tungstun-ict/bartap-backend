@@ -7,7 +7,7 @@ import com.tungstun.security.application.authorization.command.RevokeUserAuthori
 import com.tungstun.security.domain.user.Role;
 import com.tungstun.security.domain.user.User;
 import com.tungstun.security.domain.user.UserRepository;
-import com.tungstun.sharedlibrary.exception.UserNotFoundException;
+import com.tungstun.common.exception.UserNotFoundException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;

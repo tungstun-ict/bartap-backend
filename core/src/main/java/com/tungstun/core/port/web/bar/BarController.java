@@ -12,7 +12,7 @@ import com.tungstun.core.port.web.bar.request.CreateBarRequest;
 import com.tungstun.core.port.web.bar.request.UpdateBarRequest;
 import com.tungstun.core.port.web.bar.response.BarIdResponse;
 import com.tungstun.core.port.web.bar.response.BarResponse;
-import com.tungstun.sharedlibrary.security.BartapUserDetails;
+import com.tungstun.common.security.BartapUserDetails;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;

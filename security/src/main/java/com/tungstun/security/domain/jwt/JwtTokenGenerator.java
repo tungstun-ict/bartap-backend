@@ -3,7 +3,7 @@ package com.tungstun.security.domain.jwt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.tungstun.security.domain.user.User;
-import com.tungstun.sharedlibrary.security.jwt.JwtCredentials;
+import com.tungstun.common.security.jwt.JwtCredentials;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;

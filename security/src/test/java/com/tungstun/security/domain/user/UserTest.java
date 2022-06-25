@@ -1,6 +1,6 @@
 package com.tungstun.security.domain.user;
 
-import com.tungstun.sharedlibrary.security.exception.NotAuthorizedException;
+import com.tungstun.common.security.exception.NotAuthorizedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

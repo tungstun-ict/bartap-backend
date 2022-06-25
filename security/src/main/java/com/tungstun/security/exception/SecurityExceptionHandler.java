@@ -1,8 +1,8 @@
 package com.tungstun.security.exception;
 
 import com.auth0.jwt.exceptions.JWTCreationException;
-import com.tungstun.sharedlibrary.exception.BartapExceptionHandler;
-import com.tungstun.sharedlibrary.exception.ExceptionResponse;
+import com.tungstun.common.exception.BartapExceptionHandler;
+import com.tungstun.common.exception.ExceptionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

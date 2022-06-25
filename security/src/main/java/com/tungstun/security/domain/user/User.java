@@ -1,6 +1,6 @@
 package com.tungstun.security.domain.user;
 
-import com.tungstun.sharedlibrary.security.exception.NotAuthorizedException;
+import com.tungstun.common.security.exception.NotAuthorizedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

@@ -18,7 +18,7 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.tungstun.sharedlibrary.messaging.MessagingUtils.createTypeMapping;
+import static com.tungstun.common.messaging.MessagingUtils.createTypeMapping;
 
 @Configuration("coreSecurityConsumerConfig")
 public class KafkaConsumerConfig {
@@ -37,7 +37,6 @@ public class KafkaConsumerConfig {
     public ConsumerFactory<String, Object> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "security");
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "com.tungstun.**");
         props.put(JsonDeserializer.TYPE_MAPPINGS, String.join(",",
                 createTypeMapping(UserCreated.class)

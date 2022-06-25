@@ -1,6 +1,6 @@
 package com.tungstun.core.domain.session;
 
-import com.tungstun.sharedlibrary.persistence.CrudRepositoryFragment;
+import com.tungstun.common.persistence.CrudRepositoryFragment;
 
 import java.util.List;
 

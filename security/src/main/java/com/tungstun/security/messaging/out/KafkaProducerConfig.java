@@ -18,7 +18,7 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.tungstun.sharedlibrary.messaging.MessagingUtils.createTypeMapping;
+import static com.tungstun.common.messaging.MessagingUtils.createTypeMapping;
 
 @Configuration("securityProducerConfig")
 @EnableKafka
