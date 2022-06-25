@@ -1,5 +1,6 @@
-package com.tungstun.bill.port.message.config;
+package com.tungstun.security.port.messaging.config;
 
+import com.tungstun.security.port.messaging.out.message.UserCreated;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.*;
 import org.apache.kafka.common.utils.Bytes;
@@ -16,6 +17,8 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.tungstun.common.messaging.MessagingUtils.createTypeMapping;
 
 @Configuration
 @EnableKafka
@@ -37,8 +40,8 @@ public class KafkaProducerConfig {
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-        props.put(JsonDeserializer.TYPE_MAPPINGS,String.join(",",
-                ""
+        props.put(JsonDeserializer.TYPE_MAPPINGS, String.join(",",
+                createTypeMapping(UserCreated.class)
         ));
         return props;
     }
@@ -49,7 +52,8 @@ public class KafkaProducerConfig {
                 Long.class, new LongSerializer(),
                 byte[].class, new ByteArraySerializer(),
                 Bytes.class, new BytesSerializer(),
-                String.class, new StringSerializer()
+                String.class, new StringSerializer(),
+                UserCreated.class, new JsonSerializer<UserCreated>()
         ));
     }
 }

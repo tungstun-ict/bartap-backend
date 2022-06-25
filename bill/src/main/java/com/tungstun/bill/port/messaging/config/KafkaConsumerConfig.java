@@ -1,4 +1,4 @@
-package com.tungstun.bill.port.message.config;
+package com.tungstun.bill.port.messaging.config;
 
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -17,8 +17,6 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.tungstun.common.messaging.MessagingUtils.createTypeMapping;
 
 @Configuration
 public class KafkaConsumerConfig {

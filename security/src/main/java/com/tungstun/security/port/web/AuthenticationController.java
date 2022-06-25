@@ -1,12 +1,12 @@
-package com.tungstun.security.presentation;
+package com.tungstun.security.port.web;
 
 import com.tungstun.security.application.user.UserService;
 import com.tungstun.security.application.user.command.LoginUser;
 import com.tungstun.security.application.user.command.RefreshAccessToken;
 import com.tungstun.security.application.user.command.RegisterUser;
 import com.tungstun.security.application.user.command.VerifyUser;
-import com.tungstun.security.presentation.request.LoginUserRequest;
-import com.tungstun.security.presentation.request.RegisterUserRequest;
+import com.tungstun.security.port.web.request.LoginUserRequest;
+import com.tungstun.security.port.web.request.RegisterUserRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

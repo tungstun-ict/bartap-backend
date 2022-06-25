@@ -1,4 +1,4 @@
-package com.tungstun.security.data.user;
+package com.tungstun.security.port.persistence.user;
 
 import com.tungstun.security.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;

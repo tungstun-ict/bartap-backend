@@ -1,4 +1,4 @@
-package com.tungstun.security.messaging.out.message;
+package com.tungstun.security.port.messaging.out.message;
 
 public record UserCreated(Long id,
                           String username) {

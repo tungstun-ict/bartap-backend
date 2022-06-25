@@ -1,4 +1,4 @@
-package com.tungstun.bill.port.message.out;
+package com.tungstun.bill.port.messaging.out;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.slf4j.Logger;

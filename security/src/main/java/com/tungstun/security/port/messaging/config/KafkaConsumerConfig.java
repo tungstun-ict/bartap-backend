@@ -1,4 +1,4 @@
-package com.tungstun.security.messaging.config;
+package com.tungstun.security.port.messaging.config;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
