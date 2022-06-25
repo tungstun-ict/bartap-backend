@@ -98,13 +98,17 @@ class MoneyTest {
         Money money = new Money(5);
         Money increaseMoney = money.increase(5);
 
-        assertEquals(BigDecimal.valueOf(10.0), increaseMoney.amount());
+        BigDecimal expected = BigDecimal.valueOf(10.00)
+                .setScale(2, RoundingMode.UNNECESSARY);
+        assertEquals(expected, increaseMoney.amount());
     }
     @Test
     void decreaseMoney_ReturnsNewMoney() {
         Money money = new Money(10);
         Money increaseMoney = money.decrease(5);
 
-        assertEquals(BigDecimal.valueOf(5.0), increaseMoney.amount());
+        BigDecimal expected = BigDecimal.valueOf(5.00)
+                        .setScale(2, RoundingMode.UNNECESSARY);
+        assertEquals(expected, increaseMoney.amount());
     }
 }
