@@ -1,7 +1,7 @@
-package com.tungstun.core.port.persistence.bill;
+package com.tungstun.bill.port.persistence.bill;
 
-import com.tungstun.core.domain.bill.Bill;
-import com.tungstun.core.domain.bill.BillRepository;
+import com.tungstun.bill.domain.bill.Bill;
+import com.tungstun.bill.domain.bill.BillRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

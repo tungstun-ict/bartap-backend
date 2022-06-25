@@ -1,7 +1,6 @@
-package com.tungstun.core.domain.bill;
+package com.tungstun.bill.domain.bill;
 
-import com.tungstun.core.domain.bar.Bar;
-import com.tungstun.sharedlibrary.persistence.CrudRepositoryFragment;
+import com.tungstun.common.persistence.CrudRepositoryFragment;
 
 import java.util.List;
 

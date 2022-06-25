@@ -1,4 +1,4 @@
-package com.tungstun.core.application.bill.command;
+package com.tungstun.bill.application.bill.command;
 
 import javax.validation.constraints.NotNull;
 

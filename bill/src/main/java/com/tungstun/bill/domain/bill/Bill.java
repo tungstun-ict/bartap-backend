@@ -1,7 +1,6 @@
-package com.tungstun.core.domain.bill;
+package com.tungstun.bill.domain.bill;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 
 @Entity
 @Table(name = "bill")
@@ -19,9 +18,13 @@ public class Bill {
     @Column(name = "customer_id")
     private Long customerId;
 
-    @Column(name = "total_rice")
-    private BigDecimal totalPrice;
 
+//    private Map<Long, Short> orders;
+
+//    @Column(name = "total_price")
+//    @Embedded
+//    private Money totalPrice;
+//    //todo check of Money wel handig is. Money wel in common moet (voordeel, overal consistentie in money) nadeel, ingewikkelde logica
 
     public Bill() { }
 

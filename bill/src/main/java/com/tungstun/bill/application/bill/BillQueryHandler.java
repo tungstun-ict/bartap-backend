@@ -1,10 +1,10 @@
-package com.tungstun.core.application.bill;
+package com.tungstun.bill.application.bill;
 
-import com.tungstun.core.application.bill.query.GetBill;
-import com.tungstun.core.application.bill.query.ListBillsOfPerson;
-import com.tungstun.core.application.bill.query.ListBillsOfSession;
-import com.tungstun.core.domain.bill.Bill;
-import com.tungstun.core.domain.bill.BillRepository;
+import com.tungstun.bill.application.bill.query.GetBill;
+import com.tungstun.bill.application.bill.query.ListBillsOfPerson;
+import com.tungstun.bill.application.bill.query.ListBillsOfSession;
+import com.tungstun.bill.domain.bill.Bill;
+import com.tungstun.bill.domain.bill.BillRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 

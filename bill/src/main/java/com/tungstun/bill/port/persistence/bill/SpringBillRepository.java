@@ -1,6 +1,6 @@
-package com.tungstun.core.port.persistence.bill;
+package com.tungstun.bill.port.persistence.bill;
 
-import com.tungstun.core.domain.bill.Bill;
+import com.tungstun.bill.domain.bill.Bill;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

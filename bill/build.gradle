@@ -1,0 +1,22 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+project.mainClassName = 'com.tungstun.core.BillApplication'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':common')
+    annotationProcessor project(':common')
+
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
