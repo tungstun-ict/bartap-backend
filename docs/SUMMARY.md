@@ -1,7 +1,11 @@
 # Table of contents
 
-* [Documentation](../README.md)
+* [🏡 Home](../README.md)
 
-## 📬 Kafka
+## 📬 Kafka messge bus <a href="#kafka" id="kafka"></a>
 
 * [Overview](kafka/overview.md)
+
+## ☕ Product service
+
+* [Overview](product-service/overview.md)
