@@ -9,6 +9,8 @@ import com.tungstun.security.application.user.command.VerifyUser;
 import com.tungstun.security.domain.jwt.JwtTokenGenerator;
 import com.tungstun.security.domain.user.User;
 import com.tungstun.security.domain.user.UserRepository;
+import com.tungstun.security.messaging.out.KafkaSecurityMessageProducer;
+import com.tungstun.security.messaging.out.message.UserCreated;
 import com.tungstun.sharedlibrary.exception.UserNotFoundException;
 import com.tungstun.sharedlibrary.security.jwt.JwtValidator;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,12 +33,14 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final JwtTokenGenerator jwtTokenGenerator;
     private final JwtValidator jwtValidator;
+    private final KafkaSecurityMessageProducer producer;
 
-    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, JwtTokenGenerator jwtTokenGenerator, JwtValidator jwtValidator) {
+    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, JwtTokenGenerator jwtTokenGenerator, JwtValidator jwtValidator, KafkaSecurityMessageProducer producer) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.jwtTokenGenerator = jwtTokenGenerator;
         this.jwtValidator = jwtValidator;
+        this.producer = producer;
     }
 
     @Override
@@ -47,7 +51,7 @@ public class UserService implements UserDetailsService {
 
     public void registerUser(@Valid RegisterUser command) {
         String encodedPassword = passwordEncoder.encode(command.password());
-        userRepository.save(new User(
+        User user = userRepository.save(new User(
                 command.username(),
                 encodedPassword,
                 command.mail().strip(),
@@ -55,6 +59,8 @@ public class UserService implements UserDetailsService {
                 command.lastName(),
                 new ArrayList<>()
         ));
+
+        producer.publish(user.getId(), new UserCreated(user.getId(), user.getUsername()));
     }
 
     public Map<String, String> loginUser(LoginUser command) throws LoginException {

@@ -1,4 +1,4 @@
-package com.tungstun.security.messaging.core.in;
+package com.tungstun.security.messaging.in.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +12,8 @@ public class KafkaCoreMessageConsumer {
     private static final Logger LOG = LoggerFactory.getLogger(KafkaCoreMessageConsumer.class);
 
 //    @KafkaHandler
-//    public void handleCoreMessage(CoreMessage o) {
+//    public void handleCoreMessage(BarDeleted o) {
+//          //Revoke auth of deleted bar ?
 //        LOG.info("Received CoreMessage: {}", o);
 //    }
 

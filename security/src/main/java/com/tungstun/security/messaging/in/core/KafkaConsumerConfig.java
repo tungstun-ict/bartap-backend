@@ -1,4 +1,4 @@
-package com.tungstun.security.messaging.config;
+package com.tungstun.security.messaging.in.core;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -29,7 +29,7 @@ public class KafkaConsumerConfig {
 //                new FixedBackOff(1000L, 2));
 //    }
 
-    @Bean
+    @Bean(name = "securityListenerContainerFactory")
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>>
     kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
@@ -39,7 +39,7 @@ public class KafkaConsumerConfig {
         return factory;
     }
 
-    @Bean
+    @Bean(name = "securityConsumerFactory")
     public ConsumerFactory<String, Object> consumerFactory() {
         return new DefaultKafkaConsumerFactory<>(
                 consumerConfigs(),
@@ -47,7 +47,7 @@ public class KafkaConsumerConfig {
                 new ErrorHandlingDeserializer<>(new JsonDeserializer<>()));
     }
 
-    @Bean
+    @Bean(name = "securityConsumerConfig")
     public Map<String, Object> consumerConfigs() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);

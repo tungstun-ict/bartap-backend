@@ -1,7 +1,6 @@
-package com.tungstun.core.port.messaging.config;
+package com.tungstun.core.port.messaging.in.security;
 
-import com.tungstun.core.port.messaging.security.in.UserCreated;
-import com.tungstun.core.port.messaging.security.in.UserEdited;
+import com.tungstun.core.port.messaging.in.security.messages.UserCreated;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,8 +49,7 @@ public class KafkaConsumerConfig {
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "security");
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "com.tungstun.**");
         props.put(JsonDeserializer.TYPE_MAPPINGS, String.join(",",
-                createTypeMapping(UserCreated.class),
-                createTypeMapping(UserEdited.class)
+                createTypeMapping(UserCreated.class)
         ));
         return props;
     }

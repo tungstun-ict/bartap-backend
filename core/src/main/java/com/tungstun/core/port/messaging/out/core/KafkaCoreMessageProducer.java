@@ -1,4 +1,4 @@
-package com.tungstun.core.port.messaging;
+package com.tungstun.core.port.messaging.out.core;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.slf4j.Logger;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class KafkaCoreMessageProducer {
     private static final Logger LOG = LoggerFactory.getLogger(KafkaCoreMessageProducer.class);
-    private static final String TOPIC_NAME = "core";
+    private static final String TOPIC = "core";
 
     private final KafkaTemplate<String, Object> template;
 
@@ -19,7 +19,7 @@ public class KafkaCoreMessageProducer {
     }
 
     public void publish(String id, Object data) {
-        template.send(TOPIC_NAME, id, data)
+        template.send(TOPIC, id, data)
                 .addCallback(
                         success -> LOG.info("Published message {} with id {}", data, id),
                         failure -> LOG.warn("Failed to publish message. Id: {}. Data: {}. Cause: {}. ",
@@ -27,8 +27,12 @@ public class KafkaCoreMessageProducer {
                 );
     }
 
+    public void publish(Number id, Object data) {
+        publish(String.valueOf(id), data);
+    }
+
     @Bean
-    public NewTopic core() {
-        return new NewTopic(TOPIC_NAME, 1, (short) 1);
+    private NewTopic core() {
+        return new NewTopic(TOPIC, 1, (short) 1);
     }
 }

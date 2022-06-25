@@ -1,7 +1,6 @@
-package com.tungstun.core.port.messaging.config;
+package com.tungstun.core.port.messaging.out.core;
 
-import com.tungstun.core.port.messaging.security.in.UserCreated;
-import com.tungstun.core.port.messaging.security.in.UserEdited;
+import com.tungstun.core.port.messaging.in.security.messages.UserCreated;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.*;
 import org.apache.kafka.common.utils.Bytes;
@@ -55,8 +54,7 @@ public class KafkaProducerConfig {
                 byte[].class, new ByteArraySerializer(),
                 Bytes.class, new BytesSerializer(),
                 String.class, new StringSerializer(),
-                UserCreated.class, new JsonSerializer<UserCreated>(),
-                UserEdited.class, new JsonSerializer<UserEdited>()
+                UserCreated.class, new JsonSerializer<UserCreated>()
         ));
     }
 }
