@@ -45,7 +45,7 @@ public class SecurityWebSecurityConfig extends WebSecurityConfigurerAdapter {
                         ignoredPaths
                 ))
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and();
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
     @Bean
