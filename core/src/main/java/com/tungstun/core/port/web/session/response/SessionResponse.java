@@ -9,8 +9,7 @@ public record SessionResponse(
         String name,
         LocalDateTime creationDate,
         LocalDateTime endDate,
-        Boolean isLocked,
-        Boolean isEnded) {
+        Boolean isLocked) {
 
     public static SessionResponse of(Session session) {
         return new SessionResponse(
@@ -18,7 +17,6 @@ public record SessionResponse(
                 session.getName(),
                 session.getCreationDate(),
                 session.getEndDate(),
-                session.isLocked(),
-                session.isEnded());
+                session.isLocked());
     }
 }
