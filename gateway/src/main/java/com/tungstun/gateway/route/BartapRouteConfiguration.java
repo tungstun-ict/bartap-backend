@@ -31,19 +31,18 @@ public class BartapRouteConfiguration {
 
                 .route("core", r -> r.path("/api/bars**")
                         .uri(routeUriConfig.getCore()))
-                .route("core", r -> r.path("/api/session**")
-                        .uri(routeUriConfig.getCore()))
-                .route("core", r -> r.path("/api/bills**")
-                        .uri(routeUriConfig.getCore()))
-                .route("core", r -> r.path("/api/bars**")
+                .route("session", r -> r.path("/api/session**")
                         .uri(routeUriConfig.getCore()))
 
-                .route("person", r -> r.path("/api/person**")
+                .route("bill", r -> r.path("/api/bills**")
+                        .uri(routeUriConfig.getCore()))
+
+                .route("person", r -> r.path("/api/people**")
                         .uri(routeUriConfig.getPerson()))
 
-                .route("product", r -> r.path("/api/product**")
+                .route("product", r -> r.path("/api/products**")
                         .uri(routeUriConfig.getProduct()))
-                .route("product", r -> r.path("/api/categories**")
+                .route("category", r -> r.path("/api/categories**")
                         .uri(routeUriConfig.getProduct()))
 
                 .route("order", r -> r.path("/api/order**")
