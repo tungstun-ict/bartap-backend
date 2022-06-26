@@ -1,10 +1,12 @@
 package com.tungstun.gateway.route;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties(prefix = "com.tungstun.bartap.routes")
+@EnableConfigurationProperties(RouteUriConfig.class)
 public class RouteUriConfig {
     private String security;
     private String core;
