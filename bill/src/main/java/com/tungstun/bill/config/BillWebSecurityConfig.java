@@ -15,12 +15,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @EnableWebSecurity
 @Order(999)
 @Primary
-public class CoreWebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class BillWebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtValidator validator;
     private final String[] ignoredPaths = {
     };
 
-    public CoreWebSecurityConfig(JwtValidator validator) {
+    public BillWebSecurityConfig(JwtValidator validator) {
         this.validator = validator;
     }
 
