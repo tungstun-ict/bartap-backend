@@ -31,8 +31,8 @@ subprojects {
         implementation 'org.hibernate.validator:hibernate-validator:6.1.5.Final'
         implementation 'com.h2database:h2'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
-        testImplementation 'io.projectreactor:reactor-test'
         testImplementation 'org.springframework.security:spring-security-test'
+        testImplementation 'io.projectreactor:reactor-test'
     }
 
     task prepareKotlinBuildScriptModel {}
