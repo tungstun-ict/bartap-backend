@@ -1,18 +1,28 @@
 package com.tungstun.core.config;
 
+import com.tungstun.common.security.filter.JwtAuthenticationFilter;
+import com.tungstun.common.security.jwt.JwtValidator;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
 @EnableWebSecurity
 @Order(999)
 @Primary
 public class CoreWebSecurityConfig extends WebSecurityConfigurerAdapter {
+    private final JwtValidator validator;
+    private final String[] ignoredPaths = {
+    };
 
+    public CoreWebSecurityConfig(JwtValidator validator) {
+        this.validator = validator;
+    }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic()
@@ -20,6 +30,15 @@ public class CoreWebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .csrf().disable()
                 .authorizeRequests()
-                .anyRequest().permitAll();
+                .antMatchers(HttpMethod.POST, ignoredPaths).permitAll()
+                .anyRequest().permitAll()
+                .and()
+                .addFilter(new JwtAuthenticationFilter(
+                        this.authenticationManager(),
+                        validator,
+                        ignoredPaths
+                ))
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 }
