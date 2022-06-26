@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/bars")
+@RequestMapping("/sessions")
 public class SessionController {
     private final SessionQueryHandler queryHandler;
     private final SessionCommandHandler commandHandler;
