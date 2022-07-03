@@ -49,9 +49,10 @@ allprojects {
     version = '0.0.1'
     sourceCompatibility = '17'
 
-    def profile = project.hasProperty('profile')
-            ? project.property('profile')
-            : 'dev'
+    def profile
+    if (project.hasProperty('dev')) profile = 'dev'
+    if (project.hasProperty('ci')) profile = 'ci'
+    if (project.hasProperty('prod')) profile = 'prod'
 
     test {
         useJUnitPlatform()
