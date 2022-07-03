@@ -14,6 +14,3 @@ dependencies {
     annotationProcessor project(':common')
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
