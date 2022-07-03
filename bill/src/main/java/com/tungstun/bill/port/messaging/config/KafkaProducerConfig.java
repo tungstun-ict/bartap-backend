@@ -1,5 +1,7 @@
 package com.tungstun.bill.port.messaging.config;
 
+import com.tungstun.common.messaging.KafkaMessageProducer;
+import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.*;
 import org.apache.kafka.common.utils.Bytes;
@@ -18,12 +20,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-@EnableKafka
 public class KafkaProducerConfig {
+    private static final String TOPIC = "bill";
+
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
     @Bean
+    public NewTopic core() {
+        return new NewTopic(TOPIC, 1, (short) 1);
+    }
+
+    @Bean
+    public KafkaMessageProducer kafkaMessageProducer() {
+        return new KafkaMessageProducer(TOPIC, kafkaTemplate());
+    }
+
     public KafkaTemplate<String, Object> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
