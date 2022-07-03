@@ -30,11 +30,12 @@ subprojects {
         implementation 'org.springframework.kafka:spring-kafka'
         implementation 'org.hibernate.validator:hibernate-validator:6.1.5.Final'
         implementation 'com.h2database:h2'
+        implementation 'org.springframework.kafka:spring-kafka-test:2.8.5'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         testImplementation 'org.springframework.security:spring-security-test'
         testImplementation 'io.projectreactor:reactor-test'
+        testImplementation 'org.springframework.kafka:spring-kafka-test'
     }
-
     task prepareKotlinBuildScriptModel {}
 }
 
@@ -42,4 +43,13 @@ allprojects {
     group = 'com.tungstun'
     version = '0.0.1'
     sourceCompatibility = '17'
+
+    testing {
+        suites {
+            test {
+                useJUnitJupiter('5.7.2')
+            }
+        }
+    }
+
 }

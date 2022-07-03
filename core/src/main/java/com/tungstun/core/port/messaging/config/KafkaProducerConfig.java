@@ -1,6 +1,9 @@
 package com.tungstun.core.port.messaging.config;
 
-import com.tungstun.core.port.messaging.in.security.messages.UserCreated;
+import com.tungstun.core.port.messaging.out.message.SessionCreated;
+import com.tungstun.core.port.messaging.out.message.SessionDeleted;
+import com.tungstun.core.port.messaging.out.message.SessionEnded;
+import com.tungstun.core.port.messaging.out.message.SessionLocked;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.*;
 import org.apache.kafka.common.utils.Bytes;
@@ -17,6 +20,8 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.tungstun.common.messaging.MessagingUtils.createTypeMapping;
 
 @Configuration("coreProducerConfig")
 @EnableKafka
@@ -39,7 +44,10 @@ public class KafkaProducerConfig {
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         props.put(JsonDeserializer.TYPE_MAPPINGS,String.join(",",
-                ""
+                createTypeMapping(SessionCreated.class),
+                createTypeMapping(SessionDeleted.class),
+                createTypeMapping(SessionEnded.class),
+                createTypeMapping(SessionLocked.class)
         ));
         return props;
     }
@@ -51,7 +59,10 @@ public class KafkaProducerConfig {
                 byte[].class, new ByteArraySerializer(),
                 Bytes.class, new BytesSerializer(),
                 String.class, new StringSerializer(),
-                UserCreated.class, new JsonSerializer<UserCreated>()
+                SessionCreated.class, new JsonSerializer<SessionCreated>(),
+                SessionDeleted.class, new JsonSerializer<SessionDeleted>(),
+                SessionEnded.class, new JsonSerializer<SessionEnded>(),
+                SessionLocked.class, new JsonSerializer<SessionLocked>()
         ));
     }
 }
