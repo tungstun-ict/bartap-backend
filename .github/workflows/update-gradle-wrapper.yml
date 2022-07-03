@@ -1,6 +1,9 @@
 name: CI
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - development
   schedule:
     - cron: "0 8 1 * *"
 
