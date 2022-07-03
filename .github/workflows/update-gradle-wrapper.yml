@@ -1,4 +1,4 @@
-name: CI
+name: Update Gradle Wrapper
 on:
   push:
     branches:
