@@ -5,6 +5,7 @@ import com.tungstun.core.domain.session.Session;
 import com.tungstun.core.domain.session.SessionRepository;
 import com.tungstun.core.port.messaging.out.KafkaCoreMessageProducer;
 import com.tungstun.core.port.messaging.out.message.SessionCreated;
+import com.tungstun.core.port.messaging.out.message.SessionDeleted;
 import com.tungstun.core.port.messaging.out.message.SessionEnded;
 import com.tungstun.core.port.messaging.out.message.SessionLocked;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,7 @@ public class SessionCommandHandler {
     public void handle(@Valid DeleteSession command) {
         repository.delete(command.id());
 
-        producer.publish(command.id(), new DeleteSession(command.id()));
+        producer.publish(command.id(), new SessionDeleted(command.id()));
     }
 
     public void handle(@Valid EndSession command) {
