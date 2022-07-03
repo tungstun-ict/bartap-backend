@@ -76,7 +76,7 @@ allprojects {
         }
     }
     testlogger {
-        theme 'standard'
+        theme 'mocha'
         showSimpleNames true
 
         if (project.hasProperty('c') || project.hasProperty('compact')){

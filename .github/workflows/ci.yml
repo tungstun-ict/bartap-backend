@@ -35,7 +35,7 @@ jobs:
         uses: gradle/gradle-build-action@v2.2.1
 
       - name: Run Tests
-        run: ./gradlew unittest -Pci -Pc
+        run: ./gradlew test -Pci -Pc
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1.39
@@ -43,3 +43,4 @@ jobs:
         with:
           files: "**/test-results/**/*.xml"
           check_name: Test Results
+          report_individual_runs: "false"
