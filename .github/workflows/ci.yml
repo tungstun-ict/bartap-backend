@@ -43,4 +43,3 @@ jobs:
         with:
           files: "**/test-results/**/*.xml"
           check_name: Test Results
-          report_individual_runs: "false"
