@@ -3,6 +3,7 @@ plugins {
     id 'application'
     id 'org.springframework.boot' version '2.6.7'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'com.adarshr.test-logger' version '3.2.0'
 }
 
 repositories {
@@ -14,6 +15,7 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'com.adarshr.test-logger'
 
     repositories {
         mavenCentral()
@@ -47,19 +49,44 @@ allprojects {
     version = '0.0.1'
     sourceCompatibility = '17'
 
-    def profiles = 'dev'
+    def profile = project.hasProperty('profile')
+            ? project.property('profile')
+            : 'dev'
 
     test {
-        doFirst {
-            systemProperty 'spring.profiles.active', profiles
-        }
         useJUnitPlatform()
-//        useJUnitJupiter('5.7.2')
+        doFirst {
+            systemProperty 'spring.profiles.active', profile
+        }
     }
 
-//    def profiles = "ci"
-//    test {
-//        args = ['--spring.profiles.active=' + profiles]
-//    }
 
+    task unittest(type: Test) {
+        description("Runs all tests except Application, Integration and Message Tests")
+        useJUnitPlatform()
+        doFirst {
+            systemProperty 'spring.profiles.active', profile
+        }
+        filter {
+            excludeTestsMatching '*ApplicationTests'
+            excludeTestsMatching '*IntegrationTest'
+            excludeTestsMatching '*MessageTest'
+            setFailOnNoMatchingTests(false)
+        }
+    }
+    testlogger {
+        theme 'standard'
+        showSimpleNames true
+
+        if (project.hasProperty('c') || project.hasProperty('compact')){
+            showExceptions false
+            showStackTraces false
+            showCauses false
+            showPassedStandardStreams false
+            showSkippedStandardStreams false
+            showFailedStandardStreams false
+        }else {
+            showStandardStreams true
+        }
+    }
 }
