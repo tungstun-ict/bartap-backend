@@ -86,8 +86,6 @@ allprojects {
             showPassedStandardStreams false
             showSkippedStandardStreams false
             showFailedStandardStreams false
-        }else {
-            showStandardStreams true
         }
     }
 }

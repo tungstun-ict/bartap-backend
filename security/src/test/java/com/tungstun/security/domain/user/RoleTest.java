@@ -14,6 +14,7 @@ class RoleTest {
             "bartender",
             "CUSTOMER", "customer"})
     void getRoleFromExistingRole_DoesNotThrow(String role) {
+        fail();
         assertDoesNotThrow(() -> Role.getRole(role));
     }
 

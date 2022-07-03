@@ -35,7 +35,8 @@ jobs:
         uses: gradle/gradle-build-action@v2.2.1
 
       - name: Run Tests
-        run: ./gradlew test -Pci
+        run: ./gradlew unittest -Pci -Pc
+
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1.39
         if: always()
