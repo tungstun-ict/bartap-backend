@@ -1,8 +1,6 @@
 package com.tungstun.common.test;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
@@ -12,9 +10,8 @@ import org.springframework.test.annotation.DirtiesContext;
  * Annotations needed to run an embedded kafka instance for tests included.
  * Basic fields needed for Consumer en Producer testbases.
  * */
-@Configuration
+// Not a Component or other Bean, because it would be loaded during non-test runtme and break the application
 @DirtiesContext
-@EnableKafka
 @EmbeddedKafka(
         partitions = KafkaTestBase.PARTITIONS,
         brokerProperties = {
