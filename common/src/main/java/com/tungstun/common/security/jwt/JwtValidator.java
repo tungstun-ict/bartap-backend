@@ -26,6 +26,10 @@ public class JwtValidator {
     }
 
     public DecodedJWT verifyToken(String token) {
+        if(token == null) {
+            throw new NotAuthenticatedException("Invalid token");
+        }
+
         try {
             return getJwtVerifier().verify(token);
         } catch (JWTVerificationException e) {
