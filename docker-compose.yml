@@ -6,7 +6,7 @@ volumes:
 
 services:
   database:
-    build: postgres:14.1-alpine
+    image: postgres:14.1-alpine
     ports:
       - "15432:5432"
     environment:
