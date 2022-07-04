@@ -23,6 +23,9 @@ public class SecurityWebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/authentication/login",
             "/api/authentication/refresh",
             "/api/authentication/verify",
+            "/api/swagger-ui/**",
+            "/api/v3/api-docs/**",
+            "/api/v3/api-docs/swagger-config"
     };
 
     public SecurityWebSecurityConfig(JwtValidator validator) {
