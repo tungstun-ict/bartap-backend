@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class RouteUriConfig {
     private String security;
     private String core;
+    private String bill;
     private String person;
     private String product;
     private String order;
@@ -52,5 +53,13 @@ public class RouteUriConfig {
 
     public void setProduct(String product) {
         this.product = product;
+    }
+
+    public String getBill() {
+        return bill;
+    }
+
+    public void setBill(String bill) {
+        this.bill = bill;
     }
 }

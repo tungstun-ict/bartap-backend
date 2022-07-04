@@ -31,11 +31,12 @@ public class BartapRouteConfiguration {
 
                 .route("core", r -> r.path("/api/bars**")
                         .uri(routeUriConfig.getCore()))
+
                 .route("session", r -> r.path("/api/session**")
                         .uri(routeUriConfig.getCore()))
 
                 .route("bill", r -> r.path("/api/bills**")
-                        .uri(routeUriConfig.getCore()))
+                        .uri(routeUriConfig.getBill()))
 
                 .route("person", r -> r.path("/api/people**")
                         .uri(routeUriConfig.getPerson()))
