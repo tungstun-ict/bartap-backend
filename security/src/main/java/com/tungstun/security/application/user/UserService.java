@@ -2,7 +2,9 @@ package com.tungstun.security.application.user;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.tungstun.common.exception.UserNotFoundException;
 import com.tungstun.common.messaging.KafkaMessageProducer;
+import com.tungstun.common.security.jwt.JwtValidator;
 import com.tungstun.security.application.user.command.LoginUser;
 import com.tungstun.security.application.user.command.RefreshAccessToken;
 import com.tungstun.security.application.user.command.RegisterUser;
@@ -11,8 +13,6 @@ import com.tungstun.security.domain.jwt.JwtTokenGenerator;
 import com.tungstun.security.domain.user.User;
 import com.tungstun.security.domain.user.UserRepository;
 import com.tungstun.security.port.messaging.out.message.UserCreated;
-import com.tungstun.common.exception.UserNotFoundException;
-import com.tungstun.common.security.jwt.JwtValidator;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 
 import javax.security.auth.login.LoginException;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,6 +29,7 @@ import java.util.Map;
 
 @Controller
 @Validated
+@Transactional
 public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
