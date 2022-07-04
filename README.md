@@ -1,5 +1,5 @@
 # 🏡 Home
-
+![](https://github.com/tungstun-ict/bartap-backend/actions/workflows/ci.yml/badge.svg)
 ## The project
 
 The bartap project is a SaaS solution for the catering branch. It provides a mobile application for stock keeping, customer management and bill administration. This project can be found [here](https://github.com/tungstun-ict/bartap-app). All data is processed and stored in a Spring Boot microservice backend. This is the documentation for the backend!
