@@ -10,6 +10,12 @@ import org.springframework.security.web.server.context.NoOpServerSecurityContext
 @Configuration
 @EnableWebFluxSecurity
 public class GatewayWebFluxSecurityConfig {
+    private final String[] ignoredPaths = {
+            "/api/swagger-ui/**",
+            "/api/v3/api-docs/**",
+            "/api/v3/api-docs/swagger-config"
+    };
+
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         return http.httpBasic().and()

@@ -9,9 +9,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 @ComponentScan("com.tungstun")
 @EnableKafka
 public class BillApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(BillApplication.class, args);
     }
-
 }

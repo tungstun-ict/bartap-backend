@@ -18,6 +18,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 public class CoreWebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtValidator validator;
     private final String[] ignoredPaths = {
+            "/api/swagger-ui/**",
+            "/api/v3/api-docs/**",
+            "/api/v3/api-docs/swagger-config"
     };
 
     public CoreWebSecurityConfig(JwtValidator validator) {

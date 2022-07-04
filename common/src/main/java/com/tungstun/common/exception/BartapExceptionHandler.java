@@ -17,7 +17,6 @@ import javax.validation.ConstraintViolationException;
 import java.util.Arrays;
 import java.util.List;
 
-
 /**
  * Base exception handler class for bartap services<br>
  * This handler handles all basic and shared exceptions that could be thrown.<br>
