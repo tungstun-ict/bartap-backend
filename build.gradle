@@ -3,6 +3,7 @@ plugins {
     id 'application'
     id 'org.springframework.boot' version '2.6.7'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'com.adarshr.test-logger' version '3.2.0'
 }
 
 repositories {
@@ -14,6 +15,7 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'com.adarshr.test-logger'
 
     repositories {
         mavenCentral()
@@ -29,11 +31,15 @@ subprojects {
         implementation 'org.springframework.kafka:spring-kafka'
         implementation 'org.hibernate.validator:hibernate-validator:6.1.5.Final'
         implementation 'com.h2database:h2'
+
+        implementation 'org.springframework.kafka:spring-kafka-test:2.8.5'
+        testImplementation 'org.springframework.kafka:spring-kafka-test:2.8.5'
+
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         testImplementation 'org.springframework.security:spring-security-test'
         testImplementation 'io.projectreactor:reactor-test'
+        testImplementation 'org.springframework.kafka:spring-kafka-test'
     }
-
     task prepareKotlinBuildScriptModel {}
 }
 
@@ -41,4 +47,44 @@ allprojects {
     group = 'com.tungstun'
     version = '0.0.1'
     sourceCompatibility = '17'
+
+    def profile
+    if (project.hasProperty('dev')) profile = 'dev'
+    if (project.hasProperty('ci')) profile = 'ci'
+    if (project.hasProperty('prod')) profile = 'prod'
+
+    test {
+        useJUnitPlatform()
+        doFirst {
+            systemProperty 'spring.profiles.active', profile
+        }
+    }
+
+
+    task unittest(type: Test) {
+        description("Runs all tests except Application, Integration and Message Tests")
+        useJUnitPlatform()
+        doFirst {
+            systemProperty 'spring.profiles.active', profile
+        }
+        filter {
+            excludeTestsMatching '*ApplicationTests'
+            excludeTestsMatching '*IntegrationTest'
+            excludeTestsMatching '*MessageTest'
+            setFailOnNoMatchingTests(false)
+        }
+    }
+    testlogger {
+        theme 'mocha'
+        showSimpleNames true
+
+        if (project.hasProperty('c') || project.hasProperty('compact')){
+            showExceptions false
+            showStackTraces false
+            showCauses false
+            showPassedStandardStreams false
+            showSkippedStandardStreams false
+            showFailedStandardStreams false
+        }
+    }
 }

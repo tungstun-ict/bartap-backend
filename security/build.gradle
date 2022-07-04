@@ -18,10 +18,4 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
 }
 
-testing {
-    suites {
-        test {
-            useJUnitJupiter('5.7.2')
-        }
-    }
-}
+

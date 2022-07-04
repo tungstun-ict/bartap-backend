@@ -9,3 +9,9 @@
 ## ☕ Product service
 
 * [Overview](product-service/overview.md)
+
+## 🏛 Architecture
+
+* [Overview](architecture/overview.md)
+* [Domain driven design](architecture/domain-driven-design.md)
+* [Hexagonal architecture](architecture/hexagonal-architecture.md)
