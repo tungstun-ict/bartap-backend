@@ -3,7 +3,7 @@ plugins {
     id 'application'
 }
 
-project.mainClassName = 'com.tungstun.bill.BillApplication'
+project.mainClassName = 'com.tungstun.product.ProductApplication'
 
 repositories {
     mavenCentral()

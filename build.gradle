@@ -41,6 +41,7 @@ subprojects {
         testImplementation 'org.springframework.kafka:spring-kafka-test'
     }
     task prepareKotlinBuildScriptModel {}
+    task wrapper {}
 }
 
 allprojects {
