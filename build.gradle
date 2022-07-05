@@ -86,6 +86,14 @@ subprojects {
         finalizedBy jacocoTestReport
     }
 
+    jacocoTestReport {
+        reports {
+            xml.enabled true
+            html.enabled true
+            csv.enabled false
+        }
+    }
+
     task unittest(type: Test) {
         description("Runs all tests except Application, Integration and Message Tests")
         useJUnitPlatform()
@@ -130,6 +138,13 @@ task jacocoRootReport(type: JacocoReport, group: 'Coverage reports') {
     sourceDirectories.from = files(subprojects.sourceSets.main.allSource.srcDirs)
     classDirectories.from = files(subprojects.sourceSets.main.output)
     executionData.from = files(subprojects.jacocoTestReport.executionData)
+
+    reports {
+        xml.enabled true
+        html.enabled true
+        csv.enabled false
+    }
+
 }
 
 test {

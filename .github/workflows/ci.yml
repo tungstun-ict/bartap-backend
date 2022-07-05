@@ -37,6 +37,16 @@ jobs:
       - name: Run Tests
         run: ./gradlew test -Pci -Pc
 
+      - name: JaCoCo Report
+        uses: Madrapps/jacoco-report@v1.2
+        with:
+          path: ${{github.workspace}}/build/reports/jacoco/jacocoRootReport/jacocoRootReport.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: JaCoCo Test Coverage
+          min-coverage-overall: 50
+          min-coverage-changed-files: 50
+
+
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1.39
         if: always()
