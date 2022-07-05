@@ -36,21 +36,17 @@ jobs:
 
       - name: Run Tests
         run: ./gradlew test -Pci -Pc
-
-      - name: JaCoCo Report
-        uses: Madrapps/jacoco-report@v1.2
-        if: always()
-        with:
-          paths: ${{github.workspace}}/build/reports/jacoco/jacocoRootReport/jacocoRootReport.xml
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: JaCoCo Test Coverage
-          min-coverage-overall: 50
-          min-coverage-changed-files: 50
-
-      - name: jacoco-badge-generator
-        uses: cicirello/jacoco-badge-generator@v2.7.0
-        with:
-          jacoco-csv-file: bill/build/reports/jacoco/test/jacocoTestReport.csv core/build/reports/jacoco/test/jacocoTestReport.csv common/build/reports/jacoco/test/jacocoTestReport.csv gateway/build/reports/jacoco/test/jacocoTestReport.csv product/build/reports/jacoco/test/jacocoTestReport.csv security/build/reports/jacoco/test/jacocoTestReport.csv
+      - name: JaCoCo Code Coverage Report
+          uses: PavanMudigonda/jacoco-reporter@v4.5
+          with:
+            coverage_results_path: ${{ github.workspace }}/build/reports/jacoco/jacocoRootReport/jacocoRootReport.xml
+            coverage_report_name: Coverage
+            coverage_report_title: JaCoCo
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            skip_check_run: false
+            minimum_coverage: 80
+            fail_below_threshold: false
+            publish_only_summary: false
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1.39
