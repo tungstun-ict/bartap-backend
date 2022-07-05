@@ -4,6 +4,7 @@ plugins {
     id 'org.springframework.boot' version '2.6.7'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'com.adarshr.test-logger' version '3.2.0'
+    id 'jacoco'
 }
 
 repositories {
@@ -16,10 +17,7 @@ subprojects {
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'com.adarshr.test-logger'
-
-    repositories {
-        mavenCentral()
-    }
+    apply plugin: 'jacoco'
 
     dependencies {
         implementation 'org.springframework.boot:spring-boot-starter'
@@ -40,9 +38,7 @@ subprojects {
         testImplementation 'io.projectreactor:reactor-test'
         testImplementation 'org.springframework.kafka:spring-kafka-test'
     }
-    task prepareKotlinBuildScriptModel {}
 }
-
 allprojects {
     group = 'com.tungstun'
     version = '0.0.1'
@@ -53,13 +49,77 @@ allprojects {
     if (project.hasProperty('ci')) profile = 'ci'
     if (project.hasProperty('prod')) profile = 'prod'
 
+
+    jacocoTestReport {
+        reports {
+            xml.required = false
+            csv.required = false
+//            html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+        }
+    }
+//    jacocoTestCoverageVerification {
+//        violationRules {
+//            rule {
+//                element 'PACKAGE'
+//            }
+//        }
+//    }
+
+//    jacocoTestCoverageVerification {
+//        violationRules {
+//            rule {
+//                element 'PACKAGE'
+////                includes ['com.tungstun.*']
+//            }
+//            rule {
+//                limit {
+//                    minimum 0.5
+//                }
+//            }
+//            rule {
+//                enabled true
+//                element 'CLASS'
+//                includes['com.tungstun.*']
+//                limit {
+//                    counter 'INSTRUCTION'
+//                    value 'COVEREDRATIO'
+//                    minimum 0.5
+//                    failOnViolation false
+//                }
+//            }
+//            rule {
+//                enabled true
+//                element 'CLASS'
+//                includes['com.tungstun.*']
+//                limit {
+//                    counter 'BRANCH'
+//                    value 'COVEREDRATIO'
+//                    minimum 0.5
+//                    failOnViolation false
+//                }
+//            }
+//
+//            rule {
+//                enabled true
+//                element 'CLASS'
+//                includes['com.tungstun.*']
+//                limit {
+//                    counter 'LINE'
+//                    value 'COVEREDRATIO'
+//                    minimum 0.5
+//                    failOnViolation false
+//                }
+//            }
+//        }
+//    }
+
     test {
         useJUnitPlatform()
         doFirst {
             systemProperty 'spring.profiles.active', profile
         }
+        finalizedBy jacocoTestReport
     }
-
 
     task unittest(type: Test) {
         description("Runs all tests except Application, Integration and Message Tests")
@@ -73,12 +133,14 @@ allprojects {
             excludeTestsMatching '*MessageTest'
             setFailOnNoMatchingTests(false)
         }
+        finalizedBy jacocoTestReport
     }
+
     testlogger {
         theme 'mocha'
         showSimpleNames true
 
-        if (project.hasProperty('c') || project.hasProperty('compact')){
+        if (project.hasProperty('c') || project.hasProperty('compact')) {
             showExceptions false
             showStackTraces false
             showCauses false
@@ -86,5 +148,20 @@ allprojects {
             showSkippedStandardStreams false
             showFailedStandardStreams false
         }
+    }
+}
+
+task jacocoRootReport(type: JacocoReport, group: 'Coverage reports') {
+    println "donedone"
+    description = 'Generates an aggregate report from all subprojects'
+    dependsOn(subprojects.test)
+
+    additionalSourceDirs.from = files(subprojects.sourceSets.main.allSource.srcDirs)
+    sourceDirectories.from = files(subprojects.sourceSets.main.allSource.srcDirs)
+    classDirectories.from = files(subprojects.sourceSets.main.output)
+    executionData.from = files(subprojects.jacocoTestReport.executionData)
+
+    reports {
+        html.enabled true
     }
 }
