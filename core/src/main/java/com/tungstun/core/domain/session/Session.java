@@ -3,6 +3,8 @@ package com.tungstun.core.domain.session;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "session")
@@ -26,6 +28,10 @@ public class Session {
     @Column(name = "locked", nullable = false)
     private boolean isLocked;
 
+    @ElementCollection
+    @OrderColumn(name = "bill_index")
+    private List<Long> billIds;
+
     public static Session with(Long barId, String name) {
         return new Session(barId, name, ZonedDateTime.now().toLocalDateTime());
     }
@@ -38,6 +44,7 @@ public class Session {
         this.name = name;
         this.creationDate = creationDate;
         this.isLocked = false;
+        billIds = new ArrayList<>();
     }
 
     public boolean endSession() {
@@ -50,6 +57,15 @@ public class Session {
         if (endDate == null) throw new IllegalStateException("Cannot lock session that is stil ongoing");
         isLocked = true;
     }
+
+    public boolean addBill(Long billId) {
+        return billIds.add(billId);
+    }
+
+    public boolean removeBill(Long billId) {
+        return billIds.remove(billId);
+    }
+
 
     public Long getId() {
         return id;
