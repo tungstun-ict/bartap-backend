@@ -12,6 +12,12 @@ repositories {
     mavenLocal()
 }
 
+def profile = tasks.register('profile') {
+    if (project.hasProperty('dev')) return 'dev'
+    if (project.hasProperty('ci')) return 'ci'
+    if (project.hasProperty('prod')) return 'prod'
+}
+
 subprojects {
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
@@ -38,82 +44,41 @@ subprojects {
         testImplementation 'io.projectreactor:reactor-test'
         testImplementation 'org.springframework.kafka:spring-kafka-test'
     }
-}
-allprojects {
-    group = 'com.tungstun'
-    version = '0.0.1'
-    sourceCompatibility = '17'
 
-    def profile
-    if (project.hasProperty('dev')) profile = 'dev'
-    if (project.hasProperty('ci')) profile = 'ci'
-    if (project.hasProperty('prod')) profile = 'prod'
-
-
-    jacocoTestReport {
-        reports {
-            xml.required = false
-            csv.required = false
-//            html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    jacocoTestCoverageVerification {
+        violationRules {
+            rule {
+                element = 'BUNDLE'
+                limit {
+                    counter = 'INSTRUCTIONS'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.5
+                    failOnViolation(false)
+                }
+            }
+            rule {
+                element = 'BUNDLE'
+                limit {
+                    counter = 'BRANCHES'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.5
+                    failOnViolation(false)
+                }
+            }
+            rule {
+                element = 'BUNDLE'
+                limit {
+                    counter = 'CLASS'
+                    value = 'MISSEDRATIO'
+                    maximum = 0.5
+                    failOnViolation(false)
+                }
+            }
         }
     }
-//    jacocoTestCoverageVerification {
-//        violationRules {
-//            rule {
-//                element 'PACKAGE'
-//            }
-//        }
-//    }
-
-//    jacocoTestCoverageVerification {
-//        violationRules {
-//            rule {
-//                element 'PACKAGE'
-////                includes ['com.tungstun.*']
-//            }
-//            rule {
-//                limit {
-//                    minimum 0.5
-//                }
-//            }
-//            rule {
-//                enabled true
-//                element 'CLASS'
-//                includes['com.tungstun.*']
-//                limit {
-//                    counter 'INSTRUCTION'
-//                    value 'COVEREDRATIO'
-//                    minimum 0.5
-//                    failOnViolation false
-//                }
-//            }
-//            rule {
-//                enabled true
-//                element 'CLASS'
-//                includes['com.tungstun.*']
-//                limit {
-//                    counter 'BRANCH'
-//                    value 'COVEREDRATIO'
-//                    minimum 0.5
-//                    failOnViolation false
-//                }
-//            }
-//
-//            rule {
-//                enabled true
-//                element 'CLASS'
-//                includes['com.tungstun.*']
-//                limit {
-//                    counter 'LINE'
-//                    value 'COVEREDRATIO'
-//                    minimum 0.5
-//                    failOnViolation false
-//                }
-//            }
-//        }
-//    }
 
     test {
+        description("Runs all tests")
         useJUnitPlatform()
         doFirst {
             systemProperty 'spring.profiles.active', profile
@@ -136,6 +101,13 @@ allprojects {
         finalizedBy jacocoTestReport
     }
 
+
+}
+
+allprojects {
+    group = 'com.tungstun'
+    version = '0.0.1'
+    sourceCompatibility = '17'
     testlogger {
         theme 'mocha'
         showSimpleNames true
@@ -152,16 +124,16 @@ allprojects {
 }
 
 task jacocoRootReport(type: JacocoReport, group: 'Coverage reports') {
-    println "donedone"
     description = 'Generates an aggregate report from all subprojects'
-    dependsOn(subprojects.test)
 
     additionalSourceDirs.from = files(subprojects.sourceSets.main.allSource.srcDirs)
     sourceDirectories.from = files(subprojects.sourceSets.main.allSource.srcDirs)
     classDirectories.from = files(subprojects.sourceSets.main.output)
     executionData.from = files(subprojects.jacocoTestReport.executionData)
+}
 
-    reports {
-        html.enabled true
-    }
+test {
+    description("Runs all tests and generates an aggragate coverage report")
+    dependsOn(subprojects.test)
+    finalizedBy(jacocoRootReport)
 }
