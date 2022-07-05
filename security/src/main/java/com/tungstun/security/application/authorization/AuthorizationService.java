@@ -1,5 +1,6 @@
 package com.tungstun.security.application.authorization;
 
+import com.tungstun.common.exception.UserNotFoundException;
 import com.tungstun.security.application.authorization.command.AuthorizeNewBar;
 import com.tungstun.security.application.authorization.command.AuthorizeUser;
 import com.tungstun.security.application.authorization.command.RevokeOwnerShip;
@@ -7,13 +8,15 @@ import com.tungstun.security.application.authorization.command.RevokeUserAuthori
 import com.tungstun.security.domain.user.Role;
 import com.tungstun.security.domain.user.User;
 import com.tungstun.security.domain.user.UserRepository;
-import com.tungstun.common.exception.UserNotFoundException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 
+import javax.transaction.Transactional;
+
 @Controller
 @Validated
+@Transactional
 public class AuthorizationService {
     private final UserRepository userRepository;
 

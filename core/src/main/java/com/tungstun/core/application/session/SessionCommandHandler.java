@@ -1,9 +1,9 @@
 package com.tungstun.core.application.session;
 
+import com.tungstun.common.messaging.KafkaMessageProducer;
 import com.tungstun.core.application.session.command.*;
 import com.tungstun.core.domain.session.Session;
 import com.tungstun.core.domain.session.SessionRepository;
-import com.tungstun.core.port.messaging.out.KafkaCoreMessageProducer;
 import com.tungstun.core.port.messaging.out.message.SessionCreated;
 import com.tungstun.core.port.messaging.out.message.SessionDeleted;
 import com.tungstun.core.port.messaging.out.message.SessionEnded;
@@ -18,9 +18,9 @@ import javax.validation.Valid;
 @Validated
 public class SessionCommandHandler {
     private final SessionRepository repository;
-    private final KafkaCoreMessageProducer producer;
+    private final KafkaMessageProducer producer;
 
-    public SessionCommandHandler(SessionRepository repository, KafkaCoreMessageProducer producer) {
+    public SessionCommandHandler(SessionRepository repository, KafkaMessageProducer producer) {
         this.repository = repository;
         this.producer = producer;
     }
