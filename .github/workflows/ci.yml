@@ -37,10 +37,6 @@ jobs:
       - name: Run Tests
         run: ./gradlew test -Pci -Pc
 
-  reports:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
       - name: JaCoCo Report
         uses: Madrapps/jacoco-report@v1.2
         with:
