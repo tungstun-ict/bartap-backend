@@ -46,7 +46,6 @@ subprojects {
     }
     task prepareKotlinBuildScriptModel {}
     task wrapper {}
-}
 
     jacocoTestCoverageVerification {
         violationRules {
