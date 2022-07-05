@@ -46,6 +46,16 @@ jobs:
           min-coverage-overall: 50
           min-coverage-changed-files: 50
 
+      - name: jacoco-badge-generator
+        uses: cicirello/jacoco-badge-generator@v2.7.0
+        with:
+          jacoco-csv-file: >
+            bill/build/reports/jacoco/test/jacocoTestReport.csv
+            core/build/reports/jacoco/test/jacocoTestReport.csv
+            common/build/reports/jacoco/test/jacocoTestReport.csv
+            gateway/build/reports/jacoco/test/jacocoTestReport.csv
+            product/build/reports/jacoco/test/jacocoTestReport.csv
+            security/build/reports/jacoco/test/jacocoTestReport.csv
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1.39
