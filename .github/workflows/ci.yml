@@ -50,12 +50,12 @@ jobs:
         uses: cicirello/jacoco-badge-generator@v2.7.0
         with:
           jacoco-csv-file: >
-            bill/build/reports/jacoco/test/jacocoTestReport.csv
-            core/build/reports/jacoco/test/jacocoTestReport.csv
-            common/build/reports/jacoco/test/jacocoTestReport.csv
-            gateway/build/reports/jacoco/test/jacocoTestReport.csv
-            product/build/reports/jacoco/test/jacocoTestReport.csv
-            security/build/reports/jacoco/test/jacocoTestReport.csv
+            ${{github.workspace}}/bill/build/reports/jacoco/test/jacocoTestReport.csv
+            ${{github.workspace}}/core/build/reports/jacoco/test/jacocoTestReport.csv
+            ${{github.workspace}}/common/build/reports/jacoco/test/jacocoTestReport.csv
+            ${{github.workspace}}/gateway/build/reports/jacoco/test/jacocoTestReport.csv
+            ${{github.workspace}}/product/build/reports/jacoco/test/jacocoTestReport.csv
+            ${{github.workspace}}/security/build/reports/jacoco/test/jacocoTestReport.csv
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1.39
