@@ -56,7 +56,7 @@ public abstract class KafkaConfigBase {
     /**
      * Kafka Server URLs
      */
-    @Value("${spring.kafka.bootstrap-servers}")
+    @Value("${spring.kafka.bootstrap-servers:localhost:9092}")
     protected String bootstrapServers;
 
     /**
