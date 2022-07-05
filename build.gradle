@@ -44,6 +44,9 @@ subprojects {
         testImplementation 'io.projectreactor:reactor-test'
         testImplementation 'org.springframework.kafka:spring-kafka-test'
     }
+    task prepareKotlinBuildScriptModel {}
+    task wrapper {}
+}
 
     jacocoTestCoverageVerification {
         violationRules {
