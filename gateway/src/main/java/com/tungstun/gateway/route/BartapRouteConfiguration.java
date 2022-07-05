@@ -26,27 +26,29 @@ public class BartapRouteConfiguration {
     @Bean
     public RouteLocator gatewayRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route("security", r -> r.path("/api/authentication**")
+                .route("security", r -> r.path("/api/authentication/**")
+                        .uri(routeUriConfig.getSecurity()))
+                .route("user", r -> r.path("/api/user/**")
                         .uri(routeUriConfig.getSecurity()))
 
-                .route("core", r -> r.path("/api/bars**")
+                .route("core", r -> r.path("/api/bars/**")
                         .uri(routeUriConfig.getCore()))
 
-                .route("session", r -> r.path("/api/session**")
+                .route("session", r -> r.path("/api/session/**")
                         .uri(routeUriConfig.getCore()))
 
-                .route("bill", r -> r.path("/api/bills**")
+                .route("bill", r -> r.path("/api/bills/**")
                         .uri(routeUriConfig.getBill()))
 
-                .route("person", r -> r.path("/api/people**")
+                .route("person", r -> r.path("/api/people/**")
                         .uri(routeUriConfig.getPerson()))
 
-                .route("product", r -> r.path("/api/products**")
+                .route("product", r -> r.path("/api/products/**")
                         .uri(routeUriConfig.getProduct()))
-                .route("category", r -> r.path("/api/categories**")
+                .route("category", r -> r.path("/api/categories/**")
                         .uri(routeUriConfig.getProduct()))
 
-                .route("order", r -> r.path("/api/order**")
+                .route("order", r -> r.path("/api/order/**")
                         .uri(routeUriConfig.getOrder()))
 
 
