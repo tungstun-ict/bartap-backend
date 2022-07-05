@@ -34,6 +34,7 @@ public class Session {
     }
 
     private Session(Long barId, String name, LocalDateTime creationDate) {
+        this.barId = barId;
         this.name = name;
         this.creationDate = creationDate;
         this.isLocked = false;
