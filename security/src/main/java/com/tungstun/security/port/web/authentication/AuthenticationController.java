@@ -27,7 +27,7 @@ public class AuthenticationController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public void register(@RequestBody RegisterUserRequest request) {
-        userService.registerUser(new RegisterUser(
+        userService.handle(new RegisterUser(
                 request.username(),
                 request.password(),
                 request.mail(),
@@ -38,7 +38,7 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody LoginUserRequest loginRequest) throws LoginException {
-        Map<String, String> authorization = this.userService.loginUser(
+        Map<String, String> authorization = this.userService.handle(
                 new LoginUser(loginRequest.username(), loginRequest.password()));
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setAll(authorization);
@@ -48,7 +48,7 @@ public class AuthenticationController {
     @PostMapping("/refresh")
     public ResponseEntity<Void> refresh(@RequestHeader("access_token") String accessToken,
                                         @RequestHeader("refresh_token") String refreshToken) {
-        Map<String, String> authorization = this.userService.refreshUser(new RefreshAccessToken(accessToken, refreshToken));
+        Map<String, String> authorization = this.userService.handle(new RefreshAccessToken(accessToken, refreshToken));
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setAll(authorization);
         return ResponseEntity.ok().headers(responseHeaders).build();
@@ -57,6 +57,6 @@ public class AuthenticationController {
     @PostMapping("/verify")
     public void verify(@RequestHeader("access_token") String accessToken,
                        @RequestHeader("token_type") String tokenType) {
-        this.userService.verifyUser(new VerifyUser(accessToken, tokenType));
+        this.userService.handle(new VerifyUser(accessToken, tokenType));
     }
 }

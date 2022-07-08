@@ -51,7 +51,7 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UserNotFoundException(String.format("User with username '%s' was not found", username)));
     }
 
-    public void registerUser(@Valid RegisterUser command) {
+    public void handle(@Valid RegisterUser command) {
         String encodedPassword = passwordEncoder.encode(command.password());
         User user = userRepository.save(new User(
                 command.username(),
@@ -65,7 +65,7 @@ public class UserService implements UserDetailsService {
         producer.publish(user.getId(), new UserCreated(user.getId(), user.getUsername()));
     }
 
-    public Map<String, String> loginUser(@Valid LoginUser command) throws LoginException {
+    public Map<String, String> handle(@Valid LoginUser command) throws LoginException {
         User user = (User) loadUserByUsername(command.username());
         if (!passwordEncoder.matches(command.password(), user.getPassword())) {
             throw new LoginException("Incorrect password");
@@ -76,7 +76,7 @@ public class UserService implements UserDetailsService {
                 "refresh_token", jwtTokenGenerator.createRefreshToken());
     }
 
-    public Map<String, String> refreshUser(@Valid RefreshAccessToken command) {
+    public Map<String, String> handle(@Valid RefreshAccessToken command) {
         jwtValidator.verifyToken(command.refreshToken());
         DecodedJWT accessTokenInfo = jwtValidator.verifyToken(command.accessToken());
         User userDetails = (User) loadUserByUsername(accessTokenInfo.getSubject());
@@ -84,7 +84,7 @@ public class UserService implements UserDetailsService {
         return Collections.singletonMap("access_token", newAccessToken);
     }
 
-    public void verifyUser(@Valid VerifyUser command) {
+    public void handle(@Valid VerifyUser command) {
         if (command.accessToken() == null || command.accessToken().isEmpty()) {
             throw new JWTVerificationException("No access token present");
         }
