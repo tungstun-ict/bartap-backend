@@ -14,5 +14,4 @@ public enum Role {
             throw new IllegalArgumentException(String.format("'%s' is not an existing role type", role), e);
         }
     }
-
 }
