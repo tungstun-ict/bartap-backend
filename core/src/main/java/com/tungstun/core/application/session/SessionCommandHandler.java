@@ -25,6 +25,11 @@ public class SessionCommandHandler {
         this.producer = producer;
     }
 
+    private Session loadSession(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("No session found with id %s", id)));
+    }
+
     public Long handle(@Valid CreateSession command) {
         Long id = repository.save(Session.with(command.barId(), command.name())).getId();
 
@@ -61,8 +66,15 @@ public class SessionCommandHandler {
         producer.publish(command.id(), new SessionLocked(command.id()));
     }
 
-    private Session loadSession(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("No session found with id %s", id)));
+    public void handle(@Valid AddBill command) {
+        Session session = loadSession(command.id());
+        session.addBill(command.billId());
+        repository.update(session);
+    }
+
+    public void handle(@Valid RemoveBill command) {
+        Session session = loadSession(command.id());
+        session.removeBill(command.billId());
+        repository.update(session);
     }
 }
