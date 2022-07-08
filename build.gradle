@@ -4,6 +4,7 @@ plugins {
     id 'org.springframework.boot' version '2.6.7'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'com.adarshr.test-logger' version '3.2.0'
+    id 'jacoco'
 }
 
 repositories {
@@ -11,15 +12,18 @@ repositories {
     mavenLocal()
 }
 
+def profile = tasks.register('profile') {
+    if (project.hasProperty('dev')) return 'dev'
+    if (project.hasProperty('ci')) return 'ci'
+    if (project.hasProperty('prod')) return 'prod'
+}
+
 subprojects {
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'com.adarshr.test-logger'
-
-    repositories {
-        mavenCentral()
-    }
+    apply plugin: 'jacoco'
 
     dependencies {
         implementation 'org.springframework.boot:spring-boot-starter'
@@ -42,25 +46,55 @@ subprojects {
     }
     task prepareKotlinBuildScriptModel {}
     task wrapper {}
-}
 
-allprojects {
-    group = 'com.tungstun'
-    version = '0.0.1'
-    sourceCompatibility = '17'
-
-    def profile
-    if (project.hasProperty('dev')) profile = 'dev'
-    if (project.hasProperty('ci')) profile = 'ci'
-    if (project.hasProperty('prod')) profile = 'prod'
+    jacocoTestCoverageVerification {
+        violationRules {
+            rule {
+                element = 'BUNDLE'
+                limit {
+                    counter = 'INSTRUCTIONS'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.5
+                    failOnViolation(false)
+                }
+            }
+            rule {
+                element = 'BUNDLE'
+                limit {
+                    counter = 'BRANCHES'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.5
+                    failOnViolation(false)
+                }
+            }
+            rule {
+                element = 'BUNDLE'
+                limit {
+                    counter = 'CLASS'
+                    value = 'MISSEDRATIO'
+                    maximum = 0.5
+                    failOnViolation(false)
+                }
+            }
+        }
+    }
 
     test {
+        description("Runs all tests")
         useJUnitPlatform()
         doFirst {
             systemProperty 'spring.profiles.active', profile
         }
+        finalizedBy jacocoTestReport
     }
 
+    jacocoTestReport {
+        reports {
+            xml.enabled true
+            html.enabled true
+            csv.enabled false
+        }
+    }
 
     task unittest(type: Test) {
         description("Runs all tests except Application, Integration and Message Tests")
@@ -74,12 +108,21 @@ allprojects {
             excludeTestsMatching '*MessageTest'
             setFailOnNoMatchingTests(false)
         }
+        finalizedBy jacocoTestReport
     }
+
+
+}
+
+allprojects {
+    group = 'com.tungstun'
+    version = '0.0.1'
+    sourceCompatibility = '17'
     testlogger {
         theme 'mocha'
         showSimpleNames true
 
-        if (project.hasProperty('c') || project.hasProperty('compact')){
+        if (project.hasProperty('c') || project.hasProperty('compact')) {
             showExceptions false
             showStackTraces false
             showCauses false
@@ -88,4 +131,26 @@ allprojects {
             showFailedStandardStreams false
         }
     }
+}
+
+task jacocoRootReport(type: JacocoReport, group: 'Coverage reports') {
+    description = 'Generates an aggregate report from all subprojects'
+
+    additionalSourceDirs.from = files(subprojects.sourceSets.main.allSource.srcDirs)
+    sourceDirectories.from = files(subprojects.sourceSets.main.allSource.srcDirs)
+    classDirectories.from = files(subprojects.sourceSets.main.output)
+    executionData.from = files(subprojects.jacocoTestReport.executionData)
+
+    reports {
+        xml.enabled true
+        html.enabled true
+        csv.enabled false
+    }
+
+}
+
+test {
+    description("Runs all tests and generates an aggragate coverage report")
+    dependsOn(subprojects.test)
+    finalizedBy(jacocoRootReport)
 }
