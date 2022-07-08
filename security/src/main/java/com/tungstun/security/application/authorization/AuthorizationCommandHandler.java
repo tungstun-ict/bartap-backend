@@ -1,9 +1,9 @@
 package com.tungstun.security.application.authorization;
 
 import com.tungstun.common.exception.UserNotFoundException;
-import com.tungstun.security.application.authorization.command.AuthorizeNewBar;
+import com.tungstun.security.application.authorization.command.AuthorizeNewBarOwnership;
 import com.tungstun.security.application.authorization.command.AuthorizeUser;
-import com.tungstun.security.application.authorization.command.RevokeOwnerShip;
+import com.tungstun.security.application.authorization.command.RevokeBarOwnerShip;
 import com.tungstun.security.application.authorization.command.RevokeUserAuthorization;
 import com.tungstun.security.domain.user.Role;
 import com.tungstun.security.domain.user.User;
@@ -42,12 +42,12 @@ public class AuthorizationCommandHandler {
         return owner.revokeUserAuthorization(user, command.barId());
     }
 
-    public boolean handle(@Valid AuthorizeNewBar command) {
+    public boolean handle(@Valid AuthorizeNewBarOwnership command) {
         User user = loadUserById(command.userId());
         return user.newBarAuthorization(command.barId());
     }
 
-    public boolean handle(@Valid RevokeOwnerShip command) {
+    public boolean handle(@Valid RevokeBarOwnerShip command) {
         User owner = loadUserById(command.ownerId());
         return owner.revokeOwnership(command.barId());
     }

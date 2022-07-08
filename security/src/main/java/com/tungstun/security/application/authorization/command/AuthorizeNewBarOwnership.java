@@ -2,7 +2,7 @@ package com.tungstun.security.application.authorization.command;
 
 import javax.validation.constraints.NotNull;
 
-public record AuthorizeNewBar(
+public record AuthorizeNewBarOwnership(
         @NotNull(message = "Bar id cannot be null")
         Long barId,
 
