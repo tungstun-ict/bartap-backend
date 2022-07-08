@@ -39,8 +39,7 @@ class SessionTest {
     void endSession_Successfully() throws InterruptedException {
         Thread.sleep(1); // Added to make sure session is not ended in the same millisecond as it is created
         session.endSession();
-        System.out.println(session.getCreationDate());
-        System.out.println(session.getEndDate());
+
         assertNotNull(session.getEndDate());
         assertTrue(session.isEnded());
         assertTrue(session.getCreationDate().isBefore(session.getEndDate()));
