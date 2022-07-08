@@ -9,7 +9,6 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -27,6 +26,6 @@ public class BarQueryHandler {
     }
 
     public List<Bar> handle(@Valid GetOwnedBars query) {
-        return Collections.emptyList(); //todo implement
+        return repository.findAllById(query.barIds());
     }
 }

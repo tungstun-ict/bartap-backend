@@ -86,13 +86,16 @@ public class BarController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Get all bars owned by user",
-            description = "All bars owned by a user are queried",
+            description = "All bars owned by a user are queried based on the user's authentication",
             tags = "Bar"
     )
     public List<BarResponse> getOwnedBar(Authentication authentication) {
         BartapUserDetails userDetails = (BartapUserDetails) authentication.getPrincipal();
-        return queryHandler.handle(new GetOwnedBars(userDetails.getId()))
-                .stream()
+        List<Long> ownedBarIds = userDetails.authorizations().parallelStream()
+                .filter(auth -> auth.role().equalsIgnoreCase("OWNER"))
+                .map(auth -> Long.parseLong(auth.barId()))
+                .toList();
+        return queryHandler.handle(new GetOwnedBars(ownedBarIds)).stream()
                 .map(this::mapToResponse)
                 .toList();
     }
