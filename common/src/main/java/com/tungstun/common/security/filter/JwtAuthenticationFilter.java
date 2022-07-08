@@ -50,7 +50,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         }
 
         try {
-            DecodedJWT decodedJWT = validator.verifyToken(accessToken);
+            DecodedJWT decodedJWT = validator.verifyAccessToken(accessToken);
             Long userId = Optional.ofNullable(decodedJWT.getClaim("userId").asLong())
                     .orElseThrow(() -> new JWTDecodeException("No user id in access token"));
             String username = decodedJWT.getSubject();

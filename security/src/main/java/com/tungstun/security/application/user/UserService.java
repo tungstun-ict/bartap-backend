@@ -89,8 +89,8 @@ public class UserService implements UserDetailsService {
     }
 
     public Map<String, String> handle(@Valid RefreshAccessToken command) {
-        jwtValidator.verifyToken(command.refreshToken());
-        DecodedJWT accessTokenInfo = jwtValidator.verifyToken(command.accessToken());
+        jwtValidator.verifyRefreshToken(command.refreshToken());
+        DecodedJWT accessTokenInfo = jwtValidator.verifyAccessToken(command.accessToken());
         User userDetails = (User) loadUserByUsername(accessTokenInfo.getSubject());
         String newAccessToken = jwtTokenGenerator.createAccessToken(userDetails);
         return Collections.singletonMap("access_token", newAccessToken);
@@ -103,6 +103,6 @@ public class UserService implements UserDetailsService {
         if (!command.tokenType().equals("bearer")) {
             throw new JWTVerificationException("Wrong token type");
         }
-        jwtValidator.verifyToken(command.accessToken());
+        jwtValidator.verifyAccessToken(command.accessToken());
     }
 }
