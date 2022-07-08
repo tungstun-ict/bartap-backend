@@ -70,8 +70,7 @@ public class User implements UserDetails {
                 .findAny()
                 .ifPresentOrElse(
                         authorization -> authorization.updateRole(role),
-                        () -> authorizations.add(new Authorization(barId, role))
-                );
+                        () -> authorizations.add(new Authorization(barId, role)));
         return true;
     }
 
@@ -94,8 +93,7 @@ public class User implements UserDetails {
         return authorizations.stream()
                 .collect(Collectors.toMap(
                         Authorization::getBarId,
-                        authorization -> authorization.getRole().name())
-                );
+                        authorization -> authorization.getRole().name()));
     }
 
     public Long getId() {
