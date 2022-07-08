@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,12 +21,12 @@ public class BarQueryHandler {
         this.repository = repository;
     }
 
-    public Bar handle(GetBar query) {
+    public Bar handle(@Valid GetBar query) {
         return repository.findById(query.id())
                 .orElseThrow(() -> new EntityNotFoundException(String.format("No bar found with id %s", query.id())));
     }
 
-    public List<Bar> handle(GetOwnedBars query) {
+    public List<Bar> handle(@Valid GetOwnedBars query) {
         return Collections.emptyList(); //todo implement
     }
 }

@@ -1,5 +1,6 @@
 package com.tungstun.core.port.web.bar;
 
+import com.tungstun.common.security.BartapUserDetails;
 import com.tungstun.core.application.bar.BarCommandHandler;
 import com.tungstun.core.application.bar.BarQueryHandler;
 import com.tungstun.core.application.bar.command.CreateBar;
@@ -12,7 +13,7 @@ import com.tungstun.core.port.web.bar.request.CreateBarRequest;
 import com.tungstun.core.port.web.bar.request.UpdateBarRequest;
 import com.tungstun.core.port.web.bar.response.BarIdResponse;
 import com.tungstun.core.port.web.bar.response.BarResponse;
-import com.tungstun.common.security.BartapUserDetails;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -32,20 +33,35 @@ public class BarController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BarIdResponse createBar(CreateBarRequest request) {
+    @Operation(
+            summary = "Create a new bar",
+            description = "A new bar is created with the information provided in the request body",
+            tags = "Bar"
+    )
+    public BarIdResponse createBar(@RequestBody CreateBarRequest request) {
         Long id = commandHandler.handle(new CreateBar(request.name(), request.address(), request.mail(), request.phoneNumber()));
         return new BarIdResponse(id);
     }
 
     @PutMapping("/{barId}")
     @ResponseStatus(HttpStatus.OK)
-    public BarIdResponse updateBar(@PathVariable("barId") Long id, UpdateBarRequest request) {
+    @Operation(
+            summary = "Update bar",
+            description = "The bar with the given id id is updated with the information provided in the request body",
+            tags = "Bar"
+    )
+    public BarIdResponse updateBar(@PathVariable("barId") Long id, @RequestBody UpdateBarRequest request) {
         commandHandler.handle(new UpdateBar(id, request.name(), request.address(), request.mail(), request.phoneNumber()));
         return new BarIdResponse(id);
     }
 
     @DeleteMapping("/{barId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(
+            summary = "Delete bar",
+            description = "The bar with given id is deleted",
+            tags = "Bar"
+    )
     public void updateBar(@PathVariable("barId") Long id) {
         commandHandler.handle(new DeleteBar(id));
     }
@@ -56,6 +72,11 @@ public class BarController {
 
     @GetMapping("/{barId}")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Get bar",
+            description = "The bar with given id is queried",
+            tags = "Bar"
+    )
     public BarResponse getBar(@PathVariable("barId") Long id) {
         Bar bar = queryHandler.handle(new GetBar(id));
         return mapToResponse(bar);
@@ -63,6 +84,11 @@ public class BarController {
 
     @GetMapping("/owned")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Get all bars owned by user",
+            description = "All bars owned by a user are queried",
+            tags = "Bar"
+    )
     public List<BarResponse> getOwnedBar(Authentication authentication) {
         BartapUserDetails userDetails = (BartapUserDetails) authentication.getPrincipal();
         return queryHandler.handle(new GetOwnedBars(userDetails.getId()))
