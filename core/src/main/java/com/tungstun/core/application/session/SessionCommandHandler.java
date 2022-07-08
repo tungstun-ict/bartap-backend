@@ -4,18 +4,20 @@ import com.tungstun.common.messaging.KafkaMessageProducer;
 import com.tungstun.core.application.session.command.*;
 import com.tungstun.core.domain.session.Session;
 import com.tungstun.core.domain.session.SessionRepository;
-import com.tungstun.core.port.messaging.out.message.SessionCreated;
-import com.tungstun.core.port.messaging.out.message.SessionDeleted;
-import com.tungstun.core.port.messaging.out.message.SessionEnded;
-import com.tungstun.core.port.messaging.out.message.SessionLocked;
+import com.tungstun.core.port.messaging.out.session.message.SessionCreated;
+import com.tungstun.core.port.messaging.out.session.message.SessionDeleted;
+import com.tungstun.core.port.messaging.out.session.message.SessionEnded;
+import com.tungstun.core.port.messaging.out.session.message.SessionLocked;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 @Service
 @Validated
+@Transactional
 public class SessionCommandHandler {
     private final SessionRepository repository;
     private final KafkaMessageProducer producer;
