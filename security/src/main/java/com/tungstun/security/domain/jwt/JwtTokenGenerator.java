@@ -2,8 +2,8 @@ package com.tungstun.security.domain.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTCreationException;
-import com.tungstun.security.domain.user.User;
 import com.tungstun.common.security.jwt.JwtCredentials;
+import com.tungstun.security.domain.user.User;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -23,7 +23,7 @@ public class JwtTokenGenerator {
             Map<String, String> authorizations = user.getAuthorizations()
                     .entrySet()
                     .stream()
-                    .collect(Collectors.toMap(String::valueOf, Map.Entry::getValue));
+                    .collect(Collectors.toMap(k -> String.valueOf(k.getKey()), Map.Entry::getValue));
             return JWT.create()
                     .withIssuer(credentials.getJwtIssuer())
                     .withAudience(credentials.getJwtAudience())
