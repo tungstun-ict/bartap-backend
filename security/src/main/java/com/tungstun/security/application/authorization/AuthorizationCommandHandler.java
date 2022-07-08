@@ -47,6 +47,11 @@ public class AuthorizationCommandHandler {
         return user.newBarAuthorization(command.barId());
     }
 
+    /**
+     * DON'T USE
+     * Currently only removes a user's ownership of bar. After removing user cannot undo or get access back to the bar.
+     * Implement soft delete or give access to other user.
+     */
     public boolean handle(@Valid RevokeBarOwnerShip command) {
         User owner = loadUserById(command.ownerId());
         return owner.revokeOwnership(command.barId());
