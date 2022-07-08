@@ -4,6 +4,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.tungstun.common.exception.UserNotFoundException;
 import com.tungstun.common.messaging.KafkaMessageProducer;
+import com.tungstun.common.security.exception.CannotAuthenticateException;
 import com.tungstun.common.security.jwt.JwtValidator;
 import com.tungstun.security.application.user.command.LoginUser;
 import com.tungstun.security.application.user.command.RefreshAccessToken;
@@ -65,12 +66,23 @@ public class UserService implements UserDetailsService {
         producer.publish(user.getId(), new UserCreated(user.getId(), user.getUsername()));
     }
 
+    private void validateUserCanAuthenticate(User user) {
+        if (user.isAccountNonExpired())
+            throw new CannotAuthenticateException("Account expired. An expired account cannot be authenticated.");
+        if (user.isAccountNonLocked())
+            throw new CannotAuthenticateException("Account locked. A locked account cannot be authenticated.");
+        if (user.isCredentialsNonExpired())
+            throw new CannotAuthenticateException("Account credentials expired. Expired credentials prevent authentication.");
+        if (user.isEnabled())
+            throw new CannotAuthenticateException("Account disabled. A disabled account cannot be authenticated.");
+    }
+
     public Map<String, String> handle(@Valid LoginUser command) throws LoginException {
         User user = (User) loadUserByUsername(command.username());
+        validateUserCanAuthenticate(user);
         if (!passwordEncoder.matches(command.password(), user.getPassword())) {
             throw new LoginException("Incorrect password");
         }
-
         return Map.of("token_type", "bearer",
                 "access_token", jwtTokenGenerator.createAccessToken(user),
                 "refresh_token", jwtTokenGenerator.createRefreshToken());
