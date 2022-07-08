@@ -33,18 +33,18 @@ public class Session {
     private List<Long> billIds;
 
     public static Session with(Long barId, String name) {
-        return new Session(barId, name, ZonedDateTime.now().toLocalDateTime());
+        return new Session(barId, name, ZonedDateTime.now().toLocalDateTime(), new ArrayList<>());
     }
 
     public Session() {
     }
 
-    private Session(Long barId, String name, LocalDateTime creationDate) {
+    private Session(Long barId, String name, LocalDateTime creationDate, List<Long> billIds) {
         this.barId = barId;
         this.name = name;
         this.creationDate = creationDate;
         this.isLocked = false;
-        billIds = new ArrayList<>();
+        this.billIds = billIds;
     }
 
     public boolean endSession() {
@@ -54,21 +54,39 @@ public class Session {
     }
 
     public void lock() {
-        if (endDate == null) throw new IllegalStateException("Cannot lock session that is stil ongoing");
+        if (endDate == null || isLocked)
+            throw new IllegalStateException("Cannot lock session that is stil ongoing or is already locked");
         isLocked = true;
     }
 
     public boolean addBill(Long billId) {
+        if (isLocked) throw new IllegalStateException("Cannot add bills when session is already locked");
         return billIds.add(billId);
     }
 
     public boolean removeBill(Long billId) {
+        if (isLocked) throw new IllegalStateException("Cannot add bills when session is already locked");
         return billIds.remove(billId);
     }
 
+    public List<Long> getBillIds() {
+        return new ArrayList<>(billIds);
+    }
+
+    public boolean isEnded() {
+        return endDate != null;
+    }
+
+    public boolean isLocked() {
+        return isLocked;
+    }
 
     public Long getId() {
         return id;
+    }
+
+    public Long getBarId() {
+        return barId;
     }
 
     public String getName() {
@@ -83,15 +101,8 @@ public class Session {
         return endDate;
     }
 
-    public boolean isEnded() {
-        return endDate != null;
-    }
-
-    public boolean isLocked() {
-        return isLocked;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
+
 }
