@@ -17,7 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.security.auth.login.LoginException;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 
-@Controller
+@Service
 @Validated
 @Transactional
 public class UserService implements UserDetailsService {
@@ -65,7 +65,7 @@ public class UserService implements UserDetailsService {
         producer.publish(user.getId(), new UserCreated(user.getId(), user.getUsername()));
     }
 
-    public Map<String, String> loginUser(LoginUser command) throws LoginException {
+    public Map<String, String> loginUser(@Valid LoginUser command) throws LoginException {
         User user = (User) loadUserByUsername(command.username());
         if (!passwordEncoder.matches(command.password(), user.getPassword())) {
             throw new LoginException("Incorrect password");
@@ -76,7 +76,7 @@ public class UserService implements UserDetailsService {
                 "refresh_token", jwtTokenGenerator.createRefreshToken());
     }
 
-    public Map<String, String> refreshUser(RefreshAccessToken command) {
+    public Map<String, String> refreshUser(@Valid RefreshAccessToken command) {
         jwtValidator.verifyToken(command.refreshToken());
         DecodedJWT accessTokenInfo = jwtValidator.verifyToken(command.accessToken());
         User userDetails = (User) loadUserByUsername(accessTokenInfo.getSubject());
@@ -84,7 +84,7 @@ public class UserService implements UserDetailsService {
         return Collections.singletonMap("access_token", newAccessToken);
     }
 
-    public void verifyUser(VerifyUser command) {
+    public void verifyUser(@Valid VerifyUser command) {
         if (command.accessToken() == null || command.accessToken().isEmpty()) {
             throw new JWTVerificationException("No access token present");
         }

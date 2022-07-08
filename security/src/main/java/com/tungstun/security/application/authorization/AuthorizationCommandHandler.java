@@ -9,18 +9,19 @@ import com.tungstun.security.domain.user.Role;
 import com.tungstun.security.domain.user.User;
 import com.tungstun.security.domain.user.UserRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
-@Controller
+@Service
 @Validated
 @Transactional
-public class AuthorizationService {
+public class AuthorizationCommandHandler {
     private final UserRepository userRepository;
 
-    public AuthorizationService(UserRepository userRepository) {
+    public AuthorizationCommandHandler(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -29,24 +30,24 @@ public class AuthorizationService {
                 .orElseThrow(() -> new UserNotFoundException(String.format("User with id '%s' was not found", id)));
     }
 
-    public boolean handle(AuthorizeUser command) {
+    public boolean handle(@Valid AuthorizeUser command) {
         User owner = loadUserById(command.ownerId());
         User user = loadUserById(command.userId());
         return owner.authorizeUser(user, command.barId(), Role.getRole(command.role()));
     }
 
-    public boolean handle(AuthorizeNewBar command) {
-        User user = loadUserById(command.userId());
-        return user.newBarAuthorization(command.barId());
-    }
-
-    public boolean handle(RevokeUserAuthorization command) {
+    public boolean handle(@Valid RevokeUserAuthorization command) {
         User owner = loadUserById(command.ownerId());
         User user = loadUserById(command.userId());
         return owner.revokeUserAuthorization(user, command.barId());
     }
 
-    public boolean handle(RevokeOwnerShip command) {
+    public boolean handle(@Valid AuthorizeNewBar command) {
+        User user = loadUserById(command.userId());
+        return user.newBarAuthorization(command.barId());
+    }
+
+    public boolean handle(@Valid RevokeOwnerShip command) {
         User owner = loadUserById(command.ownerId());
         return owner.revokeOwnership(command.barId());
     }
