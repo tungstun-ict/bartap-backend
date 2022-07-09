@@ -69,13 +69,13 @@ public class SessionCommandHandler {
     }
 
     public void handle(@Valid AddBill command) {
-        Session session = loadSession(command.id());
+        Session session = loadSession(command.sessionId());
         session.addBill(command.billId());
         repository.update(session);
     }
 
     public void handle(@Valid RemoveBill command) {
-        Session session = loadSession(command.id());
+        Session session = loadSession(command.sessionId());
         session.removeBill(command.billId());
         repository.update(session);
     }
