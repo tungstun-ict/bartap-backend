@@ -19,7 +19,7 @@ public class KafkaProducerConfig extends KafkaConfigBase {
     );
 
     @Bean
-    public NewTopic core() {
+    public NewTopic bill() {
         return new NewTopic(TOPIC, 1, (short) 1);
     }
 

@@ -24,13 +24,13 @@ public class KafkaBillMessageConsumer {
     @KafkaHandler
     public void handleBillCreated(BillCreated o) {
         LOG.info("Received BillCreated: {}", o);
-        commandHandler.handle(new AddBill(o.id(), o.billId()));
+        commandHandler.handle(new AddBill(o.sessionId(), o.id()));
     }
 
     @KafkaHandler
     public void handleBillCreated(BillDeleted o) {
         LOG.info("Received BillDeleted: {}", o);
-        commandHandler.handle(new RemoveBill(o.id(), o.billId()));
+        commandHandler.handle(new RemoveBill(o.sessionId(), o.id()));
     }
 
     @KafkaHandler(isDefault = true)
