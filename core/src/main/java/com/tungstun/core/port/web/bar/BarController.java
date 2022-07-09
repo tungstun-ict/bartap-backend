@@ -62,7 +62,7 @@ public class BarController {
             description = "The bar with given id is deleted",
             tags = "Bar"
     )
-    public void updateBar(@PathVariable("barId") Long id) {
+    public void deleteBar(@PathVariable("barId") Long id) {
         commandHandler.handle(new DeleteBar(id));
     }
 
