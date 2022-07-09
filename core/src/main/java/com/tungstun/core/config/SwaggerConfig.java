@@ -24,6 +24,4 @@ import io.swagger.v3.oas.models.annotations.OpenAPI31;
         }
 )
 public class SwaggerConfig {
-
-
 }
