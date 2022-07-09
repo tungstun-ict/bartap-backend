@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.util.List;
 
 @Service
@@ -16,20 +17,20 @@ import java.util.List;
 public class BillQueryHandler {
     private final BillRepository repository;
 
-    public BillQueryHandler(BillRepository repository) {
+    public BillQueryHandler(@Valid BillRepository repository) {
         this.repository = repository;
     }
 
-    public Bill handle(GetBill query) {
+    public Bill handle(@Valid GetBill query) {
         return repository.findById(query.id())
                 .orElseThrow(() -> new EntityNotFoundException(String.format("No bill found with id %s", query.id())));
     }
 
-    public List<Bill> handle(ListBillsOfSession query) {
+    public List<Bill> handle(@Valid ListBillsOfSession query) {
         return repository.findAllBySessionId(query.sessionId());
     }
 
-    public List<Bill> handle(ListBillsOfPerson query) {
+    public List<Bill> handle(@Valid ListBillsOfPerson query) {
         return repository.findAllBySessionId(query.personId());
     }
 }

@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 @Service
 @Validated
+@Transactional
 public class BillCommandHandler {
     private final BillRepository repository;
 
