@@ -31,6 +31,6 @@ public class BillQueryHandler {
     }
 
     public List<Bill> handle(@Valid ListBillsOfPerson query) {
-        return repository.findAllBySessionId(query.personId());
+        return repository.findAllByCustomerId(query.personId());
     }
 }
