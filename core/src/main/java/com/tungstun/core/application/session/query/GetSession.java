@@ -4,5 +4,7 @@ import javax.validation.constraints.NotNull;
 
 public record GetSession(
         @NotNull(message = "id cannot be empty")
-        Long id) {
+        Long id,
+        @NotNull(message = "Bar id cannot be empty")
+        Long barId) {
 }
