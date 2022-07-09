@@ -1,4 +1,4 @@
-package com.tungstun.core.port.messaging.in.bill.message;
+package com.tungstun.bill.port.messaging.out;
 
 public record BillCreated(
         Long id,
