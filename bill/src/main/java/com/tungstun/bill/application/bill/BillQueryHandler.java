@@ -17,7 +17,7 @@ import java.util.List;
 public class BillQueryHandler {
     private final BillRepository repository;
 
-    public BillQueryHandler(@Valid BillRepository repository) {
+    public BillQueryHandler(BillRepository repository) {
         this.repository = repository;
     }
 
