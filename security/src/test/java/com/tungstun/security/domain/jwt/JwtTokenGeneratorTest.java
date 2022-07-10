@@ -40,8 +40,9 @@ class JwtTokenGeneratorTest {
         jwtValidator = new JwtValidator(jwtCredentials);
     }
 
+    @SuppressWarnings("java:S2925")
     @Test
-    void createAccessToken_ContainsCorrectValues() throws IllegalAccessException {
+    void createAccessToken_ContainsCorrectValues() throws IllegalAccessException, InterruptedException {
         User user = new User(
                 "username",
                 "password",
@@ -51,9 +52,11 @@ class JwtTokenGeneratorTest {
                 new ArrayList<>(List.of(new Authorization(123L, Role.OWNER))));
         FieldUtils.writeField(user, "id", 123L, true);
         long before = ZonedDateTime.now().toInstant().toEpochMilli();
+        Thread.sleep(1); // Added to insure Before date is actually before and not equal to the token's date
 
         String token = tokenGenerator.createAccessToken(user);
 
+        Thread.sleep(1); // Added to insure After date is actually after and not equal to the token's date
         long after = before + jwtCredentials.getJwtExpirationInMs();
         DecodedJWT decodedJWT = jwtValidator.verifyAccessToken(token);
         assertTrue(decodedJWT.getExpiresAt().after(new Date(before)));
@@ -70,12 +73,15 @@ class JwtTokenGeneratorTest {
         assertEquals(user.getAuthorizations(), authorizations);
     }
 
+    @SuppressWarnings("java:S2925")
     @Test
-    void createRefreshToken_ContainsCorrectValues() {
+    void createRefreshToken_ContainsCorrectValues() throws InterruptedException {
         long before = ZonedDateTime.now().toInstant().toEpochMilli();
+        Thread.sleep(1); // Added to insure Before date is actually before and not equal to the token's date
 
         String token = tokenGenerator.createRefreshToken();
 
+        Thread.sleep(1); // Added to insure After date is actually after and not equal to the token's date
         DecodedJWT decodedJWT = jwtValidator.verifyRefreshToken(token);
         long after = before + jwtCredentials.getJwtRefreshExpirationInMs();
         assertTrue(decodedJWT.getExpiresAt().after(new Date(before)));
