@@ -7,6 +7,7 @@ import com.tungstun.security.application.user.command.RegisterUser;
 import com.tungstun.security.application.user.command.VerifyUser;
 import com.tungstun.security.port.web.authentication.request.LoginUserRequest;
 import com.tungstun.security.port.web.authentication.request.RegisterUserRequest;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,11 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
+    @Operation(
+            summary = "Register a new user account",
+            description = "A new user account is created with the information provided in the request body",
+            tags = "User"
+    )
     public void register(@RequestBody RegisterUserRequest request) {
         userService.handle(new RegisterUser(
                 request.username(),
@@ -37,6 +43,11 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
+    @Operation(
+            summary = "Login user",
+            description = "Logs in a user based on the information provided in the request body and return an access and refresh token",
+            tags = "Authentication"
+    )
     public ResponseEntity<Void> login(@RequestBody LoginUserRequest loginRequest) throws LoginException {
         Map<String, String> authorization = this.userService.handle(
                 new LoginUser(loginRequest.username(), loginRequest.password()));
@@ -46,6 +57,11 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refresh")
+    @Operation(
+            summary = "Refresh access token",
+            description = "Refreshes a user's access token using the refresh token and expired access token",
+            tags = "Authentication"
+    )
     public ResponseEntity<Void> refresh(@RequestHeader("access_token") String accessToken,
                                         @RequestHeader("refresh_token") String refreshToken) {
         Map<String, String> authorization = this.userService.handle(new RefreshAccessToken(accessToken, refreshToken));
@@ -55,6 +71,11 @@ public class AuthenticationController {
     }
 
     @PostMapping("/verify")
+    @Operation(
+            summary = "Verify access token",
+            description = "Verifies the validity of the provided access token",
+            tags = "Authentication"
+    )
     public void verify(@RequestHeader("access_token") String accessToken,
                        @RequestHeader("token_type") String tokenType) {
         this.userService.handle(new VerifyUser(accessToken, tokenType));
