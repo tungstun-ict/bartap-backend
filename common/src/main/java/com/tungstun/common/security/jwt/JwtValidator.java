@@ -15,26 +15,36 @@ public class JwtValidator {
         this.credentials = credentials;
     }
 
-    private JWTVerifier getJwtVerifier() {
-        return JWT.require(credentials.algorithm())
+    private DecodedJWT verify(String token, JWTVerifier verifier) {
+        if (token == null) {
+            throw new NotAuthenticatedException("Invalid token");
+        }
+
+        try {
+            return verifier.verify(token);
+        } catch (JWTVerificationException e) {
+            e.printStackTrace();
+            throw new NotAuthenticatedException("Invalid token", e);
+        }
+    }
+
+    public DecodedJWT verifyAccessToken(String token) {
+        JWTVerifier verifier = JWT.require(credentials.algorithm())
                 .withIssuer(credentials.getJwtIssuer())
                 .withAudience(credentials.getJwtAudience())
                 .withClaimPresence("client_id")
                 .withClaimPresence("authorizations")
                 .acceptLeeway(1)
                 .build();
+        return verify(token, verifier);
     }
 
-    public DecodedJWT verifyToken(String token) {
-        if(token == null) {
-            throw new NotAuthenticatedException("Invalid token");
-        }
-
-        try {
-            return getJwtVerifier().verify(token);
-        } catch (JWTVerificationException e) {
-            e.printStackTrace();
-            throw new NotAuthenticatedException("Invalid token", e);
-        }
+    public DecodedJWT verifyRefreshToken(String token) {
+        JWTVerifier verifier = JWT.require(credentials.algorithm())
+                .withIssuer(credentials.getJwtIssuer())
+                .withAudience(credentials.getJwtAudience())
+                .acceptLeeway(1)
+                .build();
+        return verify(token, verifier);
     }
 }

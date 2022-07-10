@@ -1,19 +1,18 @@
-package com.tungstun.security.port.web;
+package com.tungstun.security.port.web.authentication;
 
 import com.tungstun.security.application.user.UserService;
 import com.tungstun.security.application.user.command.LoginUser;
 import com.tungstun.security.application.user.command.RefreshAccessToken;
 import com.tungstun.security.application.user.command.RegisterUser;
 import com.tungstun.security.application.user.command.VerifyUser;
-import com.tungstun.security.port.web.request.LoginUserRequest;
-import com.tungstun.security.port.web.request.RegisterUserRequest;
+import com.tungstun.security.port.web.authentication.request.LoginUserRequest;
+import com.tungstun.security.port.web.authentication.request.RegisterUserRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.LoginException;
-import javax.validation.Valid;
 import java.util.Map;
 
 @RestController
@@ -28,7 +27,7 @@ public class AuthenticationController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public void register(@RequestBody RegisterUserRequest request) {
-        userService.registerUser(new RegisterUser(
+        userService.handle(new RegisterUser(
                 request.username(),
                 request.password(),
                 request.mail(),
@@ -38,8 +37,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@Valid @RequestBody LoginUserRequest loginRequest) throws LoginException {
-        Map<String, String> authorization = this.userService.loginUser(
+    public ResponseEntity<Void> login(@RequestBody LoginUserRequest loginRequest) throws LoginException {
+        Map<String, String> authorization = this.userService.handle(
                 new LoginUser(loginRequest.username(), loginRequest.password()));
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setAll(authorization);
@@ -49,7 +48,7 @@ public class AuthenticationController {
     @PostMapping("/refresh")
     public ResponseEntity<Void> refresh(@RequestHeader("access_token") String accessToken,
                                         @RequestHeader("refresh_token") String refreshToken) {
-        Map<String, String> authorization = this.userService.refreshUser(new RefreshAccessToken(accessToken, refreshToken));
+        Map<String, String> authorization = this.userService.handle(new RefreshAccessToken(accessToken, refreshToken));
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setAll(authorization);
         return ResponseEntity.ok().headers(responseHeaders).build();
@@ -58,6 +57,6 @@ public class AuthenticationController {
     @PostMapping("/verify")
     public void verify(@RequestHeader("access_token") String accessToken,
                        @RequestHeader("token_type") String tokenType) {
-        this.userService.verifyUser(new VerifyUser(accessToken, tokenType));
+        this.userService.handle(new VerifyUser(accessToken, tokenType));
     }
 }

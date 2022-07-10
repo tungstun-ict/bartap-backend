@@ -1,6 +1,6 @@
 package com.tungstun.security.application.authorization.command;
 
-public record RevokeOwnerShip(
+public record RevokeBarOwnerShip(
         Long ownerId,
         Long barId) {
 }
