@@ -44,8 +44,8 @@ public class CategoryController {
     @PutMapping("/{categoryId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(
-            summary = "Update bill",
-            description = "The isPayed status of the bill with the given id is updated to the boolean value provided in the request body",
+            summary = "Update category",
+            description = "The category with the given id is updated with the new name provided in the request body",
             tags = "Category"
     )
     public CategoryIdResponse updateCategory(@PathVariable("categoryId") Long id,
@@ -61,7 +61,7 @@ public class CategoryController {
             description = "The category with given id is deleted",
             tags = "Category"
     )
-    public void deleteBill(@PathVariable("categoryId") Long id) {
+    public void deleteCategory(@PathVariable("categoryId") Long id) {
         commandHandler.handle(new DeleteCategory(id));
     }
 
@@ -77,14 +77,14 @@ public class CategoryController {
         return CategoryResponse.from(category);
     }
 
-    @GetMapping("/bar/{barId}")
+    @GetMapping("/bars/{barId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Get categories of bar",
             description = "The categories of bar with given id are queried",
             tags = "Category"
     )
-    public List<CategoryResponse> getCategoryOfSession(@PathVariable("barId") Long id) {
+    public List<CategoryResponse> getCategoryOfBar(@PathVariable("barId") Long id) {
         return queryHandler.handle(new ListCategoriesOfBar(id))
                 .parallelStream()
                 .map(CategoryResponse::from)

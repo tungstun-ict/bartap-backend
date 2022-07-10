@@ -23,14 +23,14 @@ public class CategoryCommandHandler {
     }
 
     public Long handle(@Valid CreateCategory command) {
-        return repository.save(new Category(command.name(), command.barId())).getBarId();
+        return repository.save(new Category(command.name(), command.barId())).getId();
     }
 
     public Long handle(@Valid UpdateCategory command) {
         Category category = repository.findById(command.id())
                 .orElseThrow(() -> new EntityNotFoundException(String.format("No category found with id %s", command.id())));
         category.setName(command.name());
-        return repository.update(category).getBarId();
+        return repository.update(category).getId();
     }
 
     public void handle(@Valid DeleteCategory command) {

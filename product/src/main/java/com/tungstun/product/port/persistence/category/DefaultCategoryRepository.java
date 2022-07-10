@@ -1,4 +1,4 @@
-package com.tungstun.product.port.persistence;
+package com.tungstun.product.port.persistence.category;
 
 import com.tungstun.product.domain.category.Category;
 import com.tungstun.product.domain.category.CategoryRepository;
