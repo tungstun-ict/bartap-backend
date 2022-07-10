@@ -4,18 +4,24 @@ import com.tungstun.common.money.Money;
 import com.tungstun.product.domain.category.Category;
 
 public class ProductBuilder {
+    private final Long barId;
     private final String name;
-    private final String brand;
     private final Category category;
+    private String brand = "";
     private double size = 0;
     private boolean isFavorite = false;
     private Money price = new Money(0.0);
     private ProductType type = ProductType.OTHER;
 
-    public ProductBuilder(String name, String brand, Category category) {
+    public ProductBuilder(Long barId, String name, Category category) {
+        this.barId = barId;
         this.name = name;
-        this.brand = brand;
         this.category = category;
+    }
+
+    public ProductBuilder setBrand(String brand) {
+        this.brand = brand;
+        return this;
     }
 
     public ProductBuilder setSize(double size) {
@@ -40,6 +46,7 @@ public class ProductBuilder {
 
     public Product build() {
         return new Product(
+                this.barId,
                 this.name,
                 this.brand,
                 this.size,

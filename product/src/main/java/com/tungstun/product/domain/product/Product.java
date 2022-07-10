@@ -14,6 +14,9 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(name = "bar_id")
+    private Long barId;
+
     @Column(name = "deleted")
     private final boolean deleted = Boolean.FALSE;
 
@@ -42,7 +45,8 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, String brand, double size, boolean isFavorite, Money price, ProductType type, Category category) {
+    public Product(Long barId, String name, String brand, double size, boolean isFavorite, Money price, ProductType type, Category category) {
+        this.barId = barId;
         this.name = name;
         this.brand = brand;
         this.size = size;
@@ -54,6 +58,14 @@ public class Product {
 
     public Long getId() {
         return id;
+    }
+
+    public Long getBarId() {
+        return barId;
+    }
+
+    public void setBarId(Long barId) {
+        this.barId = barId;
     }
 
     public String getName() {
