@@ -35,7 +35,7 @@ jobs:
         uses: gradle/gradle-build-action@v2.2.1
 
       - name: Run Tests
-        run: ./gradlew test -Pci -Pc
+        run: ./gradlew test -Pci
 
       - name: JaCoCo Report
         uses: Madrapps/jacoco-report@v1.2
