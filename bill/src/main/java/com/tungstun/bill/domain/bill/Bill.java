@@ -40,9 +40,13 @@ public class Bill {
         return sessionId;
     }
 
-    public boolean isPayed() { return isPayed; }
+    public boolean isPayed() {
+        return isPayed;
+    }
 
-    public void setPayed(boolean payed) { isPayed = payed; }
+    public void setPayed(boolean payed) {
+        isPayed = payed;
+    }
 
 //    public double calculateTotalPrice() {
 //        return this.orders.stream()
@@ -50,7 +54,9 @@ public class Bill {
 //                .sum();
 //    }
 
-//    public Long getCustomerId() { return customerId; }
+    public Long getCustomerId() {
+        return customerId;
+    }
 
 //    public List<Order> getOrders() { return this.orders; }
 

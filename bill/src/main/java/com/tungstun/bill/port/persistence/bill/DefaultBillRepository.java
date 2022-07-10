@@ -44,4 +44,9 @@ public class DefaultBillRepository implements BillRepository {
     public List<Bill> findAllByCustomerId(Long id) {
         return repository.findAllByCustomerId(id);
     }
+
+    @Override
+    public void delete(Bill bill) {
+        repository.delete(bill);
+    }
 }
