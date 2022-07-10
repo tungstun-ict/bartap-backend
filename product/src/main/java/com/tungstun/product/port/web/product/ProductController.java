@@ -1,5 +1,6 @@
 package com.tungstun.product.port.web.product;
 
+import com.tungstun.common.web.IdResponse;
 import com.tungstun.product.application.product.ProductCommandHandler;
 import com.tungstun.product.application.product.ProductQueryHandler;
 import com.tungstun.product.application.product.command.CreateProduct;
@@ -13,7 +14,6 @@ import com.tungstun.product.port.web.product.request.CreateProductRequest;
 import com.tungstun.product.port.web.product.request.ListProductsOfBarRequest;
 import com.tungstun.product.port.web.product.request.ListProductsOfCategoryRequest;
 import com.tungstun.product.port.web.product.request.UpdateProductRequest;
-import com.tungstun.product.port.web.product.response.ProductIdResponse;
 import com.tungstun.product.port.web.product.response.ProductResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
@@ -39,7 +39,7 @@ public class ProductController {
             description = "A new product is created with information provided in the request body for the bar with the given id",
             tags = "Product"
     )
-    public ProductIdResponse createProduct(@RequestBody CreateProductRequest request) {
+    public IdResponse createProduct(@RequestBody CreateProductRequest request) {
         Long id = commandHandler.handle(new CreateProduct(
                 request.name(),
                 request.brand(),
@@ -49,7 +49,7 @@ public class ProductController {
                 request.categoryId(),
                 request.barId()
         ));
-        return new ProductIdResponse(id);
+        return new IdResponse(id);
     }
 
     @PutMapping("/{productId}")
@@ -59,8 +59,8 @@ public class ProductController {
             description = "The product with the given id is updated with the information provided in the request body",
             tags = "Product"
     )
-    public ProductIdResponse updateProduct(@PathVariable("productId") Long id,
-                                           @RequestBody UpdateProductRequest request) {
+    public IdResponse updateProduct(@PathVariable("productId") Long id,
+                                    @RequestBody UpdateProductRequest request) {
         commandHandler.handle(new UpdateProduct(id,
                 request.name(),
                 request.brand(),
@@ -70,7 +70,7 @@ public class ProductController {
                 request.categoryId(),
                 request.isFavorite()
         ));
-        return new ProductIdResponse(id);
+        return new IdResponse(id);
     }
 
     @DeleteMapping("/{productId}")

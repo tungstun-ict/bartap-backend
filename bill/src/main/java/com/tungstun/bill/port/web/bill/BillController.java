@@ -11,8 +11,8 @@ import com.tungstun.bill.application.bill.query.ListBillsOfSession;
 import com.tungstun.bill.domain.bill.Bill;
 import com.tungstun.bill.port.web.bill.request.CreateBillRequest;
 import com.tungstun.bill.port.web.bill.request.UpdateBillPayedRequest;
-import com.tungstun.bill.port.web.bill.response.BillIdResponse;
 import com.tungstun.bill.port.web.bill.response.BillResponse;
+import com.tungstun.common.web.IdResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -37,9 +37,9 @@ public class BillController {
             description = "A new bill is created for the customer with the given id for the session with the provided id",
             tags = "Bill"
     )
-    public BillIdResponse createBill(@RequestBody CreateBillRequest request) {
+    public IdResponse createBill(@RequestBody CreateBillRequest request) {
         Long id = commandHandler.handle(new CreateBill(request.sessionId(), request.customerId()));
-        return new BillIdResponse(id);
+        return new IdResponse(id);
     }
 
     @PutMapping("/{billId}")
@@ -49,9 +49,9 @@ public class BillController {
             description = "The isPayed status of the bill with the given id is updated to the boolean value provided in the request body",
             tags = "Bill"
     )
-    public BillIdResponse updateBill(@PathVariable("billId") Long id, @RequestBody UpdateBillPayedRequest request) {
+    public IdResponse updateBill(@PathVariable("billId") Long id, @RequestBody UpdateBillPayedRequest request) {
         commandHandler.handle(new UpdateBillPayed(id, request.payed()));
-        return new BillIdResponse(id);
+        return new IdResponse(id);
     }
 
     @DeleteMapping("/{billId}")

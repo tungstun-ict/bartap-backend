@@ -1,5 +1,6 @@
 package com.tungstun.core.port.web.session;
 
+import com.tungstun.common.web.IdResponse;
 import com.tungstun.core.application.session.SessionCommandHandler;
 import com.tungstun.core.application.session.SessionQueryHandler;
 import com.tungstun.core.application.session.command.*;
@@ -8,7 +9,6 @@ import com.tungstun.core.application.session.query.GetSession;
 import com.tungstun.core.application.session.query.ListSessionsOfBar;
 import com.tungstun.core.domain.session.Session;
 import com.tungstun.core.port.web.session.request.*;
-import com.tungstun.core.port.web.session.response.SessionIdResponse;
 import com.tungstun.core.port.web.session.response.SessionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
@@ -34,9 +34,9 @@ public class SessionController {
             description = "A new session is created for the bar with the given bar id and the name provided in the request body",
             tags = "Session"
     )
-    public SessionIdResponse createSession(CreateSessionRequest request) {
+    public IdResponse createSession(CreateSessionRequest request) {
         Long sessionId = commandHandler.handle(new CreateSession(request.barId(), request.name()));
-        return new SessionIdResponse(sessionId);
+        return new IdResponse(sessionId);
     }
 
     @PutMapping("/{sessionId}")
@@ -46,11 +46,11 @@ public class SessionController {
             description = "The session with the given id is updated with the information provided in the request body",
             tags = "Session"
     )
-    public SessionIdResponse updateSession(
+    public IdResponse updateSession(
             @PathVariable("sessionId") Long sessionId,
             @RequestBody UpdateSessionRequest request) {
         commandHandler.handle(new UpdateSessionName(sessionId, request.name()));
-        return new SessionIdResponse(sessionId);
+        return new IdResponse(sessionId);
     }
 
     @DeleteMapping("/{sessionId}")

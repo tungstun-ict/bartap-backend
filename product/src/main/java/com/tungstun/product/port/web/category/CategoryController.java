@@ -1,5 +1,6 @@
 package com.tungstun.product.port.web.category;
 
+import com.tungstun.common.web.IdResponse;
 import com.tungstun.product.application.category.CategoryCommandHandler;
 import com.tungstun.product.application.category.CategoryQueryHandler;
 import com.tungstun.product.application.category.command.CreateCategory;
@@ -10,7 +11,6 @@ import com.tungstun.product.application.category.query.ListCategoriesOfBar;
 import com.tungstun.product.domain.category.Category;
 import com.tungstun.product.port.web.category.request.CreateCategoryRequest;
 import com.tungstun.product.port.web.category.request.UpdateCategoryRequest;
-import com.tungstun.product.port.web.category.response.CategoryIdResponse;
 import com.tungstun.product.port.web.category.response.CategoryResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
@@ -36,9 +36,9 @@ public class CategoryController {
             description = "A new category is created with given name for the bar with provided id",
             tags = "Category"
     )
-    public CategoryIdResponse createCategory(@RequestBody CreateCategoryRequest request) {
+    public IdResponse createCategory(@RequestBody CreateCategoryRequest request) {
         Long id = commandHandler.handle(new CreateCategory(request.name(), request.barId()));
-        return new CategoryIdResponse(id);
+        return new IdResponse(id);
     }
 
     @PutMapping("/{categoryId}")
@@ -48,10 +48,10 @@ public class CategoryController {
             description = "The category with the given id is updated with the new name provided in the request body",
             tags = "Category"
     )
-    public CategoryIdResponse updateCategory(@PathVariable("categoryId") Long id,
-                                             @RequestBody UpdateCategoryRequest request) {
+    public IdResponse updateCategory(@PathVariable("categoryId") Long id,
+                                     @RequestBody UpdateCategoryRequest request) {
         commandHandler.handle(new UpdateCategory(id, request.name()));
-        return new CategoryIdResponse(id);
+        return new IdResponse(id);
     }
 
     @DeleteMapping("/{categoryId}")
