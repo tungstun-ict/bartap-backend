@@ -4,9 +4,9 @@ import com.tungstun.common.money.Money;
 import com.tungstun.product.domain.category.Category;
 
 public class ProductBuilder {
-    private String name;
-    private String brand;
-    private Category category;
+    private final String name;
+    private final String brand;
+    private final Category category;
     private double size = 0;
     private boolean isFavorite = false;
     private Money price = new Money(0.0);
@@ -16,16 +16,6 @@ public class ProductBuilder {
         this.name = name;
         this.brand = brand;
         this.category = category;
-    }
-
-    public ProductBuilder setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public ProductBuilder setBrand(String brand) {
-        this.brand = brand;
-        return this;
     }
 
     public ProductBuilder setSize(double size) {
@@ -43,12 +33,8 @@ public class ProductBuilder {
         return this;
     }
 
-    public void setType(ProductType type) {
+    public ProductBuilder setType(ProductType type) {
         this.type = type;
-    }
-
-    public ProductBuilder setCategory(Category category) {
-        this.category = category;
         return this;
     }
 
