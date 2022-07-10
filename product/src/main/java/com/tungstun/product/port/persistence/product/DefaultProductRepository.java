@@ -41,7 +41,7 @@ public class DefaultProductRepository implements ProductRepository {
     }
 
     @Override
-    public List<Product> findAllOfCategory(Long categoryId) {
-        return repository.findAllByCategoryId(categoryId);
+    public List<Product> findAllOfCategory(Long categoryId, Long barId) {
+        return repository.findAllByCategoryIdAndBarId(categoryId, barId);
     }
 }

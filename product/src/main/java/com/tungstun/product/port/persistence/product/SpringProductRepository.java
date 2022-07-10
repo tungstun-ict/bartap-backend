@@ -8,5 +8,5 @@ import java.util.List;
 public interface SpringProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAllByBarId(Long barId);
 
-    List<Product> findAllByCategoryId(Long categoryId);
+    List<Product> findAllByCategoryIdAndBarId(Long categoryId, Long barId);
 }

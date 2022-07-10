@@ -7,5 +7,5 @@ import java.util.List;
 public interface ProductRepository extends CrudRepositoryFragment<Product, Long> {
     List<Product> findAllOfBar(Long barId);
 
-    List<Product> findAllOfCategory(Long categoryId);
+    List<Product> findAllOfCategory(Long categoryId, Long barId);
 }

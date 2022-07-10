@@ -31,6 +31,6 @@ public class ProductQueryHandler {
     }
 
     public List<Product> handle(@Valid ListProductsOfCategory command) {
-        return repository.findAllOfCategory(command.categoryId());
+        return repository.findAllOfCategory(command.categoryId(), command.barId());
     }
 }
