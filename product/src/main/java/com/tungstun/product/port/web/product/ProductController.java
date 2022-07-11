@@ -41,13 +41,13 @@ public class ProductController {
     )
     public ProductIdResponse createProduct(@RequestBody CreateProductRequest request) {
         Long id = commandHandler.handle(new CreateProduct(
+                request.barId(),
                 request.name(),
                 request.brand(),
                 request.size(),
                 request.price(),
                 request.type(),
-                request.categoryId(),
-                request.barId()
+                request.categoryId()
         ));
         return new ProductIdResponse(id);
     }
@@ -62,6 +62,7 @@ public class ProductController {
     public ProductIdResponse updateProduct(@PathVariable("productId") Long id,
                                            @RequestBody UpdateProductRequest request) {
         commandHandler.handle(new UpdateProduct(id,
+                request.barId(),
                 request.name(),
                 request.brand(),
                 request.size(),
@@ -73,26 +74,28 @@ public class ProductController {
         return new ProductIdResponse(id);
     }
 
-    @DeleteMapping("/{productId}")
+    @DeleteMapping("/{productId}/bars/{barId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(
             summary = "Delete product",
             description = "The product with given id is deleted",
             tags = "Product"
     )
-    public void deleteProduct(@PathVariable("productId") Long id) {
-        commandHandler.handle(new DeleteProduct(id));
+    public void deleteProduct(@PathVariable("productId") Long id,
+                              @PathVariable("barId") Long barId) {
+        commandHandler.handle(new DeleteProduct(id, barId));
     }
 
-    @GetMapping("/{productId}")
+    @GetMapping("/{productId}/bars/{barId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Get product",
             description = "The product with given id is queried",
             tags = "Product"
     )
-    public ProductResponse getCategory(@PathVariable("productId") Long id) {
-        Product product = queryHandler.handle(new GetProduct(id));
+    public ProductResponse getCategory(@PathVariable("productId") Long id,
+                                       @PathVariable("barId") Long barId) {
+        Product product = queryHandler.handle(new GetProduct(id, barId));
         return ProductResponse.from(product);
     }
 

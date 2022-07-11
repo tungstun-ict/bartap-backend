@@ -8,6 +8,9 @@ public record UpdateProduct(
         @NotNull(message = "Product id cannot be empty")
         Long id,
 
+        @NotNull(message = "Bar id cannot be empty")
+        Long barId,
+
         @NotBlank(message = "Product name cannot be blank")
         String name,
 
@@ -25,9 +28,8 @@ public record UpdateProduct(
         @NotBlank(message = "Product type cannot be blank")
         String type,
 
-        @NotBlank(message = "Category id cannot be blank")
+        @NotNull(message = "Category id cannot be blank")
         Long categoryId,
 
-        @NotBlank(message = "isFavorite cannot be blank")
-        Boolean isFavorite) {
+        boolean isFavorite) {
 }

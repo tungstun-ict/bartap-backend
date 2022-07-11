@@ -5,6 +5,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 
 public record CreateProduct(
+        @NotNull(message = "Bar id cannot be empty")
+        Long barId,
+
         @NotBlank(message = "Product name cannot be blank")
         String name,
 
@@ -22,9 +25,6 @@ public record CreateProduct(
         @NotBlank(message = "Product type cannot be blank")
         String type,
 
-        @NotBlank(message = "Category id cannot be blank")
-        Long categoryId,
-
-        @NotNull(message = "Bar id cannot be empty")
-        Long barId) {
+        @NotNull(message = "Category id cannot be blank")
+        Long categoryId) {
 }
