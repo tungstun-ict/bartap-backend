@@ -10,7 +10,6 @@ import com.tungstun.product.application.product.query.ListProductsOfBar;
 import com.tungstun.product.application.product.query.ListProductsOfCategory;
 import com.tungstun.product.domain.product.Product;
 import com.tungstun.product.port.web.product.request.CreateProductRequest;
-import com.tungstun.product.port.web.product.request.ListProductsOfBarRequest;
 import com.tungstun.product.port.web.product.request.ListProductsOfCategoryRequest;
 import com.tungstun.product.port.web.product.request.UpdateProductRequest;
 import com.tungstun.product.port.web.product.response.ProductIdResponse;
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/bars/{barId}/products")
 public class ProductController {
     private final ProductCommandHandler commandHandler;
     private final ProductQueryHandler queryHandler;
@@ -39,9 +38,11 @@ public class ProductController {
             description = "A new product is created with information provided in the request body for the bar with the given id",
             tags = "Product"
     )
-    public ProductIdResponse createProduct(@RequestBody CreateProductRequest request) {
+    public ProductIdResponse createProduct(
+            @PathVariable("barId") Long barId,
+            @RequestBody CreateProductRequest request) {
         Long id = commandHandler.handle(new CreateProduct(
-                request.barId(),
+                barId,
                 request.name(),
                 request.brand(),
                 request.size(),
@@ -59,10 +60,12 @@ public class ProductController {
             description = "The product with the given id is updated with the information provided in the request body",
             tags = "Product"
     )
-    public ProductIdResponse updateProduct(@PathVariable("productId") Long id,
-                                           @RequestBody UpdateProductRequest request) {
-        commandHandler.handle(new UpdateProduct(id,
-                request.barId(),
+    public ProductIdResponse updateProduct(
+            @PathVariable("barId") Long barId,
+            @PathVariable("productId") Long productId,
+            @RequestBody UpdateProductRequest request) {
+        commandHandler.handle(new UpdateProduct(productId,
+               barId,
                 request.name(),
                 request.brand(),
                 request.size(),
@@ -71,43 +74,45 @@ public class ProductController {
                 request.categoryId(),
                 request.isFavorite()
         ));
-        return new ProductIdResponse(id);
+        return new ProductIdResponse(productId);
     }
 
-    @DeleteMapping("/{productId}/bars/{barId}")
+    @DeleteMapping("/{productId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(
             summary = "Delete product",
             description = "The product with given id is deleted",
             tags = "Product"
     )
-    public void deleteProduct(@PathVariable("productId") Long id,
-                              @PathVariable("barId") Long barId) {
-        commandHandler.handle(new DeleteProduct(id, barId));
+    public void deleteProduct(
+            @PathVariable("barId") Long barId,
+            @PathVariable("productId") Long productId) {
+        commandHandler.handle(new DeleteProduct(productId, barId));
     }
 
-    @GetMapping("/{productId}/bars/{barId}")
+    @GetMapping("/{productId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Get product",
             description = "The product with given id is queried",
             tags = "Product"
     )
-    public ProductResponse getCategory(@PathVariable("productId") Long id,
-                                       @PathVariable("barId") Long barId) {
-        Product product = queryHandler.handle(new GetProduct(id, barId));
+    public ProductResponse getProduct(
+            @PathVariable("barId") Long barId,
+            @PathVariable("productId") Long productId) {
+        Product product = queryHandler.handle(new GetProduct(productId, barId));
         return ProductResponse.from(product);
     }
 
-    @GetMapping("/of-bar")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Get products of bar",
             description = "The products of bar with given id are queried",
             tags = "Product"
     )
-    public List<ProductResponse> getProductOfBar(@RequestBody ListProductsOfBarRequest request) {
-        return queryHandler.handle(new ListProductsOfBar(request.barId()))
+    public List<ProductResponse> getProductOfBar(@PathVariable("barId") Long barId) {
+        return queryHandler.handle(new ListProductsOfBar(barId))
                 .parallelStream()
                 .map(ProductResponse::from)
                 .toList();
@@ -120,8 +125,10 @@ public class ProductController {
             description = "The products of category with given id are queried",
             tags = "Product"
     )
-    public List<ProductResponse> getProductsOfCategory(@RequestBody ListProductsOfCategoryRequest request) {
-        return queryHandler.handle(new ListProductsOfCategory(request.categoryId(), request.barId()))
+    public List<ProductResponse> getProductsOfCategory(
+            @PathVariable("barId") Long barId,
+            @RequestBody ListProductsOfCategoryRequest request) {
+        return queryHandler.handle(new ListProductsOfCategory(request.categoryId(), barId))
                 .parallelStream()
                 .map(ProductResponse::from)
                 .toList();
