@@ -27,7 +27,7 @@ public class CategoryCommandHandler {
     }
 
     public Long handle(@Valid UpdateCategory command) {
-        Category category = repository.findById(command.id())
+        Category category = repository.findByIdAndBarId(command.id(), command.barId())
                 .orElseThrow(() -> new EntityNotFoundException(String.format("No category found with id %s", command.id())));
         category.setName(command.name());
         return repository.update(category).getId();

@@ -21,7 +21,7 @@ public class CategoryQueryHandler {
     }
 
     public Category handle(@Valid GetCategory command) {
-        return repository.findById(command.id())
+        return repository.findByIdAndBarId(command.id(), command.barId())
                 .orElseThrow(() -> new EntityNotFoundException(String.format("No category found with id %s", command.id())));
     }
 

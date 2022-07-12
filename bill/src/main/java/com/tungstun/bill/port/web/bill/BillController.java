@@ -10,6 +10,7 @@ import com.tungstun.bill.application.bill.query.ListBillsOfPerson;
 import com.tungstun.bill.application.bill.query.ListBillsOfSession;
 import com.tungstun.bill.domain.bill.Bill;
 import com.tungstun.bill.port.web.bill.request.CreateBillRequest;
+import com.tungstun.bill.port.web.bill.request.DeleteBillRequest;
 import com.tungstun.bill.port.web.bill.request.UpdateBillPayedRequest;
 import com.tungstun.bill.port.web.bill.response.BillIdResponse;
 import com.tungstun.bill.port.web.bill.response.BillResponse;
@@ -38,7 +39,7 @@ public class BillController {
             tags = "Bill"
     )
     public BillIdResponse createBill(@RequestBody CreateBillRequest request) {
-        Long id = commandHandler.handle(new CreateBill(request.sessionId(), request.customerId()));
+        Long id = commandHandler.handle(new CreateBill(request.sessionId(), request.customerId(), request.barId()));
         return new BillIdResponse(id);
     }
 
@@ -50,7 +51,7 @@ public class BillController {
             tags = "Bill"
     )
     public BillIdResponse updateBill(@PathVariable("billId") Long id, @RequestBody UpdateBillPayedRequest request) {
-        commandHandler.handle(new UpdateBillPayed(id, request.payed()));
+        commandHandler.handle(new UpdateBillPayed(id, request.barId(), request.payed()));
         return new BillIdResponse(id);
     }
 
@@ -61,8 +62,8 @@ public class BillController {
             description = "The bill with given id is deleted",
             tags = "Bill"
     )
-    public void deleteBill(@PathVariable("billId") Long id) {
-        commandHandler.handle(new DeleteBill(id));
+    public void deleteBill(@PathVariable("billId") Long id, @RequestBody DeleteBillRequest request) {
+        commandHandler.handle(new DeleteBill(id, request.barId()));
     }
 
     @GetMapping("/{billId}")

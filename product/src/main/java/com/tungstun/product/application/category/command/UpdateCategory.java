@@ -7,5 +7,7 @@ public record UpdateCategory(
         @NotNull(message = "Category id cannot be empty")
         Long id,
         @NotBlank(message = "Category name cannot be blank")
-        String name) {
+        String name,
+        @NotNull(message = "Bar id cannot be empty")
+        Long barId) {
 }
