@@ -22,15 +22,15 @@ public class BillQueryHandler {
     }
 
     public Bill handle(@Valid GetBill query) {
-        return repository.findById(query.id())
+        return repository.findByIdAndBarId(query.id(), query.barId())
                 .orElseThrow(() -> new EntityNotFoundException(String.format("No bill found with id %s", query.id())));
     }
 
     public List<Bill> handle(@Valid ListBillsOfSession query) {
-        return repository.findAllBySessionId(query.sessionId());
+        return repository.findAllOfSession(query.sessionId(), query.barId());
     }
 
     public List<Bill> handle(@Valid ListBillsOfPerson query) {
-        return repository.findAllByCustomerId(query.personId());
+        return repository.findAllOfCustomer(query.personId(), query.barId());
     }
 }

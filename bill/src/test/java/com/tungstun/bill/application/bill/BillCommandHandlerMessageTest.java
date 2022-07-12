@@ -42,7 +42,7 @@ class BillCommandHandlerMessageTest extends MessageProducerTestBases {
 
     @Test
     void createBill_PublishesBillCreated() throws InterruptedException {
-        Long id = commandHandler.handle(new CreateBill(123L, 456L));
+        Long id = commandHandler.handle(new CreateBill(123L, 456L, 789L));
 
         ConsumerRecord<String, String> singleRecord = records.poll(100, TimeUnit.MILLISECONDS);
         assertNotNull(singleRecord);
@@ -52,10 +52,10 @@ class BillCommandHandlerMessageTest extends MessageProducerTestBases {
 
     @Test
     void deleteBill_PublishesBillDeleted() throws InterruptedException {
-        Bill bill = repository.save(new Bill(123L, 456L));
+        Bill bill = repository.save(new Bill(123L, 456L, 789L));
         Long id = bill.getId();
 
-        commandHandler.handle(new DeleteBill(id));
+        commandHandler.handle(new DeleteBill(id, bill.getBarId()));
 
         ConsumerRecord<String, String> singleRecord = records.poll(100, TimeUnit.MILLISECONDS);
         assertNotNull(singleRecord);

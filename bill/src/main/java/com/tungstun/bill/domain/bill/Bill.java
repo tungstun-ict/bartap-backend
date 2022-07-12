@@ -12,6 +12,9 @@ public class Bill {
     @Column(name = "is_payed")
     private boolean isPayed;
 
+    @Column(name = "bar_id")
+    private Long barId;
+
     @Column(name = "session_id")
     private Long sessionId;
 
@@ -26,15 +29,19 @@ public class Bill {
 //    private Money totalPrice;
 //    //todo check of Money wel handig is. Money wel in common moet (voordeel, overal consistentie in money) nadeel, ingewikkelde logica
 
-    public Bill() { }
-
-    public Bill(Long sessionId, Long customerId) {
-        this.sessionId = sessionId;
-        this.customerId = customerId;
-        this.isPayed = false;
+    public Bill() {
     }
 
-    public Long getId() { return id; }
+    public Bill(Long barId, Long sessionId, Long customerId) {
+        this.barId = barId;
+        this.sessionId = sessionId;
+        this.customerId = customerId;
+        isPayed = false;
+    }
+
+    public Long getId() {
+        return id;
+    }
 
     public Long getSessionId() {
         return sessionId;
@@ -48,7 +55,11 @@ public class Bill {
         isPayed = payed;
     }
 
-//    public double calculateTotalPrice() {
+    public Long getBarId() {
+        return barId;
+    }
+
+    //    public double calculateTotalPrice() {
 //        return this.orders.stream()
 //                .mapToDouble(order -> order.getProduct().getPrice() * order.getAmount())
 //                .sum();
