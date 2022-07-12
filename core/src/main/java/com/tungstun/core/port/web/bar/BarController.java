@@ -66,10 +66,6 @@ public class BarController {
         commandHandler.handle(new DeleteBar(id));
     }
 
-    private BarResponse mapToResponse(Bar bar) {
-        return new BarResponse(bar.getId(), bar.getName(), bar.getAddress(), bar.getMail(), bar.getPhoneNumber());
-    }
-
     @GetMapping("/{barId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(
@@ -79,7 +75,7 @@ public class BarController {
     )
     public BarResponse getBar(@PathVariable("barId") Long id) {
         Bar bar = queryHandler.handle(new GetBar(id));
-        return mapToResponse(bar);
+        return BarResponse.from(bar);
     }
 
     @GetMapping("/owned")
@@ -96,7 +92,7 @@ public class BarController {
                 .map(auth -> Long.parseLong(auth.barId()))
                 .toList();
         return queryHandler.handle(new GetOwnedBars(ownedBarIds)).stream()
-                .map(this::mapToResponse)
+                .map(BarResponse::from)
                 .toList();
     }
 }
