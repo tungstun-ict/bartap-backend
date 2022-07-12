@@ -128,8 +128,7 @@ public class SessionController {
             tags = "Session"
     )
     public List<SessionResponse> getAllSession(@RequestBody ListSessionsOfBarRequest request) {
-        List<Session> sessions = queryHandler.handle(new ListSessionsOfBar(request.barId()));
-        return sessions.stream()
+        return queryHandler.handle(new ListSessionsOfBar(request.barId())).parallelStream()
                 .map(SessionResponse::of)
                 .toList();
     }
