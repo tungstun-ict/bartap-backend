@@ -93,5 +93,5 @@ class ProductCommandHandlerMessageTest extends MessageProducerTestBases {
         assertEventKey(id, singleRecord);
         assertEventType("ProductDeleted", singleRecord);
     }
-
 }
+
