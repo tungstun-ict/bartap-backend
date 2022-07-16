@@ -24,9 +24,8 @@ public class ProductSimilaritySearchAlgorithm implements ProductSearchAlgorithm 
                 ));
 
         return indexedProducts.entrySet().parallelStream()
-                .filter(entry -> entry.getValue() >= THRESHOLD)
-                .peek( entry -> System.out.println(entry.getKey().getName() + " " + entry.getKey().getBrand() + " " + entry.getValue()))
-                .sorted((p1, p2) -> p2.getValue().compareTo(p1.getValue()))
+                .filter(entry -> entry.getValue() >= THRESHOLD) // Filter out result similarities under the threshold
+                .sorted((p1, p2) -> p2.getValue().compareTo(p1.getValue())) // Sort products on similarity
                 .map(Map.Entry::getKey)
                 .toList();
 
@@ -41,7 +40,7 @@ public class ProductSimilaritySearchAlgorithm implements ProductSearchAlgorithm 
 
         return Stream.of(completeName, completeNameReversed, brand, name)
                 .map(right -> JACCARD_SIMILARITY.apply(searchString, right)) // Calculate similarity index of all string combinations
-                .reduce((l, r) -> l > r ? l : r) // Reduce stream to the highest similarity index value
+                .reduce((l, r) -> l > r ? l : r) // Reduce stream to the highest similarity value
                 .map(similarity -> { // Apply relative bonus and multiplier if regex pattern matches
                     if (regexPattern.matcher(completeName).find() || regexPattern.matcher(completeNameReversed).find()) {
                         similarity = (double) searchString.length() / completeName.length() + 0.3f * REGEX_MULTIPLIER;
