@@ -26,6 +26,7 @@ class SessionCommandHandlerMessageTest extends MessageProducerTestBases {
     @Autowired
     private JpaRepository<Session, Long> repository;
 
+    private Long barId = 123L;
     private Session session;
 
     @BeforeAll
@@ -59,7 +60,7 @@ class SessionCommandHandlerMessageTest extends MessageProducerTestBases {
     void deleteSession_PublishesSessionDeleted() throws InterruptedException {
         Long id = session.getId();
 
-        commandHandler.handle(new DeleteSession(id));
+        commandHandler.handle(new DeleteSession(id, barId));
 
         ConsumerRecord<String, String> singleRecord = records.poll(100, TimeUnit.MILLISECONDS);
         assertNotNull(singleRecord);
@@ -71,7 +72,7 @@ class SessionCommandHandlerMessageTest extends MessageProducerTestBases {
     void endSession_PublishesSessionEnded() throws InterruptedException {
         Long id = session.getId();
 
-        commandHandler.handle(new EndSession(id));
+        commandHandler.handle(new EndSession(id, barId));
 
         ConsumerRecord<String, String> singleRecord = records.poll(100, TimeUnit.MILLISECONDS);
         assertNotNull(singleRecord);
@@ -84,7 +85,7 @@ class SessionCommandHandlerMessageTest extends MessageProducerTestBases {
         session.endSession();
         Long id = repository.save(session).getId();
 
-        commandHandler.handle(new LockSession(id));
+        commandHandler.handle(new LockSession(id, barId));
 
         ConsumerRecord<String, String> singleRecord = records.poll(100, TimeUnit.MILLISECONDS);
         assertNotNull(singleRecord);
