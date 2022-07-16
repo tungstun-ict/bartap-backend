@@ -37,10 +37,11 @@ public class BillController {
             description = "A new bill is created for the customer with the given id for the session with the provided id",
             tags = "Bill"
     )
-    public BillIdResponse createBill(
+    public IdResponse createBill(
             @PathVariable("barId") Long barId,
             @RequestBody CreateBillRequest request) {
         Long id = commandHandler.handle(new CreateBill(request.sessionId(), request.customerId(), barId));
+        return new IdResponse(id);
     }
 
     @PutMapping("/{billId}")
@@ -50,12 +51,12 @@ public class BillController {
             description = "The isPayed status of the bill with the given id is updated to the boolean value provided in the request body",
             tags = "Bill"
     )
-    public BillIdResponse updateBill(
+    public IdResponse updateBill(
             @PathVariable("barId") Long barId,
             @PathVariable("billId") Long id,
             @RequestBody UpdateBillPayedRequest request) {
         commandHandler.handle(new UpdateBillPayed(id, barId, request.payed()));
-        return new BillIdResponse(id);
+        return new IdResponse(id);
     }
 
     @DeleteMapping("/{billId}")
