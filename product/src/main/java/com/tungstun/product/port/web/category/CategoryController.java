@@ -1,5 +1,6 @@
 package com.tungstun.product.port.web.category;
 
+import com.tungstun.common.web.IdResponse;
 import com.tungstun.product.application.category.CategoryCommandHandler;
 import com.tungstun.product.application.category.CategoryQueryHandler;
 import com.tungstun.product.application.category.command.CreateCategory;
@@ -10,7 +11,6 @@ import com.tungstun.product.application.category.query.ListCategoriesOfBar;
 import com.tungstun.product.domain.category.Category;
 import com.tungstun.product.port.web.category.request.CreateCategoryRequest;
 import com.tungstun.product.port.web.category.request.UpdateCategoryRequest;
-import com.tungstun.product.port.web.category.response.CategoryIdResponse;
 import com.tungstun.product.port.web.category.response.CategoryResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;

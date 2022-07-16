@@ -11,8 +11,8 @@ import com.tungstun.bill.application.bill.query.ListBillsOfSession;
 import com.tungstun.bill.domain.bill.Bill;
 import com.tungstun.bill.port.web.bill.request.CreateBillRequest;
 import com.tungstun.bill.port.web.bill.request.UpdateBillPayedRequest;
-import com.tungstun.bill.port.web.bill.response.BillIdResponse;
 import com.tungstun.bill.port.web.bill.response.BillResponse;
+import com.tungstun.common.web.IdResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +41,6 @@ public class BillController {
             @PathVariable("barId") Long barId,
             @RequestBody CreateBillRequest request) {
         Long id = commandHandler.handle(new CreateBill(request.sessionId(), request.customerId(), barId));
-        return new BillIdResponse(id);
     }
 
     @PutMapping("/{billId}")

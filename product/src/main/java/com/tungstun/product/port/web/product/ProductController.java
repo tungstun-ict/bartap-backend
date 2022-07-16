@@ -1,5 +1,6 @@
 package com.tungstun.product.port.web.product;
 
+import com.tungstun.common.web.IdResponse;
 import com.tungstun.product.application.product.ProductCommandHandler;
 import com.tungstun.product.application.product.ProductQueryHandler;
 import com.tungstun.product.application.product.command.CreateProduct;
@@ -12,7 +13,6 @@ import com.tungstun.product.domain.product.Product;
 import com.tungstun.product.port.web.product.request.CreateProductRequest;
 import com.tungstun.product.port.web.product.request.ListProductsOfCategoryRequest;
 import com.tungstun.product.port.web.product.request.UpdateProductRequest;
-import com.tungstun.product.port.web.product.response.ProductIdResponse;
 import com.tungstun.product.port.web.product.response.ProductResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
@@ -50,7 +50,7 @@ public class ProductController {
                 request.type(),
                 request.categoryId()
         ));
-        return new ProductIdResponse(id);
+        return new IdResponse(id);
     }
 
     @PutMapping("/{productId}")
@@ -64,8 +64,9 @@ public class ProductController {
             @PathVariable("barId") Long barId,
             @PathVariable("productId") Long productId,
             @RequestBody UpdateProductRequest request) {
-        commandHandler.handle(new UpdateProduct(productId,
-               barId,
+        commandHandler.handle(new UpdateProduct(
+                productId,
+                barId,
                 request.name(),
                 request.brand(),
                 request.size(),
@@ -74,7 +75,7 @@ public class ProductController {
                 request.categoryId(),
                 request.isFavorite()
         ));
-        return new ProductIdResponse(productId);
+        return new IdResponse(id);
     }
 
     @DeleteMapping("/{productId}")

@@ -1,5 +1,6 @@
 package com.tungstun.core.port.web.session;
 
+import com.tungstun.common.web.IdResponse;
 import com.tungstun.core.application.session.SessionCommandHandler;
 import com.tungstun.core.application.session.SessionQueryHandler;
 import com.tungstun.core.application.session.command.*;
@@ -8,7 +9,6 @@ import com.tungstun.core.application.session.query.GetSession;
 import com.tungstun.core.application.session.query.ListSessionsOfBar;
 import com.tungstun.core.domain.session.Session;
 import com.tungstun.core.port.web.session.request.*;
-import com.tungstun.core.port.web.session.response.SessionIdResponse;
 import com.tungstun.core.port.web.session.response.SessionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;

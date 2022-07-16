@@ -1,6 +1,7 @@
 package com.tungstun.core.port.web.bar;
 
 import com.tungstun.common.security.BartapUserDetails;
+import com.tungstun.common.web.IdResponse;
 import com.tungstun.core.application.bar.BarCommandHandler;
 import com.tungstun.core.application.bar.BarQueryHandler;
 import com.tungstun.core.application.bar.command.CreateBar;
@@ -11,7 +12,6 @@ import com.tungstun.core.application.bar.query.GetOwnedBars;
 import com.tungstun.core.domain.bar.Bar;
 import com.tungstun.core.port.web.bar.request.CreateBarRequest;
 import com.tungstun.core.port.web.bar.request.UpdateBarRequest;
-import com.tungstun.core.port.web.bar.response.BarIdResponse;
 import com.tungstun.core.port.web.bar.response.BarResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
@@ -38,9 +38,9 @@ public class BarController {
             description = "A new bar is created with the information provided in the request body",
             tags = "Bar"
     )
-    public BarIdResponse createBar(@RequestBody CreateBarRequest request) {
+    public IdResponse createBar(@RequestBody CreateBarRequest request) {
         Long id = commandHandler.handle(new CreateBar(request.name(), request.address(), request.mail(), request.phoneNumber()));
-        return new BarIdResponse(id);
+        return new IdResponse(id);
     }
 
     @PutMapping("/{barId}")
@@ -50,9 +50,9 @@ public class BarController {
             description = "The bar with the given id id is updated with the information provided in the request body",
             tags = "Bar"
     )
-    public BarIdResponse updateBar(@PathVariable("barId") Long id, @RequestBody UpdateBarRequest request) {
+    public IdResponse updateBar(@PathVariable("barId") Long id, @RequestBody UpdateBarRequest request) {
         commandHandler.handle(new UpdateBar(id, request.name(), request.address(), request.mail(), request.phoneNumber()));
-        return new BarIdResponse(id);
+        return new IdResponse(id);
     }
 
     @DeleteMapping("/{barId}")
