@@ -52,11 +52,11 @@ class JwtTokenGeneratorTest {
                 new ArrayList<>(List.of(new Authorization(123L, Role.OWNER))));
         FieldUtils.writeField(user, "id", 123L, true);
         long before = ZonedDateTime.now().toInstant().toEpochMilli();
-        Thread.sleep(1); // Added to insure Before date is actually before and not equal to the token's date
+        Thread.sleep(2); // Added to insure Before date is actually before and not equal to the token's date
 
         String token = tokenGenerator.createAccessToken(user);
 
-        Thread.sleep(1); // Added to insure After date is actually after and not equal to the token's date
+        Thread.sleep(2); // Added to insure After date is actually after and not equal to the token's date
         long after = before + jwtCredentials.getJwtExpirationInMs();
         DecodedJWT decodedJWT = jwtValidator.verifyAccessToken(token);
         assertTrue(decodedJWT.getExpiresAt().after(new Date(before)));
