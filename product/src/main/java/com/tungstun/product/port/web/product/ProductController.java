@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
@@ -112,24 +113,13 @@ public class ProductController {
             description = "The products of bar with given id are queried",
             tags = "Product"
     )
-    public List<ProductResponse> getProductOfBar(@PathVariable("barId") Long barId) {
-        return queryHandler.handle(new ListProductsOfBar(barId))
-                .parallelStream()
-                .map(ProductResponse::from)
-                .toList();
-    }
-
-    @GetMapping("/of-category")
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(
-            summary = "Get products of category",
-            description = "The products of category with given id are queried",
-            tags = "Product"
-    )
-    public List<ProductResponse> getProductsOfCategory(
+    public List<ProductResponse> getProductOfBar(
             @PathVariable("barId") Long barId,
-            @RequestBody ListProductsOfCategoryRequest request) {
-        return queryHandler.handle(new ListProductsOfCategory(request.categoryId(), barId))
+            @PathParam("categoryId") Long categoryId,
+            @PathParam("isFavorite") Boolean isFavorite,
+            @PathParam("productType") String productType,
+            @PathParam("search") String searchText) {
+        return queryHandler.handle(new ListProductsOfBar(barId, categoryId, isFavorite, productType, searchText))
                 .parallelStream()
                 .map(ProductResponse::from)
                 .toList();
