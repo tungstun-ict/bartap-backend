@@ -6,5 +6,7 @@ public record CreateBill(
         @NotNull(message = "Session id cannot be empty")
         Long sessionId,
         @NotNull(message = "Customer id cannot be empty")
-        Long customerId) {
+        Long customerId,
+        @NotNull(message = "Bar id cannot be empty")
+        Long barId) {
 }

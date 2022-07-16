@@ -6,6 +6,5 @@ public record CreateProductRequest(
         Double size,
         Double price,
         String type,
-        Long categoryId,
-        Long barId) {
+        Long categoryId) {
 }

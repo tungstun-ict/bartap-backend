@@ -1,6 +1,4 @@
 package com.tungstun.product.port.web.category.request;
 
-public record CreateCategoryRequest(
-        String name,
-        Long barId) {
+public record CreateCategoryRequest(String name) {
 }

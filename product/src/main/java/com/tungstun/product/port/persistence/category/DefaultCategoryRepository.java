@@ -36,6 +36,11 @@ public class DefaultCategoryRepository implements CategoryRepository {
     }
 
     @Override
+    public Optional<Category> findByIdAndBarId(Long id, Long barId) {
+        return repository.findByIdAndBarId(id, barId);
+    }
+
+    @Override
     public List<Category> findAllOfBar(Long barId) {
         return repository.findAllByBarId(barId);
     }

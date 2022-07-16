@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/categories")
+@RequestMapping("/bars/{barId}/categories")
 public class CategoryController {
     private final CategoryCommandHandler commandHandler;
     private final CategoryQueryHandler queryHandler;
@@ -33,12 +33,14 @@ public class CategoryController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(
             summary = "Create a new category",
-            description = "A new category is created with given name for the bar with provided id",
+            description = "A new category is created with given name for the bar with given id",
             tags = "Category"
     )
-    public IdResponse createCategory(@RequestBody CreateCategoryRequest request) {
-        Long id = commandHandler.handle(new CreateCategory(request.name(), request.barId()));
-        return new IdResponse(id);
+    public CategoryIdResponse createCategory(
+            @PathVariable("barId") Long barId,
+            @RequestBody CreateCategoryRequest request) {
+        Long id = commandHandler.handle(new CreateCategory(request.name(), barId));
+        return new CategoryIdResponse(id);
     }
 
     @PutMapping("/{categoryId}")
@@ -48,10 +50,12 @@ public class CategoryController {
             description = "The category with the given id is updated with the new name provided in the request body",
             tags = "Category"
     )
-    public IdResponse updateCategory(@PathVariable("categoryId") Long id,
-                                     @RequestBody UpdateCategoryRequest request) {
-        commandHandler.handle(new UpdateCategory(id, request.name()));
-        return new IdResponse(id);
+    public CategoryIdResponse updateCategory(
+            @PathVariable("barId") Long barId,
+            @PathVariable("categoryId") Long id,
+            @RequestBody UpdateCategoryRequest request) {
+        commandHandler.handle(new UpdateCategory(id, request.name(), barId));
+        return new CategoryIdResponse(id);
     }
 
     @DeleteMapping("/{categoryId}")
@@ -61,8 +65,10 @@ public class CategoryController {
             description = "The category with given id is deleted",
             tags = "Category"
     )
-    public void deleteCategory(@PathVariable("categoryId") Long id) {
-        commandHandler.handle(new DeleteCategory(id));
+    public void deleteCategory(
+            @PathVariable("barId") Long barId,
+            @PathVariable("categoryId") Long id) {
+        commandHandler.handle(new DeleteCategory(id, barId));
     }
 
     @GetMapping("/{categoryId}")
@@ -72,20 +78,22 @@ public class CategoryController {
             description = "The category with given id is queried",
             tags = "Category"
     )
-    public CategoryResponse getCategory(@PathVariable("categoryId") Long id) {
-        Category category = queryHandler.handle(new GetCategory(id));
+    public CategoryResponse getCategory(
+            @PathVariable("barId") Long barId,
+            @PathVariable("categoryId") Long id) {
+        Category category = queryHandler.handle(new GetCategory(id, barId));
         return CategoryResponse.from(category);
     }
 
-    @GetMapping("/bars/{barId}")
+    @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Get categories of bar",
             description = "The categories of bar with given id are queried",
             tags = "Category"
     )
-    public List<CategoryResponse> getCategoryOfBar(@PathVariable("barId") Long id) {
-        return queryHandler.handle(new ListCategoriesOfBar(id))
+    public List<CategoryResponse> getCategoryOfBar(@PathVariable("barId") Long barId) {
+        return queryHandler.handle(new ListCategoriesOfBar(barId))
                 .parallelStream()
                 .map(CategoryResponse::from)
                 .toList();

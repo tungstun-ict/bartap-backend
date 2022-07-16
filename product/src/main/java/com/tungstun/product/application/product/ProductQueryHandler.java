@@ -22,7 +22,7 @@ public class ProductQueryHandler {
     }
 
     public Product handle(@Valid GetProduct command) {
-        return repository.findById(command.id())
+        return repository.findByIdAndBarId(command.id(), command.barId())
                 .orElseThrow(() -> new EntityNotFoundException(String.format("No product found with id %s", command.id())));
     }
 

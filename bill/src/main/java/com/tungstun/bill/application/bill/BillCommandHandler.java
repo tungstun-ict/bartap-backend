@@ -27,13 +27,13 @@ public class BillCommandHandler {
         this.producer = producer;
     }
 
-    private Bill loadBill(Long id) {
-        return repository.findById(id)
+    private Bill loadBill(Long id, Long barId) {
+        return repository.findByIdAndBarId(id, barId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("No bill found with id %s", id)));
     }
 
     public Long handle(@Valid CreateBill command) {
-        Bill bill = repository.save(new Bill(command.sessionId(), command.customerId()));
+        Bill bill = repository.save(new Bill(command.barId(), command.sessionId(), command.customerId()));
 
         producer.publish(bill.getId(), new BillCreated(bill.getId(), bill.getSessionId(), bill.getCustomerId()));
 
@@ -41,13 +41,13 @@ public class BillCommandHandler {
     }
 
     public Long handle(@Valid UpdateBillPayed command) {
-        Bill bill = loadBill(command.id());
+        Bill bill = loadBill(command.id(), command.barId());
         bill.setPayed(command.payed());
         return repository.update(bill).getId();
     }
 
     public void handle(@Valid DeleteBill command) {
-        Bill bill = loadBill(command.id());
+        Bill bill = loadBill(command.id(), command.barId());
         repository.delete(bill);
 
         producer.publish(command.id(), new BillDeleted(bill.getId(), bill.getSessionId(), bill.getCustomerId()));

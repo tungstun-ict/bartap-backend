@@ -36,7 +36,17 @@ public class DefaultSessionRepository implements SessionRepository {
     }
 
     @Override
+    public Optional<Session> findByIdAndBarId(Long id, Long barId) {
+        return repository.findByIdAndBarId(id, barId);
+    }
+
+    @Override
     public List<Session> findAllByBarId(Long id) {
         return repository.findAllByBarId(id);
+    }
+
+    @Override
+    public void delete(Session session) {
+        repository.delete(session);
     }
 }

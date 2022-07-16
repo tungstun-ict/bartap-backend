@@ -36,13 +36,18 @@ public class DefaultBillRepository implements BillRepository {
     }
 
     @Override
-    public List<Bill> findAllBySessionId(Long id) {
-        return repository.findAllBySessionId(id);
+    public Optional<Bill> findByIdAndBarId(Long id, Long barId) {
+        return repository.findByIdAndBarId(id, barId);
     }
 
     @Override
-    public List<Bill> findAllByCustomerId(Long id) {
-        return repository.findAllByCustomerId(id);
+    public List<Bill> findAllOfSession(Long sessionId, Long barId) {
+        return repository.findAllBySessionIdAndBarId(sessionId, barId);
+    }
+
+    @Override
+    public List<Bill> findAllOfCustomer(Long customerId, Long barId) {
+        return repository.findAllByCustomerIdAndBarId(customerId, barId);
     }
 
     @Override

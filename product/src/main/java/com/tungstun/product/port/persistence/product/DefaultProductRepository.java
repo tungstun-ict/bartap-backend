@@ -36,6 +36,11 @@ public class DefaultProductRepository implements ProductRepository {
     }
 
     @Override
+    public Optional<Product> findByIdAndBarId(Long id, Long barId) {
+        return repository.findByIdAndBarId(id, barId);
+    }
+
+    @Override
     public List<Product> findAllOfBar(Long barId) {
         return repository.findAllByBarId(barId);
     }
@@ -43,5 +48,10 @@ public class DefaultProductRepository implements ProductRepository {
     @Override
     public List<Product> findAllOfCategory(Long categoryId, Long barId) {
         return repository.findAllByCategoryIdAndBarId(categoryId, barId);
+    }
+
+    @Override
+    public void delete(Long id, Long barId) {
+        repository.deleteByIdAndBarId(id, barId);
     }
 }

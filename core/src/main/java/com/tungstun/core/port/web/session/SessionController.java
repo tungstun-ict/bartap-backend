@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/sessions")
+@RequestMapping("/bars/{barId}/sessions")
 public class SessionController {
     private final SessionQueryHandler queryHandler;
     private final SessionCommandHandler commandHandler;
@@ -34,23 +34,25 @@ public class SessionController {
             description = "A new session is created for the bar with the given bar id and the name provided in the request body",
             tags = "Session"
     )
-    public IdResponse createSession(CreateSessionRequest request) {
-        Long sessionId = commandHandler.handle(new CreateSession(request.barId(), request.name()));
-        return new IdResponse(sessionId);
+    public SessionIdResponse createSession(@PathVariable("barId") Long barId,
+                                           @RequestBody CreateSessionRequest request) {
+        Long sessionId = commandHandler.handle(new CreateSession(barId, request.name()));
+        return new SessionIdResponse(sessionId);
     }
 
     @PutMapping("/{sessionId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Update session",
-            description = "The session with the given id is updated with the information provided in the request body",
+            description = "The session with the given id of bar with given id is updated with the information provided in the request body",
             tags = "Session"
     )
-    public IdResponse updateSession(
+    public SessionIdResponse updateSession(
+            @PathVariable("barId") Long barId,
             @PathVariable("sessionId") Long sessionId,
             @RequestBody UpdateSessionRequest request) {
-        commandHandler.handle(new UpdateSessionName(sessionId, request.name()));
-        return new IdResponse(sessionId);
+        commandHandler.handle(new UpdateSessionName(sessionId, barId, request.name()));
+        return new SessionIdResponse(sessionId);
     }
 
     @DeleteMapping("/{sessionId}")
@@ -60,8 +62,10 @@ public class SessionController {
             description = "The session with given id is deleted",
             tags = "Session"
     )
-    public void deleteSession(@PathVariable("sessionId") Long sessionId) {
-        commandHandler.handle(new DeleteSession(sessionId));
+    public void deleteSession(
+            @PathVariable("barId") Long barId,
+            @PathVariable("sessionId") Long sessionId) {
+        commandHandler.handle(new DeleteSession(sessionId, barId));
     }
 
     @PatchMapping("/{sessionId}/end")
@@ -71,8 +75,10 @@ public class SessionController {
             description = "The session with the given id is ended",
             tags = "Session"
     )
-    public void endSession(@PathVariable("sessionId") Long sessionId) {
-        commandHandler.handle(new EndSession(sessionId));
+    public void endSession(
+            @PathVariable("barId") Long barId,
+            @PathVariable("sessionId") Long sessionId) {
+        commandHandler.handle(new EndSession(sessionId, barId));
     }
 
     @PatchMapping("/{sessionId}/lock")
@@ -82,8 +88,10 @@ public class SessionController {
             description = "The session with the given id is locked",
             tags = "Session"
     )
-    public void lockSession(@PathVariable("sessionId") Long sessionId) {
-        commandHandler.handle(new LockSession(sessionId));
+    public void lockSession(
+            @PathVariable("barId") Long barId,
+            @PathVariable("sessionId") Long sessionId) {
+        commandHandler.handle(new LockSession(sessionId, barId));
     }
 
     @GetMapping("/active")
@@ -93,8 +101,8 @@ public class SessionController {
             description = "The currently active session of the bar with the given bar id is queried",
             tags = "Session"
     )
-    public SessionResponse getActiveSession(@RequestBody GetActiveBarRequest request) {
-        Session session = queryHandler.handle(new GetActiveSession(request.barId()));
+    public SessionResponse getActiveSession(@PathVariable("barId") Long barId) {
+        Session session = queryHandler.handle(new GetActiveSession(barId));
         return SessionResponse.of(session);
     }
 
@@ -105,9 +113,10 @@ public class SessionController {
             description = "The session with the given id of the bar with the given bar id is queried",
             tags = "Session"
     )
-    public SessionResponse getSession(@RequestParam("sessionId") Long id,
-                                      @RequestBody GetSessionRequest request) {
-        Session session = queryHandler.handle(new GetSession(id, request.barId()));
+    public SessionResponse getSession(
+            @PathVariable("barId") Long barId,
+            @PathVariable("sessionId") Long sessionId) {
+        Session session = queryHandler.handle(new GetSession(sessionId, barId));
         return SessionResponse.of(session);
     }
 
@@ -119,8 +128,7 @@ public class SessionController {
             tags = "Session"
     )
     public List<SessionResponse> getAllSession(@RequestBody ListSessionsOfBarRequest request) {
-        List<Session> sessions = queryHandler.handle(new ListSessionsOfBar(request.barId()));
-        return sessions.stream()
+        return queryHandler.handle(new ListSessionsOfBar(request.barId())).parallelStream()
                 .map(SessionResponse::of)
                 .toList();
     }
