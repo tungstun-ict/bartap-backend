@@ -8,7 +8,9 @@ import com.tungstun.core.application.session.query.GetActiveSession;
 import com.tungstun.core.application.session.query.GetSession;
 import com.tungstun.core.application.session.query.ListSessionsOfBar;
 import com.tungstun.core.domain.session.Session;
-import com.tungstun.core.port.web.session.request.*;
+import com.tungstun.core.port.web.session.request.CreateSessionRequest;
+import com.tungstun.core.port.web.session.request.ListSessionsOfBarRequest;
+import com.tungstun.core.port.web.session.request.UpdateSessionRequest;
 import com.tungstun.core.port.web.session.response.SessionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
@@ -34,10 +36,10 @@ public class SessionController {
             description = "A new session is created for the bar with the given bar id and the name provided in the request body",
             tags = "Session"
     )
-    public SessionIdResponse createSession(@PathVariable("barId") Long barId,
-                                           @RequestBody CreateSessionRequest request) {
+    public IdResponse createSession(@PathVariable("barId") Long barId,
+                                    @RequestBody CreateSessionRequest request) {
         Long sessionId = commandHandler.handle(new CreateSession(barId, request.name()));
-        return new SessionIdResponse(sessionId);
+        return new IdResponse(sessionId);
     }
 
     @PutMapping("/{sessionId}")
@@ -47,12 +49,12 @@ public class SessionController {
             description = "The session with the given id of bar with given id is updated with the information provided in the request body",
             tags = "Session"
     )
-    public SessionIdResponse updateSession(
+    public IdResponse updateSession(
             @PathVariable("barId") Long barId,
             @PathVariable("sessionId") Long sessionId,
             @RequestBody UpdateSessionRequest request) {
         commandHandler.handle(new UpdateSessionName(sessionId, barId, request.name()));
-        return new SessionIdResponse(sessionId);
+        return new IdResponse(sessionId);
     }
 
     @DeleteMapping("/{sessionId}")

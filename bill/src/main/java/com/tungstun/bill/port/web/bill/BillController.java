@@ -37,6 +37,7 @@ public class BillController {
             description = "A new bill is created for the customer with the given id for the session with the provided id",
             tags = "Bill"
     )
+    public IdResponse createBill(
             @PathVariable("barId") Long barId,
             @RequestBody CreateBillRequest request) {
         Long id = commandHandler.handle(new CreateBill(request.sessionId(), request.customerId(), barId));

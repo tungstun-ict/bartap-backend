@@ -36,11 +36,11 @@ public class CategoryController {
             description = "A new category is created with given name for the bar with given id",
             tags = "Category"
     )
-    public CategoryIdResponse createCategory(
+    public IdResponse createCategory(
             @PathVariable("barId") Long barId,
             @RequestBody CreateCategoryRequest request) {
         Long id = commandHandler.handle(new CreateCategory(request.name(), barId));
-        return new CategoryIdResponse(id);
+        return new IdResponse(id);
     }
 
     @PutMapping("/{categoryId}")
@@ -50,12 +50,12 @@ public class CategoryController {
             description = "The category with the given id is updated with the new name provided in the request body",
             tags = "Category"
     )
-    public CategoryIdResponse updateCategory(
+    public IdResponse updateCategory(
             @PathVariable("barId") Long barId,
             @PathVariable("categoryId") Long id,
             @RequestBody UpdateCategoryRequest request) {
         commandHandler.handle(new UpdateCategory(id, request.name(), barId));
-        return new CategoryIdResponse(id);
+        return new IdResponse(id);
     }
 
     @DeleteMapping("/{categoryId}")
