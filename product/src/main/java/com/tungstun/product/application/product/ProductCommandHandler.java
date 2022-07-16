@@ -42,23 +42,24 @@ public class ProductCommandHandler {
     }
 
     public Long handle(@Valid CreateProduct command) {
-        Category category = categoryQueryHandler.handle(new GetCategory(command.categoryId()));
+        Category category = categoryQueryHandler.handle(new GetCategory(command.categoryId(), command.barId()));
         Product product = new ProductBuilder(command.barId(), command.name(), category)
                 .setBrand(command.brand())
                 .setSize(command.size())
                 .setPrice(new Money(command.price()))
                 .setType(ProductType.getProductType(command.type()))
                 .build();
+        product = repository.save(product);
 
         producer.publish(product.getId(), ProductCreated.from(product));
 
-        return repository.save(product).getId();
+        return product.getId();
     }
 
     public Long handle(@Valid UpdateProduct command) {
         Product product = loadProduct(command.id(), command.barId());
         if (!product.getCategory().getId().equals(command.categoryId())) {
-            Category category = categoryQueryHandler.handle(new GetCategory(command.categoryId()));
+            Category category = categoryQueryHandler.handle(new GetCategory(command.categoryId(), command.barId()));
             product.setCategory(category);
         }
         product.setName(command.name());

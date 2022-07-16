@@ -38,7 +38,7 @@ public class ProductController {
             description = "A new product is created with information provided in the request body for the bar with the given id",
             tags = "Product"
     )
-    public ProductIdResponse createProduct(
+    public IdResponse createProduct(
             @PathVariable("barId") Long barId,
             @RequestBody CreateProductRequest request) {
         Long id = commandHandler.handle(new CreateProduct(
@@ -60,11 +60,11 @@ public class ProductController {
             description = "The product with the given id is updated with the information provided in the request body",
             tags = "Product"
     )
-    public ProductIdResponse updateProduct(
+    public IdResponse updateProduct(
             @PathVariable("barId") Long barId,
             @PathVariable("productId") Long productId,
             @RequestBody UpdateProductRequest request) {
-        commandHandler.handle(new UpdateProduct(
+        Long id = commandHandler.handle(new UpdateProduct(
                 productId,
                 barId,
                 request.name(),

@@ -35,7 +35,7 @@ public class BillCommandHandler {
     public Long handle(@Valid CreateBill command) {
         Bill bill = repository.save(new Bill(command.barId(), command.sessionId(), command.customerId()));
 
-        producer.publish(bill.getId(), new BillCreated(bill.getId(), bill.getSessionId(), bill.getCustomerId()));
+        producer.publish(bill.getId(), new BillCreated(bill.getId(), bill.getBarId(), bill.getSessionId(), bill.getCustomerId()));
 
         return bill.getId();
     }
@@ -50,6 +50,6 @@ public class BillCommandHandler {
         Bill bill = loadBill(command.id(), command.barId());
         repository.delete(bill);
 
-        producer.publish(command.id(), new BillDeleted(bill.getId(), bill.getSessionId(), bill.getCustomerId()));
+        producer.publish(command.id(), new BillDeleted(bill.getId(), bill.getBarId(), bill.getSessionId(), bill.getCustomerId()));
     }
 }
