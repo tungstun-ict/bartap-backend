@@ -1,6 +1,10 @@
 package com.tungstun.bill.domain.bill;
 
+import com.tungstun.bill.domain.product.Product;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "bill")
@@ -21,13 +25,14 @@ public class Bill {
     @Column(name = "customer_id")
     private Long customerId;
 
-
-//    private Map<Long, Short> orders;
-
+//    //todo check of Money wel handig is. Money wel in common moet (voordeel, overal consistentie in money) nadeel, ingewikkelde logica
+//
 //    @Column(name = "total_price")
 //    @Embedded
 //    private Money totalPrice;
-//    //todo check of Money wel handig is. Money wel in common moet (voordeel, overal consistentie in money) nadeel, ingewikkelde logica
+
+    @OneToMany
+    private List<Order> orders;
 
     public Bill() {
     }
@@ -36,7 +41,30 @@ public class Bill {
         this.barId = barId;
         this.sessionId = sessionId;
         this.customerId = customerId;
-        isPayed = false;
+        this.orders = new ArrayList<>();
+        this.isPayed = false;
+    }
+
+    //    public double calculateTotalPrice() {
+//        return this.orders.stream()
+//                .mapToDouble(order -> order.getProduct().getPrice() * order.getAmount())
+//                .sum();
+//    }
+
+    public boolean addOrder(Product product, int amount, Bartender bartender) {
+        if (product == null) throw new IllegalArgumentException("Product cannot be null");
+        if (bartender == null) throw new IllegalArgumentException("Bartender cannot be null");
+        if (amount < 1) throw new IllegalArgumentException("Amount of products must be above 0");
+        Order order = new Order(product, amount, bartender);
+        return this.orders.add(order);
+    }
+
+    public boolean removeOrder(Long orderId) {
+        return orders.removeIf(order -> order.getId().equals(orderId));
+    }
+
+    public List<Order> getOrders() {
+        return this.orders;
     }
 
     public Long getId() {
@@ -59,25 +87,8 @@ public class Bill {
         return barId;
     }
 
-    //    public double calculateTotalPrice() {
-//        return this.orders.stream()
-//                .mapToDouble(order -> order.getProduct().getPrice() * order.getAmount())
-//                .sum();
-//    }
 
     public Long getCustomerId() {
         return customerId;
     }
-
-//    public List<Order> getOrders() { return this.orders; }
-
-//    public boolean addOrder(Product product, int amount, Person bartender){
-//        if (product == null || amount < 1 || bartender == null) return false;
-//        Order order = new Order(product, amount, this, bartender);
-//        return this.orders.add(order);
-//    }
-//
-//    public boolean removeOrder(Order order){
-//        return this.orders.remove(order);
-//    }
 }
