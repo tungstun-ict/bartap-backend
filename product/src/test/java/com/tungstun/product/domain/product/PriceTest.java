@@ -13,8 +13,8 @@ class PriceTest {
     void constructPrice_CreatesPricesWithMoneyAndCurrentDate() {
         Price price = new Price(new Money(2.5d));
 
-        LocalDateTime localDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.MICROS);
-        LocalDateTime priceFromDate = price.getFromDate().truncatedTo(ChronoUnit.MICROS);
+        LocalDateTime localDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        LocalDateTime priceFromDate = price.getFromDate().truncatedTo(ChronoUnit.SECONDS);
         assertTrue(priceFromDate.isEqual(localDateTime));
         assertNull(price.getToDate());
     }
