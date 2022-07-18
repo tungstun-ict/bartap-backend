@@ -25,12 +25,6 @@ public class Bill {
     @Column(name = "customer_id")
     private Long customerId;
 
-//    //todo check of Money wel handig is. Money wel in common moet (voordeel, overal consistentie in money) nadeel, ingewikkelde logica
-//
-//    @Column(name = "total_price")
-//    @Embedded
-//    private Money totalPrice;
-
     @OneToMany
     private List<Order> orders;
 
@@ -45,11 +39,11 @@ public class Bill {
         this.isPayed = false;
     }
 
-    //    public double calculateTotalPrice() {
-//        return this.orders.stream()
-//                .mapToDouble(order -> order.getProduct().getPrice() * order.getAmount())
-//                .sum();
-//    }
+    public double totalPrice() {
+        return this.orders.stream()
+                .mapToDouble(order -> order.getAmount() * order.getProduct().getPrice().amount().doubleValue())
+                .sum();
+    }
 
     public boolean addOrder(Product product, int amount, Bartender bartender) {
         if (product == null) throw new IllegalArgumentException("Product cannot be null");

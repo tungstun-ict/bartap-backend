@@ -5,13 +5,17 @@ import com.tungstun.common.money.Money;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class BillTest {
     private static final Bartender BARTENDER = new Bartender(321L, "bartender");
-    private static final Product PRODUCT = new Product("name", "brand", new Money(2d));
+    private static final Product PRODUCT = new Product("name", "brand", new Money(1.5d));
 
     private Bill bill;
 
@@ -72,5 +76,25 @@ class BillTest {
         Long orderId = bill.getOrders().get(0).getId();
 
         assertTrue(bill.removeOrder(orderId));
+    }
+
+    private static Stream<Arguments> totalPriceArgs() {
+        return Stream.of(
+                Arguments.of(1.5d, new Integer[]{1}),
+                Arguments.of(3.0d, new Integer[]{1, 1}),
+                Arguments.of(15.0d, new Integer[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}),
+                Arguments.of(10.5d, new Integer[]{5, 2}),
+                Arguments.of(90.0d, new Integer[]{20, 20, 20})
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("totalPriceArgs")
+    void totalPrice(Double expectedValue, Integer[] addProductAmounts) {
+        for (Integer integer : addProductAmounts) {
+            bill.addOrder(PRODUCT, integer, BARTENDER);
+        }
+
+        assertEquals(expectedValue, bill.totalPrice());
     }
 }
