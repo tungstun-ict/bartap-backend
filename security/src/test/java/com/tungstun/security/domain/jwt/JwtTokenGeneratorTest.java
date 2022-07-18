@@ -42,7 +42,7 @@ class JwtTokenGeneratorTest {
 
     @SuppressWarnings("java:S2925")
     @Test
-    void createAccessToken_ContainsCorrectValues() throws IllegalAccessException, InterruptedException {
+    void createAccessToken_ContainsCorrectValues() throws IllegalAccessException {
         User user = new User(
                 "username",
                 "password",
@@ -51,13 +51,11 @@ class JwtTokenGeneratorTest {
                 "last",
                 new ArrayList<>(List.of(new Authorization(123L, Role.OWNER))));
         FieldUtils.writeField(user, "id", 123L, true);
-        long before = ZonedDateTime.now().toInstant().toEpochMilli();
-        Thread.sleep(2); // Added to insure Before date is actually before and not equal to the token's date
+        long before = ZonedDateTime.now().minusSeconds(1).toInstant().toEpochMilli();
+        long after = ZonedDateTime.now().plusSeconds(1).toInstant().toEpochMilli() + jwtCredentials.getJwtExpirationInMs();
 
         String token = tokenGenerator.createAccessToken(user);
 
-        Thread.sleep(2); // Added to insure After date is actually after and not equal to the token's date
-        long after = before + jwtCredentials.getJwtExpirationInMs();
         DecodedJWT decodedJWT = jwtValidator.verifyAccessToken(token);
         assertTrue(decodedJWT.getExpiresAt().after(new Date(before)));
         assertTrue(decodedJWT.getExpiresAt().before(new Date(after)));
@@ -75,15 +73,13 @@ class JwtTokenGeneratorTest {
 
     @SuppressWarnings("java:S2925")
     @Test
-    void createRefreshToken_ContainsCorrectValues() throws InterruptedException {
-        long before = ZonedDateTime.now().toInstant().toEpochMilli();
-        Thread.sleep(1); // Added to insure Before date is actually before and not equal to the token's date
+    void createRefreshToken_ContainsCorrectValues() {
+        long before = ZonedDateTime.now().minusSeconds(1).toInstant().toEpochMilli();
+        long after = ZonedDateTime.now().plusSeconds(1).toInstant().toEpochMilli() + jwtCredentials.getJwtRefreshExpirationInMs();
 
         String token = tokenGenerator.createRefreshToken();
 
-        Thread.sleep(1); // Added to insure After date is actually after and not equal to the token's date
         DecodedJWT decodedJWT = jwtValidator.verifyRefreshToken(token);
-        long after = before + jwtCredentials.getJwtRefreshExpirationInMs();
         assertTrue(decodedJWT.getExpiresAt().after(new Date(before)));
         assertTrue(decodedJWT.getExpiresAt().before(new Date(after)));
         assertEquals(List.of(jwtCredentials.getJwtAudience()), decodedJWT.getAudience());
