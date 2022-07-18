@@ -10,15 +10,15 @@ import javax.persistence.*;
 @Table(name = "product")
 @Where(clause = "deleted = false")
 public class Product {
+    @Column(name = "deleted")
+    private final boolean deleted = Boolean.FALSE;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(name = "bar_id")
     private Long barId;
-
-    @Column(name = "deleted")
-    private final boolean deleted = Boolean.FALSE;
 
     @Column(name = "name")
     private String name;
@@ -32,8 +32,8 @@ public class Product {
     @Column(name = "is_favorite")
     private boolean isFavorite;
 
-    @Column(name = "price")
-    private Money price;
+    @Embedded
+    private Prices prices;
 
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
@@ -51,9 +51,17 @@ public class Product {
         this.brand = brand;
         this.size = size;
         this.isFavorite = isFavorite;
-        this.price = price;
         this.type = type;
         this.category = category;
+        this.prices = new Prices(price);
+    }
+
+    public Money getPrice() {
+        return prices.currentPrice().getMoney();
+    }
+
+    public void setPrice(Money price) {
+        this.prices.updatePrice(price);
     }
 
     public Long getId() {
@@ -98,14 +106,6 @@ public class Product {
 
     public void setFavorite(boolean favorite) {
         isFavorite = favorite;
-    }
-
-    public Money getPrice() {
-        return price;
-    }
-
-    public void setPrice(Money price) {
-        this.price = price;
     }
 
     public ProductType getType() {

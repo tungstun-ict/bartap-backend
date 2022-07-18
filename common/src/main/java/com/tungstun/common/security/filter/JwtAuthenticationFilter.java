@@ -4,6 +4,7 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.tungstun.common.security.Authorization;
 import com.tungstun.common.security.BartapUserDetails;
+import com.tungstun.common.security.exception.NotAuthenticatedException;
 import com.tungstun.common.security.jwt.JwtValidator;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -64,7 +65,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             BartapUserDetails principal = new BartapUserDetails(userId, username, authorizations);
             Authentication auth = new UsernamePasswordAuthenticationToken(principal, null, Collections.emptyList());
             SecurityContextHolder.getContext().setAuthentication(auth);
-        } catch (JWTDecodeException ignored) {
+        } catch (JWTDecodeException | NotAuthenticatedException ignored) {
             // Continue request without an Authentication bound to the session's request
         }
         chain.doFilter(request, response);
