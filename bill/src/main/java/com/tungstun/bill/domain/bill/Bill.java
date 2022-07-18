@@ -45,7 +45,7 @@ public class Bill {
                 .sum();
     }
 
-    public boolean addOrder(Product product, int amount, Bartender bartender) {
+    public boolean addOrder(Product product, int amount, Person bartender) {
         if (product == null) throw new IllegalArgumentException("Product cannot be null");
         if (bartender == null) throw new IllegalArgumentException("Bartender cannot be null");
         if (amount < 1) throw new IllegalArgumentException("Amount of products must be above 0");

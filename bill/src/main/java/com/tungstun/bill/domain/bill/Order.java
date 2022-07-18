@@ -23,12 +23,12 @@ public class Order {
     private int amount;
 
     @Embedded
-    private Bartender bartender;
+    private Person bartender;
 
     public Order() {
     }
 
-    public Order(Product product, int amount, Bartender bartender) {
+    public Order(Product product, int amount, Person bartender) {
         this.creationDate = ZonedDateTime.now().toLocalDateTime();
         this.product = product;
         this.amount = amount;
@@ -63,11 +63,11 @@ public class Order {
         this.amount = amount;
     }
 
-    public Bartender getBartender() {
+    public Person getBartender() {
         return bartender;
     }
 
-    public void setBartender(Bartender bartender) {
+    public void setBartender(Person bartender) {
         this.bartender = bartender;
     }
 }

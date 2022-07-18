@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BillTest {
-    private static final Bartender BARTENDER = new Bartender(321L, "bartender");
+    private static final Person BARTENDER = new Person(321L, "bartender");
     private static final Product PRODUCT = new Product("name", "brand", new Money(1.5d));
 
     private Bill bill;
