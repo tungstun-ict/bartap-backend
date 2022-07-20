@@ -1,15 +1,25 @@
 package com.tungstun.bill.domain.product;
 
 import com.tungstun.common.money.Money;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "product")
+@SQLDelete(sql = "UPDATE product SET deleted = true WHERE id=?")
+@Where(clause = "deleted = false")
 public class Product {
+    @Column(name = "deleted", columnDefinition = "BOOLEAN default false")
+    private final boolean deleted = Boolean.FALSE;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(name = "bar_id")
+    private Long barId;
 
     @Column(name = "name")
     private String name;
@@ -23,7 +33,8 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, String brand, Money price) {
+    public Product(Long barId, String name, String brand, Money price) {
+        this.barId = barId;
         this.name = name;
         this.brand = brand;
         this.price = price;
@@ -31,6 +42,10 @@ public class Product {
 
     public Long getId() {
         return id;
+    }
+
+    public Long getBarId() {
+        return barId;
     }
 
     public String getName() {
