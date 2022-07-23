@@ -1,4 +1,4 @@
-package com.tungstun.bill.port.web.bill.response;
+package com.tungstun.bill.port.web.order.response;
 
 import com.tungstun.bill.domain.bill.Order;
 import com.tungstun.bill.port.web.person.response.PersonResponse;

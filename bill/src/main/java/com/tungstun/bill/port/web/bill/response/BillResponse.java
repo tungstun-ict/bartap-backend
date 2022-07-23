@@ -1,6 +1,7 @@
 package com.tungstun.bill.port.web.bill.response;
 
 import com.tungstun.bill.domain.bill.Bill;
+import com.tungstun.bill.port.web.order.response.OrderResponse;
 
 import java.util.List;
 

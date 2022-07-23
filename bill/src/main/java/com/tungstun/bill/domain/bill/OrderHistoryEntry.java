@@ -38,6 +38,9 @@ public class OrderHistoryEntry {
         this.bartender = bartender;
     }
 
+    public Long getId() {
+        return id;
+    }
 
     public LocalDateTime getDate() {
         return date;
