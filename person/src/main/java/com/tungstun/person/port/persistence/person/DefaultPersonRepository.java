@@ -4,6 +4,7 @@ import com.tungstun.person.domain.person.Person;
 import com.tungstun.person.domain.person.PersonRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -37,5 +38,15 @@ public class DefaultPersonRepository implements PersonRepository {
     @Override
     public Optional<Person> findByIdAndBarId(Long id, Long barId) {
         return repository.findByIdAndBarId(id, barId);
+    }
+
+    @Override
+    public List<Person> findAllOfBar(Long barId) {
+        return repository.findAllByBarId(barId);
+    }
+
+    @Override
+    public void delete(Person person) {
+        repository.delete(person);
     }
 }
