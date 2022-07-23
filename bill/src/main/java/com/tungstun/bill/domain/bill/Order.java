@@ -1,5 +1,6 @@
 package com.tungstun.bill.domain.bill;
 
+import com.tungstun.bill.domain.person.Person;
 import com.tungstun.bill.domain.product.Product;
 
 import javax.persistence.*;
@@ -22,12 +23,11 @@ public class Order {
     @Column(name = "amount")
     private int amount;
 
-    @Embedded
+    @ManyToOne
     private Person bartender;
 
     public Order() {
     }
-
     public Order(Product product, int amount, Person bartender) {
         this.creationDate = ZonedDateTime.now().toLocalDateTime();
         this.product = product;

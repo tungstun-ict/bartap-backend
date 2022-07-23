@@ -1,6 +1,9 @@
 package com.tungstun.bill.port.messaging.config;
 
 
+import com.tungstun.bill.port.messaging.in.person.message.PersonCreated;
+import com.tungstun.bill.port.messaging.in.person.message.PersonDeleted;
+import com.tungstun.bill.port.messaging.in.person.message.PersonUpdated;
 import com.tungstun.bill.port.messaging.in.product.message.ProductCreated;
 import com.tungstun.bill.port.messaging.in.product.message.ProductDeleted;
 import com.tungstun.bill.port.messaging.in.product.message.ProductUpdated;
@@ -19,7 +22,10 @@ public class KafkaConsumerConfig extends KafkaConfigBase {
     private static final Set<Class<?>> CLASSES = Set.of(
             ProductCreated.class,
             ProductUpdated.class,
-            ProductDeleted.class
+            ProductDeleted.class,
+            PersonCreated.class,
+            PersonUpdated.class,
+            PersonDeleted.class
     );
 
     @Bean

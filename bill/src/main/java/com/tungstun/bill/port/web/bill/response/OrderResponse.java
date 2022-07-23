@@ -20,7 +20,7 @@ public record OrderResponse(
                 order.getCreationDate(),
                 ProductResponse.from(order.getProduct()),
                 new PersonResponse(
-                        order.getBartender().getPersonId(),
+                        order.getBartender().getId(),
                         order.getBartender().getUsername()
                 )
         );

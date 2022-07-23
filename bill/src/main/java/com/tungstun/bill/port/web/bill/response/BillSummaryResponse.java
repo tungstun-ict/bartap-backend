@@ -9,6 +9,11 @@ public record BillSummaryResponse(
         Boolean isPayed) {
 
     public static BillSummaryResponse from(Bill bill) {
-        return new BillSummaryResponse(bill.getId(), bill.getSessionId(), bill.getCustomerId(), bill.isPayed());
+        return new BillSummaryResponse(
+                bill.getId(),
+                bill.getSessionId(),
+                bill.getCustomer().getId(),
+                bill.isPayed()
+        );
     }
 }

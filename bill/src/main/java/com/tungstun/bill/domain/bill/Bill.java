@@ -1,5 +1,6 @@
 package com.tungstun.bill.domain.bill;
 
+import com.tungstun.bill.domain.person.Person;
 import com.tungstun.bill.domain.product.Product;
 
 import javax.persistence.*;
@@ -22,8 +23,8 @@ public class Bill {
     @Column(name = "session_id")
     private Long sessionId;
 
-    @Column(name = "customer_id")
-    private Long customerId;
+    @ManyToOne
+    private Person customer;
 
     @OneToMany
     private List<Order> orders;
@@ -31,10 +32,10 @@ public class Bill {
     public Bill() {
     }
 
-    public Bill(Long barId, Long sessionId, Long customerId) {
+    public Bill(Long barId, Long sessionId, Person customer) {
         this.barId = barId;
         this.sessionId = sessionId;
-        this.customerId = customerId;
+        this.customer = customer;
         this.orders = new ArrayList<>();
         this.isPayed = false;
     }
@@ -69,6 +70,14 @@ public class Bill {
         return sessionId;
     }
 
+    public Long getBarId() {
+        return barId;
+    }
+
+    public Person getCustomer() {
+        return customer;
+    }
+
     public boolean isPayed() {
         return isPayed;
     }
@@ -77,12 +86,4 @@ public class Bill {
         isPayed = payed;
     }
 
-    public Long getBarId() {
-        return barId;
-    }
-
-
-    public Long getCustomerId() {
-        return customerId;
-    }
 }

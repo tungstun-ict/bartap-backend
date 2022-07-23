@@ -20,7 +20,7 @@ public record BillResponse(
         return new BillResponse(
                 bill.getId(),
                 bill.getSessionId(),
-                bill.getCustomerId(),
+                bill.getCustomer().getId(),
                 bill.isPayed(),
                 orders
         );
