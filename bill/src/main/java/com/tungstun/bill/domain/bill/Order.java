@@ -4,6 +4,7 @@ import com.tungstun.bill.domain.person.Person;
 import com.tungstun.bill.domain.product.Product;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
@@ -28,11 +29,19 @@ public class Order {
 
     public Order() {
     }
+
     public Order(Product product, int amount, Person bartender) {
         this.creationDate = ZonedDateTime.now().toLocalDateTime();
         this.product = product;
         this.amount = amount;
         this.bartender = bartender;
+    }
+
+    public Double orderPrice() {
+        return product.getPrice()
+                .amount()
+                .multiply(BigDecimal.valueOf(amount))
+                .doubleValue();
     }
 
     public Long getId() {
