@@ -38,8 +38,8 @@ public class PersonCommandHandler {
                 .orElseThrow(() -> new EntityNotFoundException(String.format("No person found with id %s", id)));
     }
 
-    private User loadUser(Long userId, Long barId) {
-        return userRepository.findByIdAndBarId(userId, barId)
+    private User loadUser(Long userId) {
+        return userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("No user found with id %s", userId)));
     }
 
@@ -47,7 +47,7 @@ public class PersonCommandHandler {
         PersonBuilder personBuilder = new PersonBuilder(command.barId())
                 .setName(command.name());
         if (command.userId() != null) {
-            User user = loadUser(command.userId(), command.barId());
+            User user = loadUser(command.userId());
             personBuilder.setUser(user);
         }
         Person person = repository.save(personBuilder.build());

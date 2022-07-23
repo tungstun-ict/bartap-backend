@@ -33,9 +33,4 @@ public class DefaultUserRepository implements UserRepository {
     public Optional<User> findById(Long id) {
         return repository.findById(id);
     }
-
-    @Override
-    public Optional<User> findByIdAndBarId(Long id, Long barId) {
-        return repository.findByIdAndBarId(id, barId);
-    }
 }
