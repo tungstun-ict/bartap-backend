@@ -5,11 +5,15 @@ import com.tungstun.person.domain.user.User;
 import com.tungstun.person.domain.user.UserRepository;
 import com.tungstun.person.port.messaging.in.user.message.UserCreated;
 import org.springframework.kafka.annotation.KafkaHandler;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Component;
 
-public class KafkaUserConsumer extends KafkaMessageConsumer {
+@Component
+@KafkaListener(id = "securityMessageListener", topics = "security")
+public class KafkaUserMessageConsumer extends KafkaMessageConsumer {
     private final UserRepository repository;
 
-    public KafkaUserConsumer(UserRepository repository) {
+    public KafkaUserMessageConsumer(UserRepository repository) {
         this.repository = repository;
     }
 
