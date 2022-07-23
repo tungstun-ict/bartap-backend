@@ -4,7 +4,10 @@ import com.tungstun.common.money.Money;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "product")
@@ -15,7 +18,7 @@ public class Product {
     private final boolean deleted = Boolean.FALSE;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "product_id")
     private Long id;
 
     @Column(name = "bar_id")
@@ -33,7 +36,8 @@ public class Product {
     public Product() {
     }
 
-    public Product(Long barId, String name, String brand, Money price) {
+    public Product(Long id, Long barId, String name, String brand, Money price) {
+        this.id = id;
         this.barId = barId;
         this.name = name;
         this.brand = brand;

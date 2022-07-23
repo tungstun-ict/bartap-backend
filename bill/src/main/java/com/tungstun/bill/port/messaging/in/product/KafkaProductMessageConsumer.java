@@ -27,6 +27,7 @@ public class KafkaProductMessageConsumer extends KafkaMessageConsumer {
     public void handleProductCreated(ProductCreated o) {
         LOG.info("Received ProductCreated: {}", o);
         repository.save(new Product(
+                o.id(),
                 o.barId(),
                 o.name(),
                 o.brand(),

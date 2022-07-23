@@ -3,6 +3,7 @@ package com.tungstun.bill.domain.bill;
 import com.tungstun.bill.domain.person.Person;
 import com.tungstun.bill.domain.product.Product;
 import com.tungstun.common.money.Money;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BillTest {
     private static final Person BARTENDER = new Person(123L, 321L, "bartender");
-    private static final Product PRODUCT = new Product(123L, "name", "brand", new Money(1.5d));
+    private static final Product PRODUCT = new Product(123L, 123L, "name", "brand", new Money(1.5d));
 
     private Bill bill;
 
@@ -61,7 +62,7 @@ class BillTest {
         bill.addOrder(PRODUCT, amount, BARTENDER);
 
         assertEquals(1, bill.getOrders().size());
-        assertEquals(PRODUCT, bill.getOrders().get(0).getProduct());
+        assertEquals(PRODUCT.getId(), bill.getOrders().get(0).getProduct().getId());
         assertEquals(amount, bill.getOrders().get(0).getAmount());
         assertEquals(BARTENDER, bill.getOrders().get(0).getBartender());
     }
@@ -72,9 +73,11 @@ class BillTest {
     }
 
     @Test
-    void removeOrder_ReturnsTrueAndRemovesOrder() {
+    void removeOrder_ReturnsTrueAndRemovesOrder() throws IllegalAccessException {
         bill.addOrder(PRODUCT, 1, BARTENDER);
-        Long orderId = bill.getOrders().get(0).getId();
+        Order order = bill.getOrders().get(0);
+        FieldUtils.writeField(order, "id", 123L, true); // Done to simulate a id generation usually done at persistence
+        Long orderId = order.getId();
 
         assertTrue(bill.removeOrder(orderId));
     }

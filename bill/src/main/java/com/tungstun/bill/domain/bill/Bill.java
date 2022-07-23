@@ -5,6 +5,7 @@ import com.tungstun.bill.domain.product.Product;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -29,6 +30,9 @@ public class Bill {
     @OneToMany
     private List<Order> orders;
 
+    @Embedded
+    private OrderHistory history;
+
     public Bill() {
     }
 
@@ -38,6 +42,7 @@ public class Bill {
         this.customer = customer;
         this.orders = new ArrayList<>();
         this.isPayed = false;
+        this.history = new OrderHistory(new ArrayList<>());
     }
 
     public double totalPrice() {
@@ -51,7 +56,8 @@ public class Bill {
         if (bartender == null) throw new IllegalArgumentException("Bartender cannot be null");
         if (amount < 1) throw new IllegalArgumentException("Amount of products must be above 0");
         Order order = new Order(product, amount, bartender);
-        return this.orders.add(order);
+        this.orders.add(order);
+        return history.addEntry(order, customer);
     }
 
     public boolean removeOrder(Long orderId) {
@@ -86,4 +92,7 @@ public class Bill {
         isPayed = payed;
     }
 
+    public List<OrderHistoryEntry> getHistory() {
+        return Collections.unmodifiableList(history.getHistory());
+    }
 }

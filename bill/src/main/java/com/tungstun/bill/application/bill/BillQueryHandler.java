@@ -1,12 +1,10 @@
 package com.tungstun.bill.application.bill;
 
-import com.tungstun.bill.application.bill.query.GetBill;
-import com.tungstun.bill.application.bill.query.ListBillsOfPerson;
-import com.tungstun.bill.application.bill.query.ListBillsOfSession;
-import com.tungstun.bill.application.bill.query.ListOrdersOfBill;
+import com.tungstun.bill.application.bill.query.*;
 import com.tungstun.bill.domain.bill.Bill;
 import com.tungstun.bill.domain.bill.BillRepository;
 import com.tungstun.bill.domain.bill.Order;
+import com.tungstun.bill.domain.bill.OrderHistoryEntry;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -39,5 +37,10 @@ public class BillQueryHandler {
     public List<Order> handle(@Valid ListOrdersOfBill query) {
         return handle(new GetBill(query.billId(), query.barId()))
                 .getOrders();
+    }
+
+    public List<OrderHistoryEntry> handle(@Valid ListOrderHistory query) {
+        return handle(new GetBill(query.billId(), query.barId()))
+                .getHistory();
     }
 }
