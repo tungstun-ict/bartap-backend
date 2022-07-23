@@ -1,6 +1,6 @@
 package com.tungstun.security.port.web.authentication;
 
-import com.tungstun.security.application.user.UserService;
+import com.tungstun.security.application.user.UserCommandHandler;
 import com.tungstun.security.application.user.command.LoginUser;
 import com.tungstun.security.application.user.command.RefreshAccessToken;
 import com.tungstun.security.application.user.command.RegisterUser;
@@ -19,10 +19,10 @@ import java.util.Map;
 @RestController
 @RequestMapping("/authentication")
 public class AuthenticationController {
-    private final UserService userService;
+    private final UserCommandHandler userCommandHandler;
 
-    public AuthenticationController(UserService userService) {
-        this.userService = userService;
+    public AuthenticationController(UserCommandHandler userCommandHandler) {
+        this.userCommandHandler = userCommandHandler;
     }
 
     @PostMapping("/register")
@@ -33,7 +33,7 @@ public class AuthenticationController {
             tags = "User"
     )
     public void register(@RequestBody RegisterUserRequest request) {
-        userService.handle(new RegisterUser(
+        userCommandHandler.handle(new RegisterUser(
                 request.username(),
                 request.password(),
                 request.mail(),
@@ -49,7 +49,7 @@ public class AuthenticationController {
             tags = "Authentication"
     )
     public ResponseEntity<Void> login(@RequestBody LoginUserRequest loginRequest) throws LoginException {
-        Map<String, String> authorization = this.userService.handle(
+        Map<String, String> authorization = this.userCommandHandler.handle(
                 new LoginUser(loginRequest.username(), loginRequest.password()));
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setAll(authorization);
@@ -64,7 +64,7 @@ public class AuthenticationController {
     )
     public ResponseEntity<Void> refresh(@RequestHeader("access_token") String accessToken,
                                         @RequestHeader("refresh_token") String refreshToken) {
-        Map<String, String> authorization = this.userService.handle(new RefreshAccessToken(accessToken, refreshToken));
+        Map<String, String> authorization = this.userCommandHandler.handle(new RefreshAccessToken(accessToken, refreshToken));
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setAll(authorization);
         return ResponseEntity.ok().headers(responseHeaders).build();
@@ -78,6 +78,6 @@ public class AuthenticationController {
     )
     public void verify(@RequestHeader("access_token") String accessToken,
                        @RequestHeader("token_type") String tokenType) {
-        this.userService.handle(new VerifyUser(accessToken, tokenType));
+        this.userCommandHandler.handle(new VerifyUser(accessToken, tokenType));
     }
 }

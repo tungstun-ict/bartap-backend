@@ -2,6 +2,7 @@ package com.tungstun.security.port.messaging.config;
 
 import com.tungstun.common.messaging.KafkaConfigBase;
 import com.tungstun.common.messaging.KafkaMessageProducer;
+import com.tungstun.security.application.user.event.NameUpdated;
 import com.tungstun.security.port.messaging.out.message.UserCreated;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +14,8 @@ import java.util.Set;
 public class KafkaProducerConfig extends KafkaConfigBase {
     private static final String TOPIC = "security";
     private static final Set<Class<?>> CLASSES = Set.of(
-            UserCreated.class
+            UserCreated.class,
+            NameUpdated.class
     );
 
     @Bean

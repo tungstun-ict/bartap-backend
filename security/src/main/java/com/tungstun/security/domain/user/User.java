@@ -1,5 +1,6 @@
 package com.tungstun.security.domain.user;
 
+import com.tungstun.common.security.exception.CannotAuthenticateException;
 import com.tungstun.common.security.exception.NotAuthorizedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -46,7 +47,18 @@ public class User implements UserDetails {
         this.authorizations = authorizations;
     }
 
-    public boolean newBarAuthorization (Long barId) {
+    public void canAuthenticate() {
+        if (isAccountNonExpired())
+            throw new CannotAuthenticateException("Account expired. An expired account cannot be authenticated.");
+        if (isAccountNonLocked())
+            throw new CannotAuthenticateException("Account locked. A locked account cannot be authenticated.");
+        if (isCredentialsNonExpired())
+            throw new CannotAuthenticateException("Account credentials expired. Expired credentials prevent authentication.");
+        if (isEnabled())
+            throw new CannotAuthenticateException("Account disabled. A disabled account cannot be authenticated.");
+    }
+
+    public boolean newBarAuthorization(Long barId) {
         return addAuthorization(barId, Role.OWNER);
     }
 
@@ -98,6 +110,26 @@ public class User implements UserDetails {
 
     public Long getId() {
         return id;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     @Override
