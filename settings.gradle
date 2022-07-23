@@ -1,2 +1,2 @@
 rootProject.name = 'bartap'
-include('common', 'gateway', 'security', 'core', 'bill', 'product', 'person')
+include('bill', 'common', 'core', 'gateway', 'person', 'product', 'security')
