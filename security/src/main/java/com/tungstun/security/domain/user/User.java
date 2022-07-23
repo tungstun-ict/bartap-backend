@@ -31,6 +31,9 @@ public class User implements UserDetails {
     @Column(name = "last_name")
     private String lastName;
 
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
     @SuppressWarnings("java:S1948")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Authorization> authorizations;
@@ -38,12 +41,13 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String username, String password, String mail, String firstName, String lastName, List<Authorization> authorizations) {
+    public User(String username, String password, String mail, String firstName, String lastName, String phoneNumber, List<Authorization> authorizations) {
         this.username = username;
         this.password = password;
         this.mail = mail;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
         this.authorizations = authorizations;
     }
 
@@ -114,6 +118,14 @@ public class User implements UserDetails {
 
     public String getMail() {
         return mail;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getFirstName() {

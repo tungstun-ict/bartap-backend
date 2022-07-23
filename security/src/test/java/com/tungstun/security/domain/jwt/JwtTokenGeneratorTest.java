@@ -49,7 +49,7 @@ class JwtTokenGeneratorTest {
                 "mail@mail.com",
                 "first",
                 "last",
-                new ArrayList<>(List.of(new Authorization(123L, Role.OWNER))));
+                "06 12345678", new ArrayList<>(List.of(new Authorization(123L, Role.OWNER))));
         FieldUtils.writeField(user, "id", 123L, true);
         long before = ZonedDateTime.now().minusSeconds(1).toInstant().toEpochMilli();
         long after = ZonedDateTime.now().plusSeconds(1).toInstant().toEpochMilli() + jwtCredentials.getJwtExpirationInMs();

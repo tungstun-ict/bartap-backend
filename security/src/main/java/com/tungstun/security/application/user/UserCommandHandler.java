@@ -4,11 +4,11 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.tungstun.common.messaging.KafkaMessageProducer;
 import com.tungstun.common.security.jwt.JwtValidator;
 import com.tungstun.security.application.user.command.*;
-import com.tungstun.security.application.user.event.NameUpdated;
+import com.tungstun.security.application.user.event.UserCreated;
+import com.tungstun.security.application.user.event.UserUpdated;
 import com.tungstun.security.domain.jwt.JwtTokenGenerator;
 import com.tungstun.security.domain.user.User;
 import com.tungstun.security.domain.user.UserRepository;
-import com.tungstun.security.port.messaging.out.message.UserCreated;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -48,23 +48,32 @@ public class UserCommandHandler {
                 command.mail().strip(),
                 command.firstName(),
                 command.lastName(),
-                new ArrayList<>()
+                command.phoneNumber(), new ArrayList<>()
         ));
 
-        producer.publish(user.getId(), new UserCreated(user.getId(), user.getUsername()));
-    }
-
-    public void handle(@Valid UpdateName command) {
-        User user = (User) queryHandler.loadUserByUsername(command.username());
-        user.setFirstName(command.firstName());
-        user.setLastName(command.lastName());
-        userRepository.save(user);
-
-        producer.publish(user.getId(), new NameUpdated(
+        producer.publish(user.getId(), new UserCreated(
                 user.getId(),
                 user.getUsername(),
                 user.getFirstName(),
-                user.getLastName()
+                user.getLastName(),
+                user.getMail(),
+                user.getPhoneNumber()
+        ));
+    }
+
+    public void handle(@Valid UpdateUser command) {
+        User user = (User) queryHandler.loadUserByUsername(command.username());
+        if (command.firstName() != null) user.setFirstName(command.firstName());
+        if (command.lastName() != null) user.setLastName(command.lastName());
+        if (command.phoneNumber() != null) user.setPhoneNumber(command.phoneNumber());
+        userRepository.save(user);
+
+        producer.publish(user.getId(), new UserUpdated(
+                user.getId(),
+                user.getUsername(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getPhoneNumber()
         ));
     }
 

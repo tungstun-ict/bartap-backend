@@ -37,6 +37,7 @@ public class AuthenticationController {
                 request.username(),
                 request.password(),
                 request.mail(),
+                request.phoneNumber(),
                 request.firstName(),
                 request.lastName()
         ));

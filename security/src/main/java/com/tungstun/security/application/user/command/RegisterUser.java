@@ -1,6 +1,8 @@
 package com.tungstun.security.application.user.command;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 public record RegisterUser(
         @NotBlank(message = "Username cannot be blank")
@@ -15,8 +17,7 @@ public record RegisterUser(
                 message = "Mail must contain a correct mail format"
         )
         String mail,
-
+        String phoneNumber,
         String firstName,
-
         String lastName) {
 }
