@@ -88,6 +88,50 @@ subprojects {
         finalizedBy jacocoTestReport
     }
 
+    task integrationtest(type: Test) {
+        description("Runs all integration tests and heavier tests")
+        useJUnitPlatform()
+        doFirst {
+            systemProperty 'spring.profiles.active', profile
+        }
+        filter {
+            includeTestsMatching '*ApplicationTests'
+            includeTestsMatching '*E2ETest'
+            includeTestsMatching '*EndToEndTest'
+            includeTestsMatching '*End2EndTest'
+            includeTestsMatching '*SystemTest'
+            includeTestsMatching '*IntegrationTest'
+            includeTestsMatching '*MessageTest'
+            includeTestsMatching '*EventTest'
+            includeTestsMatching '*ConsumerTest'
+            includeTestsMatching '*ProducerTest'
+            setFailOnNoMatchingTests(false)
+        }
+        finalizedBy jacocoTestReport
+    }
+
+    task unittest(type: Test) {
+        description("Runs all Unit tests and tests that don't use the Spring application context")
+        useJUnitPlatform()
+        doFirst {
+            systemProperty 'spring.profiles.active', profile
+        }
+        filter {
+            excludeTestsMatching '*ApplicationTests'
+            excludeTestsMatching '*E2ETest'
+            excludeTestsMatching '*EndToEndTest'
+            excludeTestsMatching '*End2EndTest'
+            excludeTestsMatching '*SystemTest'
+            excludeTestsMatching '*IntegrationTest'
+            excludeTestsMatching '*MessageTest'
+            excludeTestsMatching '*EventTest'
+            excludeTestsMatching '*ConsumerTest'
+            excludeTestsMatching '*ProducerTest'
+            setFailOnNoMatchingTests(false)
+        }
+        finalizedBy jacocoTestReport
+    }
+
     jacocoTestReport {
         reports {
             xml.enabled true
@@ -96,22 +140,6 @@ subprojects {
         }
     }
 
-    task unittest(type: Test) {
-        description("Runs all tests except Application, Integration and Message Tests")
-        useJUnitPlatform()
-        doFirst {
-            systemProperty 'spring.profiles.active', profile
-        }
-        filter {
-            excludeTestsMatching '*ApplicationTests'
-            excludeTestsMatching '*IntegrationTest'
-            excludeTestsMatching '*MessageTest'
-            setFailOnNoMatchingTests(false)
-        }
-        finalizedBy jacocoTestReport
-    }
-
-
 }
 
 allprojects {
@@ -119,8 +147,11 @@ allprojects {
     version = '0.0.1'
     sourceCompatibility = '17'
     testlogger {
-        theme 'mocha'
         showSimpleNames true
+        theme 'standard'
+        if (project.hasProperty('ci')) {
+            theme 'mocha'
+        }
 
         if (project.hasProperty('c') || project.hasProperty('compact')) {
             showExceptions false
