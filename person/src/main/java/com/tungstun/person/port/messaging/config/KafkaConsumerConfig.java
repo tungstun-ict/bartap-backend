@@ -2,6 +2,7 @@ package com.tungstun.person.port.messaging.config;
 
 
 import com.tungstun.common.messaging.KafkaConfigBase;
+import com.tungstun.person.port.messaging.in.user.message.UserCreated;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -13,7 +14,9 @@ import java.util.Set;
 
 @Configuration
 public class KafkaConsumerConfig extends KafkaConfigBase {
-    private static final Set<Class<?>> CLASSES = Set.of();
+    private static final Set<Class<?>> CLASSES = Set.of(
+            UserCreated.class
+    );
 
     @Bean
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>>
