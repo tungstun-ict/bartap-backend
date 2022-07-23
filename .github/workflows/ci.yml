@@ -16,6 +16,7 @@ jobs:
     permissions:
       checks: write
       pull-requests: write
+
     steps:
       - uses: actions/checkout@v3
 
@@ -34,10 +35,7 @@ jobs:
         uses: gradle/gradle-build-action@v2.2.1
 
       - name: Run Tests
-        run: ./gradlew unittest -Pci
-
-      - name: Run Tests
-        run: ./gradlew integrationtest -Pci
+        run: ./gradlew test -Pci
 
       - name: JaCoCo Report
         uses: Madrapps/jacoco-report@v1.2
