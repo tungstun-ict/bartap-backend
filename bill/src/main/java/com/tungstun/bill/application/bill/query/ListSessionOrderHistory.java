@@ -1,12 +1,10 @@
-package com.tungstun.bill.application.bill.command;
+package com.tungstun.bill.application.bill.query;
 
 import javax.validation.constraints.NotNull;
 
-public record CreateBill(
+public record ListSessionOrderHistory(
         @NotNull(message = "Session id cannot be empty")
         Long sessionId,
-        @NotNull(message = "Customer person id cannot be empty")
-        Long customerId,
         @NotNull(message = "Bar id cannot be empty")
         Long barId) {
 }

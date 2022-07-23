@@ -1,6 +1,12 @@
 package com.tungstun.bill.domain.bill;
 
+import com.tungstun.bill.domain.person.Person;
+import com.tungstun.bill.domain.product.Product;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Entity
 @Table(name = "bill")
@@ -18,25 +24,48 @@ public class Bill {
     @Column(name = "session_id")
     private Long sessionId;
 
-    @Column(name = "customer_id")
-    private Long customerId;
+    @ManyToOne
+    private Person customer;
 
+    @OneToMany
+    private List<Order> orders;
 
-//    private Map<Long, Short> orders;
-
-//    @Column(name = "total_price")
-//    @Embedded
-//    private Money totalPrice;
-//    //todo check of Money wel handig is. Money wel in common moet (voordeel, overal consistentie in money) nadeel, ingewikkelde logica
+    @Embedded
+    private OrderHistory history;
 
     public Bill() {
     }
 
-    public Bill(Long barId, Long sessionId, Long customerId) {
+    public Bill(Long barId, Long sessionId, Person customer) {
         this.barId = barId;
         this.sessionId = sessionId;
-        this.customerId = customerId;
-        isPayed = false;
+        this.customer = customer;
+        this.orders = new ArrayList<>();
+        this.isPayed = false;
+        this.history = new OrderHistory(new ArrayList<>());
+    }
+
+    public double totalPrice() {
+        return this.orders.stream()
+                .mapToDouble(Order::orderPrice)
+                .sum();
+    }
+
+    public boolean addOrder(Product product, int amount, Person bartender) {
+        if (product == null) throw new IllegalArgumentException("Product cannot be null");
+        if (bartender == null) throw new IllegalArgumentException("Bartender cannot be null");
+        if (amount < 1) throw new IllegalArgumentException("Amount of products must be above 0");
+        Order order = new Order(product, amount, bartender);
+        this.orders.add(order);
+        return history.addEntry(order, customer);
+    }
+
+    public boolean removeOrder(Long orderId) {
+        return orders.removeIf(order -> order.getId().equals(orderId));
+    }
+
+    public List<Order> getOrders() {
+        return this.orders;
     }
 
     public Long getId() {
@@ -47,6 +76,14 @@ public class Bill {
         return sessionId;
     }
 
+    public Long getBarId() {
+        return barId;
+    }
+
+    public Person getCustomer() {
+        return customer;
+    }
+
     public boolean isPayed() {
         return isPayed;
     }
@@ -55,29 +92,7 @@ public class Bill {
         isPayed = payed;
     }
 
-    public Long getBarId() {
-        return barId;
+    public List<OrderHistoryEntry> getHistory() {
+        return Collections.unmodifiableList(history.getHistory());
     }
-
-    //    public double calculateTotalPrice() {
-//        return this.orders.stream()
-//                .mapToDouble(order -> order.getProduct().getPrice() * order.getAmount())
-//                .sum();
-//    }
-
-    public Long getCustomerId() {
-        return customerId;
-    }
-
-//    public List<Order> getOrders() { return this.orders; }
-
-//    public boolean addOrder(Product product, int amount, Person bartender){
-//        if (product == null || amount < 1 || bartender == null) return false;
-//        Order order = new Order(product, amount, this, bartender);
-//        return this.orders.add(order);
-//    }
-//
-//    public boolean removeOrder(Order order){
-//        return this.orders.remove(order);
-//    }
 }

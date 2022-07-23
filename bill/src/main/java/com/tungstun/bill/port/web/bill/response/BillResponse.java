@@ -1,14 +1,29 @@
 package com.tungstun.bill.port.web.bill.response;
 
 import com.tungstun.bill.domain.bill.Bill;
+import com.tungstun.bill.port.web.order.response.OrderResponse;
+
+import java.util.List;
 
 public record BillResponse(
         Long id,
         Long sessionId,
         Long customerId,
-        Boolean isPayed) {
+        Boolean isPayed,
+        List<OrderResponse> orders) {
 
     public static BillResponse from(Bill bill) {
-        return new BillResponse(bill.getId(), bill.getSessionId(), bill.getCustomerId(), bill.isPayed());
+        List<OrderResponse> orders = bill.getOrders()
+                .parallelStream()
+                .map(OrderResponse::from)
+                .toList();
+
+        return new BillResponse(
+                bill.getId(),
+                bill.getSessionId(),
+                bill.getCustomer().getId(),
+                bill.isPayed(),
+                orders
+        );
     }
 }

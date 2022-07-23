@@ -12,6 +12,7 @@ import com.tungstun.bill.domain.bill.Bill;
 import com.tungstun.bill.port.web.bill.request.CreateBillRequest;
 import com.tungstun.bill.port.web.bill.request.UpdateBillPayedRequest;
 import com.tungstun.bill.port.web.bill.response.BillResponse;
+import com.tungstun.bill.port.web.bill.response.BillSummaryResponse;
 import com.tungstun.common.web.IdResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
@@ -93,12 +94,12 @@ public class BillController {
             description = "The bills of session with given id are queried",
             tags = "Bill"
     )
-    public List<BillResponse> getBillsOfSession(
+    public List<BillSummaryResponse> getBillsOfSession(
             @PathVariable("barId") Long barId,
             @PathVariable("sessionId") Long id) {
         List<Bill> bills = queryHandler.handle(new ListBillsOfSession(id, barId));
         return bills.parallelStream()
-                .map(BillResponse::from)
+                .map(BillSummaryResponse::from)
                 .toList();
     }
 
@@ -109,12 +110,12 @@ public class BillController {
             description = "The bills of customer with given id are queried",
             tags = "Bill"
     )
-    public List<BillResponse> getBillsOfCustomer(
+    public List<BillSummaryResponse> getBillsOfCustomer(
             @PathVariable("barId") Long barId,
             @PathVariable("customerId") Long id) {
         List<Bill> bills = queryHandler.handle(new ListBillsOfPerson(id, barId));
         return bills.parallelStream()
-                .map(BillResponse::from)
+                .map(BillSummaryResponse::from)
                 .toList();
     }
 }

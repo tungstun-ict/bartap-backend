@@ -2,6 +2,7 @@ package com.tungstun.bill.port.messaging.config;
 
 import com.tungstun.bill.port.messaging.out.BillCreated;
 import com.tungstun.bill.port.messaging.out.BillDeleted;
+import com.tungstun.bill.port.messaging.out.BillPayed;
 import com.tungstun.common.messaging.KafkaConfigBase;
 import com.tungstun.common.messaging.KafkaMessageProducer;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -15,6 +16,7 @@ public class KafkaProducerConfig extends KafkaConfigBase {
     private static final String TOPIC = "bill";
     private static final Set<Class<?>> CLASSES = Set.of(
             BillCreated.class,
+            BillPayed.class,
             BillDeleted.class
     );
 
