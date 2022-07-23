@@ -6,6 +6,7 @@ import com.tungstun.bill.application.bill.command.AddOrder;
 import com.tungstun.bill.application.bill.command.RemoveOrder;
 import com.tungstun.bill.application.bill.query.ListOrderHistory;
 import com.tungstun.bill.application.bill.query.ListOrdersOfBill;
+import com.tungstun.bill.application.bill.query.ListSessionOrderHistory;
 import com.tungstun.bill.port.web.order.request.AddOrderRequest;
 import com.tungstun.bill.port.web.order.response.OrderHistoryEntryResponse;
 import com.tungstun.bill.port.web.order.response.OrderResponse;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/bars/{barId}/bills/{billId}")
+@RequestMapping("/bars/{barId}")
 public class OrderController {
     private final BillQueryHandler queryHandler;
     private final BillCommandHandler commandHandler;
@@ -28,7 +29,7 @@ public class OrderController {
         this.commandHandler = commandHandler;
     }
 
-    @PostMapping("/orders")
+    @PostMapping("/bills/{billId}/orders")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(
             summary = "Add order to bill",
@@ -51,7 +52,7 @@ public class OrderController {
         );
     }
 
-    @DeleteMapping("/orders/{orderId}")
+    @DeleteMapping("/bills/{billId}/orders/{orderId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(
             summary = "Remove order from bill",
@@ -73,7 +74,7 @@ public class OrderController {
         );
     }
 
-    @GetMapping("/orders")
+    @GetMapping("/bills/{billId}/orders")
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Get orders from bill",
@@ -90,7 +91,7 @@ public class OrderController {
                 .toList();
     }
 
-    @GetMapping("/order-history")
+    @GetMapping("/bills/{billId}/order-history")
     @ResponseStatus(HttpStatus.OK)
     @Operation(
             summary = "Get order history from bill",
@@ -102,6 +103,23 @@ public class OrderController {
             @PathVariable("billId") Long billId
     ) {
         return queryHandler.handle(new ListOrderHistory(billId, barId))
+                .parallelStream()
+                .map(OrderHistoryEntryResponse::from)
+                .toList();
+    }
+
+    @GetMapping("/sessions/{sessionId}/order-history")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(
+            summary = "Get order history from session",
+            description = "The order history of the session with the provided id is returned",
+            tags = "Order"
+    )
+    public List<OrderHistoryEntryResponse> getSessionOrderHistory(
+            @PathVariable("barId") Long barId,
+            @PathVariable("sessionId") Long sessionId
+    ) {
+        return queryHandler.handle(new ListSessionOrderHistory(sessionId, barId))
                 .parallelStream()
                 .map(OrderHistoryEntryResponse::from)
                 .toList();

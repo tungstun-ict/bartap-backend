@@ -43,4 +43,12 @@ public class BillQueryHandler {
         return handle(new GetBill(query.billId(), query.barId()))
                 .getHistory();
     }
+
+    public List<OrderHistoryEntry> handle(@Valid ListSessionOrderHistory query) {
+        return handle(new ListBillsOfSession(query.sessionId(), query.barId()))
+                .stream()
+                .map(Bill::getHistory)
+                .flatMap(List::stream)
+                .toList();
+    }
 }
