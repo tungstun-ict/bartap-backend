@@ -4,9 +4,9 @@ import com.tungstun.common.messaging.KafkaMessageProducer;
 import com.tungstun.core.application.bar.command.CreateBar;
 import com.tungstun.core.application.bar.command.DeleteBar;
 import com.tungstun.core.application.bar.command.UpdateBar;
+import com.tungstun.core.application.bar.event.BarCreated;
 import com.tungstun.core.domain.bar.Bar;
 import com.tungstun.core.domain.bar.BarRepository;
-import com.tungstun.core.port.messaging.out.bar.message.BarCreated;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 

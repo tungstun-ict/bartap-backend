@@ -1,4 +1,4 @@
-package com.tungstun.core.port.messaging.out.session.message;
+package com.tungstun.core.application.session.event;
 
 import java.time.LocalDateTime;
 

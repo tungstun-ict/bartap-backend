@@ -2,12 +2,12 @@ package com.tungstun.core.application.session;
 
 import com.tungstun.common.messaging.KafkaMessageProducer;
 import com.tungstun.core.application.session.command.*;
+import com.tungstun.core.application.session.event.SessionCreated;
+import com.tungstun.core.application.session.event.SessionDeleted;
+import com.tungstun.core.application.session.event.SessionEnded;
+import com.tungstun.core.application.session.event.SessionLocked;
 import com.tungstun.core.domain.session.Session;
 import com.tungstun.core.domain.session.SessionRepository;
-import com.tungstun.core.port.messaging.out.session.message.SessionCreated;
-import com.tungstun.core.port.messaging.out.session.message.SessionDeleted;
-import com.tungstun.core.port.messaging.out.session.message.SessionEnded;
-import com.tungstun.core.port.messaging.out.session.message.SessionLocked;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 

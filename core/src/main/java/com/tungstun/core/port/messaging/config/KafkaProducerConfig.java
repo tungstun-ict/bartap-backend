@@ -2,10 +2,10 @@ package com.tungstun.core.port.messaging.config;
 
 import com.tungstun.common.messaging.KafkaConfigBase;
 import com.tungstun.common.messaging.KafkaMessageProducer;
-import com.tungstun.core.port.messaging.out.session.message.SessionCreated;
-import com.tungstun.core.port.messaging.out.session.message.SessionDeleted;
-import com.tungstun.core.port.messaging.out.session.message.SessionEnded;
-import com.tungstun.core.port.messaging.out.session.message.SessionLocked;
+import com.tungstun.core.application.session.event.SessionCreated;
+import com.tungstun.core.application.session.event.SessionDeleted;
+import com.tungstun.core.application.session.event.SessionEnded;
+import com.tungstun.core.application.session.event.SessionLocked;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
