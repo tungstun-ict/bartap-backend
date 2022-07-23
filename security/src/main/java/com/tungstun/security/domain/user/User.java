@@ -1,5 +1,6 @@
 package com.tungstun.security.domain.user;
 
+import com.tungstun.common.security.exception.CannotAuthenticateException;
 import com.tungstun.common.security.exception.NotAuthorizedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,6 +31,9 @@ public class User implements UserDetails {
     @Column(name = "last_name")
     private String lastName;
 
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
     @SuppressWarnings("java:S1948")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Authorization> authorizations;
@@ -37,16 +41,28 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String username, String password, String mail, String firstName, String lastName, List<Authorization> authorizations) {
+    public User(String username, String password, String mail, String firstName, String lastName, String phoneNumber, List<Authorization> authorizations) {
         this.username = username;
         this.password = password;
         this.mail = mail;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
         this.authorizations = authorizations;
     }
 
-    public boolean newBarAuthorization (Long barId) {
+    public void canAuthenticate() {
+        if (isAccountNonExpired())
+            throw new CannotAuthenticateException("Account expired. An expired account cannot be authenticated.");
+        if (isAccountNonLocked())
+            throw new CannotAuthenticateException("Account locked. A locked account cannot be authenticated.");
+        if (isCredentialsNonExpired())
+            throw new CannotAuthenticateException("Account credentials expired. Expired credentials prevent authentication.");
+        if (isEnabled())
+            throw new CannotAuthenticateException("Account disabled. A disabled account cannot be authenticated.");
+    }
+
+    public boolean newBarAuthorization(Long barId) {
         return addAuthorization(barId, Role.OWNER);
     }
 
@@ -98,6 +114,34 @@ public class User implements UserDetails {
 
     public Long getId() {
         return id;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     @Override

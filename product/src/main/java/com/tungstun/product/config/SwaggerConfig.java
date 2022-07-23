@@ -10,7 +10,7 @@ import io.swagger.v3.oas.models.annotations.OpenAPI31;
 @OpenAPIDefinition(
         info = @Info(
                 title = "bartap Backend Api - Product",
-                description = "Core API of the bartap Backend API microservice cluster containing product and category functionality",
+                description = "Product API of the bartap Backend API microservice cluster containing product and category functionality",
                 version = "1.0",
                 contact = @Contact(
                         name = "Tungstun",

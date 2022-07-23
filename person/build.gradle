@@ -1,0 +1,15 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+project.mainClassName = 'com.tungstun.product.ProductApplication'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':common')
+    annotationProcessor project(':common')
+}

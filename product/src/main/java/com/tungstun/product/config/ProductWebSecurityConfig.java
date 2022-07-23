@@ -5,7 +5,6 @@ import com.tungstun.common.security.jwt.JwtValidator;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -34,7 +33,7 @@ public class ProductWebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, ignoredPaths).permitAll()
+                .antMatchers(ignoredPaths).permitAll()
                 .anyRequest().permitAll()
                 .and()
                 .addFilter(new JwtAuthenticationFilter(
