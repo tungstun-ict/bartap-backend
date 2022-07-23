@@ -1,6 +1,6 @@
 package com.tungstun.bill.port.web.product.response;
 
-import com.tungstun.bill.domain.product.Product;
+import com.tungstun.bill.domain.bill.OrderProduct;
 
 public record ProductResponse(
         Long id,
@@ -9,7 +9,7 @@ public record ProductResponse(
         Double price,
         String currencySymbol) {
 
-    public static ProductResponse from(Product product) {
+    public static ProductResponse from(OrderProduct product) {
         return new ProductResponse(
                 product.getId(),
                 product.getName(),

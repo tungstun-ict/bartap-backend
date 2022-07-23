@@ -18,8 +18,8 @@ public class Order {
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
-    @ManyToOne
-    private Product product;
+    @Embedded
+    private OrderProduct product;
 
     @Column(name = "amount")
     private int amount;
@@ -32,7 +32,7 @@ public class Order {
 
     public Order(Product product, int amount, Person bartender) {
         this.creationDate = ZonedDateTime.now().toLocalDateTime();
-        this.product = product;
+        this.product = new OrderProduct(product.getId(), product.getName(), product.getBrand(), product.getPrice());
         this.amount = amount;
         this.bartender = bartender;
     }
@@ -52,16 +52,8 @@ public class Order {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public Product getProduct() {
+    public OrderProduct getProduct() {
         return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
     }
 
     public int getAmount() {
@@ -74,9 +66,5 @@ public class Order {
 
     public Person getBartender() {
         return bartender;
-    }
-
-    public void setBartender(Person bartender) {
-        this.bartender = bartender;
     }
 }
