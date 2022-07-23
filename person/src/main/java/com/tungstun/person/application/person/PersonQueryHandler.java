@@ -1,7 +1,7 @@
 package com.tungstun.person.application.person;
 
-import com.tungstun.person.application.person.query.GetAllPeopleOfBar;
 import com.tungstun.person.application.person.query.GetPerson;
+import com.tungstun.person.application.person.query.ListAllPeopleOfBar;
 import com.tungstun.person.domain.person.Person;
 import com.tungstun.person.domain.person.PersonRepository;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class PersonQueryHandler {
                 .orElseThrow(() -> new EntityNotFoundException(String.format("No Person found with id %s", query.personId())));
     }
 
-    public List<Person> handle(@Valid GetAllPeopleOfBar query) {
+    public List<Person> handle(@Valid ListAllPeopleOfBar query) {
         return repository.findAllOfBar(query.barId());
     }
 }
