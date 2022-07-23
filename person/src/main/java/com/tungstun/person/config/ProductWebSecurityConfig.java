@@ -1,4 +1,4 @@
-package com.tungstun.product.config;
+package com.tungstun.person.config;
 
 import com.tungstun.common.security.filter.JwtAuthenticationFilter;
 import com.tungstun.common.security.jwt.JwtValidator;

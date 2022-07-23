@@ -1,4 +1,4 @@
-package com.tungstun.product.config;
+package com.tungstun.person.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;
@@ -9,8 +9,8 @@ import io.swagger.v3.oas.models.annotations.OpenAPI31;
 @OpenAPI31
 @OpenAPIDefinition(
         info = @Info(
-                title = "bartap Backend Api - Product",
-                description = "Product API of the bartap Backend API microservice cluster containing product and category functionality",
+                title = "bartap Backend Api - Person",
+                description = "Person API of the bartap Backend API microservice cluster containing person functionality",
                 version = "1.0",
                 contact = @Contact(
                         name = "Tungstun",
@@ -19,8 +19,7 @@ import io.swagger.v3.oas.models.annotations.OpenAPI31;
                 )
         ),
         tags = {
-                @Tag(name = "Category", description = "Functionality based around the Category"),
-                @Tag(name = "Product", description = "Functionality based around the Product")
+                @Tag(name = "Person", description = "Functionality based around the Person")
         }
 )
 public class SwaggerConfig {
