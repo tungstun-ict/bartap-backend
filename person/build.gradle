@@ -12,7 +12,4 @@ repositories {
 dependencies {
     implementation project(':common')
     annotationProcessor project(':common')
-
-    implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
-    implementation 'org.apache.commons:commons-text:1.9'
 }

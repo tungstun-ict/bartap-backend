@@ -38,11 +38,3 @@ dependencyManagement {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 }
-
-testing {
-    suites {
-        test {
-            useJUnitJupiter('5.7.2')
-        }
-    }
-}
