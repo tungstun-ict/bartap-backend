@@ -20,6 +20,7 @@ import io.swagger.v3.oas.models.annotations.OpenAPI31;
         ),
         tags = {
                 @Tag(name = "Bill", description = "Functionality based around the Bill"),
+                @Tag(name = "Order", description = "Functionality based around the Order and Order History"),
         }
 )
 public class SwaggerConfig {
