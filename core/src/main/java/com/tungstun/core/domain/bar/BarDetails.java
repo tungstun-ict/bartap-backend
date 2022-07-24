@@ -1,7 +1,10 @@
 package com.tungstun.core.domain.bar;
 
+import com.tungstun.common.phonenumber.PhoneNumber;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Enumerated;
 
 @Embeddable
 public class BarDetails {
@@ -15,7 +18,8 @@ public class BarDetails {
     private String mail;
 
     @Column(name = "phone_number")
-    private String phoneNumber;
+    @Enumerated
+    private PhoneNumber phoneNumber;
 
     public BarDetails() {
     }
@@ -23,7 +27,7 @@ public class BarDetails {
         this.name = name;
         this.address = address;
         this.mail = mail;
-        this.phoneNumber = phoneNumber;
+        this.phoneNumber = new PhoneNumber(phoneNumber);
     }
 
     public String getName() {
@@ -50,11 +54,11 @@ public class BarDetails {
         this.mail = mail;
     }
 
-    public String getPhoneNumber() {
+    public PhoneNumber getPhoneNumber() {
         return phoneNumber;
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+        this.phoneNumber = new PhoneNumber(phoneNumber);
     }
 }

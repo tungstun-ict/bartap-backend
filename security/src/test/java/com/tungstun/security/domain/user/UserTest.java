@@ -29,7 +29,7 @@ class UserTest {
                 "mail@mail.com",
                 "first",
                 "last",
-                "06 12345678",
+                "+31612345678",
                 new ArrayList<>(List.of(new Authorization(barId, Role.OWNER))));
         user = new User(
                 "username",
@@ -37,7 +37,7 @@ class UserTest {
                 "mail@mail.com",
                 "first",
                 "last",
-                "06 12345678",
+                "+31612345679",
                 new ArrayList<>());
     }
 

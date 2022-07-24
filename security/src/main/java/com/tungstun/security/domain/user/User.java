@@ -1,5 +1,6 @@
 package com.tungstun.security.domain.user;
 
+import com.tungstun.common.phonenumber.PhoneNumber;
 import com.tungstun.common.security.exception.CannotAuthenticateException;
 import com.tungstun.common.security.exception.NotAuthorizedException;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,7 +33,8 @@ public class User implements UserDetails {
     private String lastName;
 
     @Column(name = "phone_number")
-    private String phoneNumber;
+    @Embedded
+    private PhoneNumber phoneNumber;
 
     @SuppressWarnings("java:S1948")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -47,8 +49,8 @@ public class User implements UserDetails {
         this.mail = mail;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
         this.authorizations = authorizations;
+        this.phoneNumber = new PhoneNumber(phoneNumber);
     }
 
     public void canAuthenticate() {
@@ -120,12 +122,12 @@ public class User implements UserDetails {
         return mail;
     }
 
-    public String getPhoneNumber() {
+    public PhoneNumber getPhoneNumber() {
         return phoneNumber;
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+        this.phoneNumber = new PhoneNumber(phoneNumber);
     }
 
     public String getFirstName() {
