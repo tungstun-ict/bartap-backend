@@ -5,6 +5,7 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 import static com.google.i18n.phonenumbers.NumberParseException.ErrorType.NOT_A_NUMBER;
 
@@ -15,7 +16,7 @@ import static com.google.i18n.phonenumbers.NumberParseException.ErrorType.NOT_A_
  * On construction, the provided phone number is parsed and validated using Google's libphonenumber i18n library.
  */
 @Embeddable
-public class PhoneNumber {
+public class PhoneNumber implements Serializable {
     private static final String VALIDATION_ERROR_MESSAGE = "Invalid phone number. " +
             "Provided phone number must be in the E164 or international number format " +
             "Provided phone number may contain ' ', '-' and '.' characters anywhere, " +
@@ -41,7 +42,6 @@ public class PhoneNumber {
 
     public PhoneNumber(String phoneNumber) {
         this.value = getValidatedPhoneNumber(phoneNumber);
-
     }
 
     public String getValue() {

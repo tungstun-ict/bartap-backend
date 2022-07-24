@@ -2,7 +2,6 @@ package com.tungstun.core.application.bar.command;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 
 public record CreateBar(
         @NotBlank(message = "Name cannot be blank")
@@ -17,6 +16,5 @@ public record CreateBar(
         String mail,
 
         @NotBlank(message = "Phone number cannot be blank")
-        @Pattern(regexp = "(^$|[0-9]{10})", message = "Invalid phone number format")
         String phoneNumber) {
 }

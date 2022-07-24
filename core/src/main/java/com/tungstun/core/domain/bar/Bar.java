@@ -1,5 +1,6 @@
 package com.tungstun.core.domain.bar;
 
+import com.tungstun.common.phonenumber.PhoneNumber;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -55,7 +56,7 @@ public class Bar {
         details.setMail(mail);
     }
 
-    public String getPhoneNumber() {
+    public PhoneNumber getPhoneNumber() {
         return details.getPhoneNumber();
     }
 

@@ -1,5 +1,7 @@
 package com.tungstun.person.domain.user;
 
+import com.tungstun.common.phonenumber.PhoneNumber;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -12,7 +14,7 @@ public class User {
     private Long id;
 
     @Column(name = "phone_number")
-    private String phoneNumber;
+    private PhoneNumber phoneNumber;
 
     @Column(name = "username")
     private String username;
@@ -25,7 +27,7 @@ public class User {
     }
     public User(Long id, String phoneNumber, String username, String fullName) {
         this.id = id;
-        this.phoneNumber = phoneNumber;
+        this.phoneNumber = new PhoneNumber(phoneNumber);
         this.username = username;
         this.fullName = fullName;
     }
@@ -34,7 +36,7 @@ public class User {
         return id;
     }
 
-    public String getPhoneNumber() {
+    public PhoneNumber getPhoneNumber() {
         return phoneNumber;
     }
 

@@ -57,7 +57,7 @@ public class UserCommandHandler {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getMail(),
-                user.getPhoneNumber()
+                user.getPhoneNumber().getValue()
         ));
     }
 
@@ -73,7 +73,7 @@ public class UserCommandHandler {
                 user.getUsername(),
                 user.getFirstName(),
                 user.getLastName(),
-                user.getPhoneNumber()
+                user.getPhoneNumber().getValue()
         ));
     }
 

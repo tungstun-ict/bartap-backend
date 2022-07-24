@@ -9,6 +9,12 @@ public record BarResponse(
         String mail,
         String phoneNumber) {
     public static BarResponse from (Bar bar) {
-        return new BarResponse(bar.getId(), bar.getName(), bar.getAddress(), bar.getMail(), bar.getPhoneNumber());
+        return new BarResponse(
+                bar.getId(),
+                bar.getName(),
+                bar.getAddress(),
+                bar.getMail(),
+                bar.getPhoneNumber().getValue()
+        );
     }
 }
