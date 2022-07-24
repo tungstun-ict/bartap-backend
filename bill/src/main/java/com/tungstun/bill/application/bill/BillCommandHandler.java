@@ -1,15 +1,15 @@
 package com.tungstun.bill.application.bill;
 
 import com.tungstun.bill.application.bill.command.*;
+import com.tungstun.bill.application.bill.event.BillCreated;
+import com.tungstun.bill.application.bill.event.BillDeleted;
+import com.tungstun.bill.application.bill.event.BillPayed;
 import com.tungstun.bill.domain.bill.Bill;
 import com.tungstun.bill.domain.bill.BillRepository;
 import com.tungstun.bill.domain.person.Person;
 import com.tungstun.bill.domain.person.PersonRepository;
 import com.tungstun.bill.domain.product.Product;
 import com.tungstun.bill.domain.product.ProductRepository;
-import com.tungstun.bill.port.messaging.out.BillCreated;
-import com.tungstun.bill.port.messaging.out.BillDeleted;
-import com.tungstun.bill.port.messaging.out.BillPayed;
 import com.tungstun.common.messaging.KafkaMessageProducer;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;

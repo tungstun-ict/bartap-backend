@@ -1,4 +1,4 @@
-package com.tungstun.bill.port.messaging.out;
+package com.tungstun.bill.application.bill.event;
 
 public record BillDeleted(
         Long id,

@@ -7,14 +7,14 @@ import com.tungstun.product.application.category.query.GetCategory;
 import com.tungstun.product.application.product.command.CreateProduct;
 import com.tungstun.product.application.product.command.DeleteProduct;
 import com.tungstun.product.application.product.command.UpdateProduct;
+import com.tungstun.product.application.product.event.ProductCreated;
+import com.tungstun.product.application.product.event.ProductDeleted;
+import com.tungstun.product.application.product.event.ProductUpdated;
 import com.tungstun.product.domain.category.Category;
 import com.tungstun.product.domain.product.Product;
 import com.tungstun.product.domain.product.ProductBuilder;
 import com.tungstun.product.domain.product.ProductRepository;
 import com.tungstun.product.domain.product.ProductType;
-import com.tungstun.product.port.messaging.out.product.ProductCreated;
-import com.tungstun.product.port.messaging.out.product.ProductDeleted;
-import com.tungstun.product.port.messaging.out.product.ProductUpdated;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 

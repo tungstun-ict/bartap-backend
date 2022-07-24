@@ -2,9 +2,9 @@ package com.tungstun.product.port.messaging.config;
 
 import com.tungstun.common.messaging.KafkaConfigBase;
 import com.tungstun.common.messaging.KafkaMessageProducer;
-import com.tungstun.product.port.messaging.out.product.ProductCreated;
-import com.tungstun.product.port.messaging.out.product.ProductDeleted;
-import com.tungstun.product.port.messaging.out.product.ProductUpdated;
+import com.tungstun.product.application.product.event.ProductCreated;
+import com.tungstun.product.application.product.event.ProductDeleted;
+import com.tungstun.product.application.product.event.ProductUpdated;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

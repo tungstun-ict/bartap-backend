@@ -1,8 +1,8 @@
 package com.tungstun.bill.port.messaging.config;
 
-import com.tungstun.bill.port.messaging.out.BillCreated;
-import com.tungstun.bill.port.messaging.out.BillDeleted;
-import com.tungstun.bill.port.messaging.out.BillPayed;
+import com.tungstun.bill.application.bill.event.BillCreated;
+import com.tungstun.bill.application.bill.event.BillDeleted;
+import com.tungstun.bill.application.bill.event.BillPayed;
 import com.tungstun.common.messaging.KafkaConfigBase;
 import com.tungstun.common.messaging.KafkaMessageProducer;
 import org.apache.kafka.clients.admin.NewTopic;

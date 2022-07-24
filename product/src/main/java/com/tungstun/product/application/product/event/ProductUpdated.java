@@ -1,8 +1,8 @@
-package com.tungstun.product.port.messaging.out.product;
+package com.tungstun.product.application.product.event;
 
 import com.tungstun.product.domain.product.Product;
 
-public record ProductCreated(
+public record ProductUpdated(
         Long id,
         Long barId,
         String name,
@@ -12,8 +12,8 @@ public record ProductCreated(
         String currencyCode,
         String currencySymbol) {
 
-    public static ProductCreated from(Product product) {
-        return new ProductCreated(
+    public static ProductUpdated from(Product product) {
+        return new ProductUpdated(
                 product.getId(),
                 product.getBarId(),
                 product.getName(),

@@ -1,4 +1,4 @@
-package com.tungstun.product.port.messaging.out.product;
+package com.tungstun.product.application.product.event;
 
 public record ProductDeleted(
         Long id,
