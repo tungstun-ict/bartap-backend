@@ -15,8 +15,7 @@ import org.springframework.test.annotation.DirtiesContext;
 @EmbeddedKafka(
         partitions = KafkaTestBase.PARTITIONS,
         brokerProperties = {
-                "listeners=PLAINTEXT://${spring.kafka.bootstrap-servers:localhost:9092}",
-                "port=9092"
+                "listeners=PLAINTEXT://${spring.kafka.bootstrap-servers:localhost:9092}"
         }
 )
 public abstract class KafkaTestBase {
