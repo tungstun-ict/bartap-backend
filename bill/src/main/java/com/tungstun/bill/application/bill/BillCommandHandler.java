@@ -66,7 +66,7 @@ public class BillCommandHandler {
         Bill bill = loadBill(command.id(), command.barId());
         repository.delete(bill);
 
-        producer.publish(command.id(), new BillDeleted(bill.getId(), bill.getBarId(), bill.getSessionId(), bill.getCustomer().getId()));
+        producer.publish(command.id(), new BillDeleted(bill.getId()));
     }
 
     public void handle(@Valid AddOrder command) {
