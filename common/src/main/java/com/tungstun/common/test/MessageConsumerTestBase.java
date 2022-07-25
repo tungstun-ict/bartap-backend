@@ -25,8 +25,12 @@ public class MessageConsumerTestBase extends KafkaTestBase{
 
     /**
      * Publishes an event that is to be consumed in a test
-     * */
+     */
     protected void publishEvent(String key, Object value) {
         template.send(topic, key, value);
+    }
+
+    protected void publishEvent(Number key, Object value) {
+        template.send(topic, String.valueOf(key), value);
     }
 }
