@@ -62,22 +62,18 @@ public abstract class KafkaConfigBase {
     /**
      * Creates a simple KafkaTemplate for producer configs.
      * KafkaTemplate keys are Strings and values can Object to allow custom kafka message classes.
-     *
-     * @param customClasses Collection of custom message classes to configure for (de)serialization
      */
-    public KafkaTemplate<String, Object> defaultKafkaTemplate(Collection<Class<?>> customClasses) {
-        return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(configProps(customClasses)));
+    public KafkaTemplate<String, Object> defaultKafkaTemplate() {
+        return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(configProps()));
     }
 
     /**
      * Creates DefaultKafkaConsumerFactory for consumer configs.
      * Key and value deserializers are wrapped in ErrorHandlingDeserializer to catch thrown exceptions
-     *
-     * @param customClasses Collection of custom message classes to configure for (de)serialization
      */
-    public ConsumerFactory<String, Object> defaultConsumerFactory(Collection<Class<?>> customClasses) {
+    public ConsumerFactory<String, Object> defaultConsumerFactory() {
         return new DefaultKafkaConsumerFactory<>(
-                configProps(customClasses),
+                configProps(),
                 new ErrorHandlingDeserializer<>(new StringDeserializer()),
                 new ErrorHandlingDeserializer<>(new JsonDeserializer<>()));
     }
@@ -86,16 +82,15 @@ public abstract class KafkaConfigBase {
      * Creates general configuration properties for consumers and producers.
      * Configuration properties contain created type mappings of given classes
      *
-     * @param customClasses Collection of custom message classes to configure for (de)serialization
      * @return Map of configuration properties
      */
-    private Map<String, Object> configProps(Collection<Class<?>> customClasses) {
+    private Map<String, Object> configProps() {
         return new HashMap<>(Map.of(
                 ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers,
                 ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
                 ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class,
                 JsonDeserializer.TRUSTED_PACKAGES, "com.tungstun.**",
-                JsonDeserializer.TYPE_MAPPINGS, convertToMapping(customClasses)
+                JsonDeserializer.TYPE_MAPPINGS, convertToMapping(EventClassRegister.getEventClasses())
         ));
     }
 
