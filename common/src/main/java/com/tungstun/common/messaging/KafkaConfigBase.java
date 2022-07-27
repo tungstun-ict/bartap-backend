@@ -18,39 +18,32 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * <p>Base class for Consumer and Producer configuration classes.
- * Class contains general kafka configuration properties with type mappings for a set of custom message classes</p>
+ * <p>Base class for Kafka Configuration classes.
+ * Class contains general kafka configuration properties with type mappings for a set event classes</p>
  *
- * <p>ConsumerConfig class example:</p>
+ * <p>KafkaConfig class example:</p>
  * <pre>
- *  public class ConsumerConfig extends KafkaConfigBase {
- *      private static final Set< Class<?> > CLASSES = Set.of(
- *          SomeConsumableMessage.class
- *      );
+ *  public class KafkaConfig extends KafkaConfigBase {
+ *      private static final String TOPIC = "topic";
  *
  *      &#64;Bean
- *      public KafkaListenerContainerFactory kafkaListenerContainerFactory() {
- *          ...
- *          factory.setConsumerFactory(defaultConsumerFactory(CLASSES));
- *          ...
+ *      public NewTopic topic() {
+ *         return new NewTopic(TOPIC, 1, (short) 1);
  *      }
- *  }
- * </pre>
- *
- * <p>ProducerConfig class example:</p>
- * <pre>
- *  public class ProducerConfig extends KafkaConfigBase {
- *      private static final String TOPIC = "topic";
- *      private static final Set< Class<?> > CLASSES = Set.of(
- *          SomeProducibleMessage.class
- *      );
  *
  *      &#64;Bean
  *      public KafkaMessageProducer kafkaMessageProducer() {
- *          return new KafkaMessageProducer(TOPIC, defaultKafkaTemplate(CLASSES));
+ *          return createMessageProducer(TOPIC);
+ *      }
+ *
+ *      &#64;Bean
+ *      public KafkaListenerContainerFactory kafkaListenerContainerFactory() {
+ *          KafkaListenerContainerFactory factory = ...
+ *          factory.setSomeSetting(xyz);
+ *          ...
+ *          return factory;
  *      }
  *  }
- * </pre>
  */
 public abstract class KafkaConfigBase {
     /**
@@ -69,14 +62,14 @@ public abstract class KafkaConfigBase {
 
     /**
      * Creates a simple KafkaTemplate for producer configs.
-     * KafkaTemplate keys are Strings and values can Object to allow custom kafka message classes.
+     * KafkaTemplate keys are Strings and values can Object to allow custom kafka event classes.
      */
     private KafkaTemplate<String, Object> defaultKafkaTemplate() {
         return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(configProps()));
     }
 
     /**
-     * Creates DefaultKafkaConsumerFactory for consumer configs.
+     * Creates DefaultKafkaConsumerFactory for consumer configurations
      * Key and value deserializers are wrapped in ErrorHandlingDeserializer to catch thrown exceptions
      */
     public ConsumerFactory<String, Object> defaultConsumerFactory() {
@@ -87,8 +80,8 @@ public abstract class KafkaConfigBase {
     }
 
     /**
-     * Creates general configuration properties for consumers and producers.
-     * Configuration properties contain created type mappings of given classes
+     * Creates general kafka configuration properties.
+     * Configuration properties contain created type mappings of registered event DTO classes
      *
      * @return Map of configuration properties
      */
