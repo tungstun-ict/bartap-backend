@@ -14,4 +14,3 @@ import java.lang.annotation.*;
 @Bean
 public @interface Event {
 }
-
