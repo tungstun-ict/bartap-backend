@@ -22,7 +22,7 @@ public class KafkaConfig extends KafkaConfigBase {
 
     @Bean
     public KafkaMessageProducer kafkaMessageProducer() {
-        return new KafkaMessageProducer(TOPIC);
+        return createMessageProducer(TOPIC);
     }
 
     @Bean

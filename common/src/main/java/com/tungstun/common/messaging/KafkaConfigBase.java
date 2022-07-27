@@ -59,11 +59,19 @@ public abstract class KafkaConfigBase {
     @Value("${spring.kafka.bootstrap-servers:localhost:9292}")
     protected String bootstrapServers;
 
+
+    /**
+     * Creates a new KafkaMessageProducer instance for the provided topic with the default kafka template
+     */
+    public KafkaMessageProducer createMessageProducer(String topic) {
+        return new KafkaMessageProducer(topic, defaultKafkaTemplate());
+    }
+
     /**
      * Creates a simple KafkaTemplate for producer configs.
      * KafkaTemplate keys are Strings and values can Object to allow custom kafka message classes.
      */
-    public KafkaTemplate<String, Object> defaultKafkaTemplate() {
+    private KafkaTemplate<String, Object> defaultKafkaTemplate() {
         return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(configProps()));
     }
 

@@ -28,6 +28,7 @@ class BillCommandHandlerMessageTest extends MessageProducerTestBases {
     private JpaRepository<Bill, Long> repository;
     @Autowired
     private JpaRepository<Person, Long> personRepository;
+
     private Person customer;
 
     @BeforeAll
@@ -39,7 +40,6 @@ class BillCommandHandlerMessageTest extends MessageProducerTestBases {
     protected void setUp() {
         super.setUp();
         customer = personRepository.save(new Person(456L, BAR_ID, "customer"));
-
     }
 
     @AfterEach
