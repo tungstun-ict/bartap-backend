@@ -1,13 +1,11 @@
 package com.tungstun.gateway.route;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix = "com.tungstun.bartap.routes")
-@EnableConfigurationProperties(RouteUriConfig.class)
-public class RouteUriConfig {
+@ConfigurationProperties(prefix = "com.tungstun.services")
+public class ServiceRoutes {
     private String security;
     private String core;
     private String bill;
@@ -15,6 +13,7 @@ public class RouteUriConfig {
     private String product;
     private String order;
 
+    //<editor-fold desc="Getters and Setters">
     public String getSecurity() {
         return security;
     }
@@ -31,20 +30,20 @@ public class RouteUriConfig {
         this.core = core;
     }
 
+    public String getBill() {
+        return bill;
+    }
+
+    public void setBill(String bill) {
+        this.bill = bill;
+    }
+
     public String getPerson() {
         return person;
     }
 
     public void setPerson(String person) {
         this.person = person;
-    }
-
-    public String getOrder() {
-        return order;
-    }
-
-    public void setOrder(String order) {
-        this.order = order;
     }
 
     public String getProduct() {
@@ -55,11 +54,12 @@ public class RouteUriConfig {
         this.product = product;
     }
 
-    public String getBill() {
-        return bill;
+    public String getOrder() {
+        return order;
     }
 
-    public void setBill(String bill) {
-        this.bill = bill;
+    public void setOrder(String order) {
+        this.order = order;
     }
+    //</editor-fold>
 }

@@ -20,4 +20,8 @@ public class TimeZoneConfig {
     public void setTimezone(String timezone) {
         this.timezone = timezone;
     }
+
+    public String getTimezone() {
+        return timezone;
+    }
 }

@@ -17,43 +17,39 @@ import java.time.Duration;
 public class BartapRouteConfiguration {
     private static final int REQUEST_TIME_LIMIT = 3;
 
-    private final RouteUriConfig routeUriConfig;
+    private final ServiceRoutes serviceRoutes;
 
-    public BartapRouteConfiguration(RouteUriConfig routeUriConfig) {
-        this.routeUriConfig = routeUriConfig;
+    public BartapRouteConfiguration(ServiceRoutes serviceRoutes) {
+        this.serviceRoutes = serviceRoutes;
     }
 
     @Bean
     public RouteLocator gatewayRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("security", r -> r.path("/api/authentication/**")
-                        .uri(routeUriConfig.getSecurity()))
+                        .uri(serviceRoutes.getSecurity()))
                 .route("user", r -> r.path("/api/user/**")
-                        .uri(routeUriConfig.getSecurity()))
+                        .uri(serviceRoutes.getSecurity()))
 
                 .route("core", r -> r.path("/api/bars/**")
-                        .uri(routeUriConfig.getCore()))
+                        .uri(serviceRoutes.getCore()))
 
                 .route("session", r -> r.path("/api/session/**")
-                        .uri(routeUriConfig.getCore()))
+                        .uri(serviceRoutes.getCore()))
 
                 .route("bill", r -> r.path("/api/bills/**")
-                        .uri(routeUriConfig.getBill()))
+                        .uri(serviceRoutes.getBill()))
 
                 .route("person", r -> r.path("/api/people/**")
-                        .uri(routeUriConfig.getPerson()))
+                        .uri(serviceRoutes.getPerson()))
 
                 .route("product", r -> r.path("/api/products/**")
-                        .uri(routeUriConfig.getProduct()))
+                        .uri(serviceRoutes.getProduct()))
                 .route("category", r -> r.path("/api/categories/**")
-                        .uri(routeUriConfig.getProduct()))
+                        .uri(serviceRoutes.getProduct()))
 
                 .route("order", r -> r.path("/api/order/**")
-                        .uri(routeUriConfig.getOrder()))
-
-
-
-
+                        .uri(serviceRoutes.getOrder()))
 
 //                        .filters(filter -> filter
 //                                .retry(3)
