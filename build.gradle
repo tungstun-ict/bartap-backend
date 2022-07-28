@@ -26,22 +26,26 @@ subprojects {
     apply plugin: 'jacoco'
 
     dependencies {
+//      Basic Spring dependencies (used by most)
         implementation 'org.springframework.boot:spring-boot-starter'
         implementation 'org.springframework.boot:spring-boot-starter-web'
-        implementation 'org.springframework.boot:spring-boot-starter-webflux'
         implementation 'org.springframework.boot:spring-boot-starter-validation'
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-        implementation 'org.hibernate.validator:hibernate-validator:6.1.5.Final'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+//      In-memory database for easy local spin up and testing
         implementation 'com.h2database:h2'
+
+//      Open Api UI dependency
         implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
 
+//      Spring Kafka
         implementation 'org.springframework.kafka:spring-kafka'
         implementation 'org.springframework.kafka:spring-kafka-test'
         testImplementation 'org.springframework.kafka:spring-kafka-test'
-
-        testImplementation 'org.springframework.boot:spring-boot-starter-test'
-        testImplementation 'io.projectreactor:reactor-test'
     }
+
     task prepareKotlinBuildScriptModel {}
     task wrapper {}
 
