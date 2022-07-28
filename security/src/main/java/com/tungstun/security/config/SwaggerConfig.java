@@ -1,10 +1,10 @@
 package com.tungstun.security.config;
 
+import io.swagger.v3.oas.annotations.OpenAPI31;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.models.annotations.OpenAPI31;
 
 @OpenAPI31
 @OpenAPIDefinition(
