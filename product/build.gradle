@@ -13,5 +13,13 @@ dependencies {
     implementation project(':common')
     annotationProcessor project(':common')
 
+//  Spring dependencies
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+//  Apache Commons Text
     implementation 'org.apache.commons:commons-text:1.9'
+
+//  Eureka Service Registry
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:3.1.3'
 }
