@@ -1,0 +1,14 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+//project.mainClassName = 'com.tungstun.eurekaserver.EurekaServerApplication'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
+}
