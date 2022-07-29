@@ -37,9 +37,6 @@ subprojects {
 //      In-memory database for easy local spin up and testing
         implementation 'com.h2database:h2'
 
-//      Open Api UI dependency
-        implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
-
 //      Spring Kafka
         implementation 'org.springframework.kafka:spring-kafka'
         implementation 'org.springframework.kafka:spring-kafka-test'
