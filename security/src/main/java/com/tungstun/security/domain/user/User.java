@@ -54,13 +54,13 @@ public class User implements UserDetails {
     }
 
     public void canAuthenticate() {
-        if (isAccountNonExpired())
+        if (!isAccountNonExpired())
             throw new CannotAuthenticateException("Account expired. An expired account cannot be authenticated.");
-        if (isAccountNonLocked())
+        if (!isAccountNonLocked())
             throw new CannotAuthenticateException("Account locked. A locked account cannot be authenticated.");
-        if (isCredentialsNonExpired())
+        if (!isCredentialsNonExpired())
             throw new CannotAuthenticateException("Account credentials expired. Expired credentials prevent authentication.");
-        if (isEnabled())
+        if (!isEnabled())
             throw new CannotAuthenticateException("Account disabled. A disabled account cannot be authenticated.");
     }
 

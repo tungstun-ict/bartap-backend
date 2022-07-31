@@ -8,13 +8,21 @@ repositories {
 }
 
 dependencies {
+//  Spring dependencies
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+//  auth0
     implementation 'com.auth0:java-jwt:3.19.2'
+
+//  Google dependencies
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.49'
+
+//  Reflections library
     implementation 'org.reflections:reflections:0.10.2'
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }
 
 java {

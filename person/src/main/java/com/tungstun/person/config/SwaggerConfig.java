@@ -1,26 +1,45 @@
 package com.tungstun.person.config;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.info.Contact;
-import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.models.annotations.OpenAPI31;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.SpecVersion;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
+import io.swagger.v3.oas.models.tags.Tag;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-@OpenAPI31
-@OpenAPIDefinition(
-        info = @Info(
-                title = "bartap Backend Api - Person",
-                description = "Person API of the bartap Backend API microservice cluster containing person functionality",
-                version = "1.0",
-                contact = @Contact(
-                        name = "Tungstun",
-                        url = "https://github.com/tungstun-ict",
-                        email = "jort@tungstun.nl"
-                )
-        ),
-        tags = {
-                @Tag(name = "Person", description = "Functionality based around the Person")
-        }
-)
+@Configuration
 public class SwaggerConfig {
+    @Bean
+    public OpenAPI gatewayOpenApi(@Value("${GATEWAY_URL:}") String gatewayUrl) {
+        OpenAPI openApi = new OpenAPI(SpecVersion.V31)
+                .info(new Info()
+                        .title("bartap Backend Api - Person")
+                        .description("Person API of the bartap Backend API microservice cluster containing person functionality")
+                        .version("1.0")
+                        .contact(new Contact()
+                                .name("Tungstun")
+                                .url("https://github.com/tungstun-ict")
+                                .email("jort@tungstun.nl")))
+                .addTagsItem(new Tag().name("Person").description("Functionality based around the Person"))
+                .schemaRequirement("Bearer", new SecurityScheme()
+                        .name("Bearer")
+                        .description("Authorization using Bearer JWT")
+                        .type(SecurityScheme.Type.HTTP)
+                        .in(SecurityScheme.In.HEADER)
+                        .scheme("bearer")
+                        .bearerFormat("JWT"));
+
+        if (gatewayUrl != null) {
+            openApi.addServersItem(new Server()
+                    .description("Gateway Url")
+                    .url(gatewayUrl)
+            );
+        }
+
+        return openApi;
+    }
 }
