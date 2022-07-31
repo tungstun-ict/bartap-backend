@@ -6,28 +6,28 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * @author satish sharma
- * <pre>
- *   	In-Memory store to hold API-Definition JSON
- * </pre>
+ * <p>Code adapted from <a href="https://github.com/GnanaJeyam/microservice-patterns">https://github.com/GnanaJeyam/microservice-patterns</a></p>
+ * <p>
+ * Singleton class that stores an In-Memory map with service id's paired with their OpenApi Definition JSON String
  */
 @Component
 @Scope(scopeName = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class ServiceDefinitionsContext {
-    private final ConcurrentMap<String, String> serviceDefinitions;
+    private ConcurrentMap<String, String> serviceDefinitions;
 
     private ServiceDefinitionsContext() {
         this.serviceDefinitions = new ConcurrentHashMap<>();
     }
 
-    public void updateServiceDefinitions(Map<String, String> map) {
-        serviceDefinitions.clear();
-        serviceDefinitions.putAll(map);
+    /**
+     * Changes the {@code serviceDefinitions} ConcurrentMap to the provided ConcurrentMap if it is not {@code null}.
+     */
+    public void updateServiceDefinitions(ConcurrentMap<String, String> map) {
+        if (map != null) serviceDefinitions = map;
     }
 
     public String getSwaggerDefinition(String serviceId) {

@@ -17,6 +17,8 @@ import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
+import java.util.Optional;
+
 import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 
 @Configuration
@@ -56,13 +58,17 @@ public class SwaggerConfig {
         return openApi;
     }
 
+    /**
+     * Router Function for Swagger UI to get the cached OpenApi Definition of running registered services
+     */
     @Bean
     @Operation(hidden = true)
     public RouterFunction<ServerResponse> serviceApiDocs() {
         return RouterFunctions.route(GET("/v3/api-docs/services/{serviceName}"), (ServerRequest req) -> {
             String service = req.pathVariable("serviceName");
-            String swaggerDocs = definitionContext.getSwaggerDefinition(service);
-            if (swaggerDocs == null) throw new ServiceDefinitionResourceNotFoundException();
+            String swaggerDocs = Optional.ofNullable(definitionContext.getSwaggerDefinition(service))
+                    .orElseThrow(ServiceDefinitionResourceNotFoundException::new);
+
             return ServerResponse.ok()
                     .header("Content-Type", ContentType.APPLICATION_JSON.toString())
                     .body(BodyInserters.fromValue(swaggerDocs));

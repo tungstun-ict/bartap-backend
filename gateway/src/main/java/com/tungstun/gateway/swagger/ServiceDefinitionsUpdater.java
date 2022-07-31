@@ -15,15 +15,14 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 /**
- * @author satish sharma
- * <pre>
- *   Periodically poll the service instaces and update the in memory store as key value pair
- * </pre>
+ * <p>Code adapted from <a href="https://github.com/GnanaJeyam/microservice-patterns">https://github.com/GnanaJeyam/microservice-patterns</a></p>
+ * <p>
+ * Class that periodically updates the {@code ServiceDefinitionContext}.
  */
 @Component
 public class ServiceDefinitionsUpdater {
@@ -43,30 +42,36 @@ public class ServiceDefinitionsUpdater {
         this.template = new RestTemplate();
     }
 
+    /**
+     * Gets all running services from the service registry, polls their OpenApi Definition and updates the {@code ServiceDefinitionContext} with them.
+     */
     @Scheduled(fixedDelayString = "${swagger.config.refreshrate}")
-    public void refreshSwaggerDefinitions() {
+    public void refreshOpenApiDefinitions() {
         LOG.info("Starting Service Definitions Context refresh");
 
-        Map<String, String> serviceDocumentations = discoveryClient.getServices()
+        ConcurrentMap<String, String> serviceDocumentations = discoveryClient.getServices()
                 .parallelStream()
                 .filter(serviceId -> !serviceId.equals(applicationName))
                 .map(serviceId -> Pair.create(serviceId, getServiceDefinition(serviceId)))
                 .filter(pair -> pair.getRight().isPresent())
-                .collect(Collectors.toMap(Pair::getLeft, pair -> pair.getRight().get()));
+                .collect(Collectors.toConcurrentMap(Pair::getLeft, pair -> pair.getRight().get()));
         definitionContext.updateServiceDefinitions(serviceDocumentations);
 
         LOG.info("Service Definitions Context Refreshed for at : {}", LocalDateTime.now());
     }
 
+    /**
+     * Gets a running service instance's URL and polls the OpenApi Definition from it.
+     */
     private Optional<String> getServiceDefinition(String serviceId) {
         List<ServiceInstance> serviceInstances = discoveryClient.getInstances(serviceId);
-        if (serviceInstances == null || serviceInstances.isEmpty()) { //Should not be the case, kept for failsafe
+        if (serviceInstances == null || serviceInstances.isEmpty()) {
             LOG.info("No instances available for service : {} ", serviceId);
             return Optional.empty();
         }
 
         String swaggerURL = serviceInstances.get(0).getUri() + DEFAULT_SWAGGER_URL;
-        Optional<String> jsonData = loadSwaggerDefinition(swaggerURL, serviceId);
+        Optional<String> jsonData = pollOpenApiDefinition(swaggerURL, serviceId);
         if (jsonData.isEmpty()) {
             LOG.error("Skipping Definition Refresh for service : {}", serviceId);
         }
@@ -74,7 +79,10 @@ public class ServiceDefinitionsUpdater {
         return jsonData;
     }
 
-    private Optional<String> loadSwaggerDefinition(String url, String serviceName) {
+    /**
+     * Polls the OpenApi Definition JSON from the provided url.
+     */
+    private Optional<String> pollOpenApiDefinition(String url, String serviceName) {
         try {
             Object data = template.getForObject(url, Object.class);
             String json = new ObjectMapper().writeValueAsString(data);
