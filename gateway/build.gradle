@@ -39,6 +39,7 @@ dependencies {
 //  Springdoc OpenAPI / Swagger
     implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
     implementation 'org.springdoc:springdoc-openapi-webflux-ui:1.6.9'
+    implementation 'org.springdoc:springdoc-openapi-security:1.6.9'
 }
 
 dependencyManagement {

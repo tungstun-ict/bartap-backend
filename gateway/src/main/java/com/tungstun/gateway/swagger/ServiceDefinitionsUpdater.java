@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.graalvm.collections.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -33,6 +34,9 @@ public class ServiceDefinitionsUpdater {
     private final DiscoveryClient discoveryClient;
     private final RestTemplate template;
 
+    @Value("${spring.application.name}")
+    private String applicationName;
+
     public ServiceDefinitionsUpdater(ServiceDefinitionsContext definitionContext, DiscoveryClient discoveryClient) {
         this.definitionContext = definitionContext;
         this.discoveryClient = discoveryClient;
@@ -41,17 +45,17 @@ public class ServiceDefinitionsUpdater {
 
     @Scheduled(fixedDelayString = "${swagger.config.refreshrate}")
     public void refreshSwaggerDefinitions() {
-        LOG.info("Starting Service Definition Context refresh");
+        LOG.info("Starting Service Definitions Context refresh");
 
         Map<String, String> serviceDocumentations = discoveryClient.getServices()
                 .parallelStream()
-                .filter(serviceId -> !serviceId.equals("bartap-gateway"))
+                .filter(serviceId -> !serviceId.equals(applicationName))
                 .map(serviceId -> Pair.create(serviceId, getServiceDefinition(serviceId)))
                 .filter(pair -> pair.getRight().isPresent())
                 .collect(Collectors.toMap(Pair::getLeft, pair -> pair.getRight().get()));
         definitionContext.updateServiceDefinitions(serviceDocumentations);
 
-        LOG.info("Definition Context Refreshed for at : {}", LocalDateTime.now());
+        LOG.info("Service Definitions Context Refreshed for at : {}", LocalDateTime.now());
     }
 
     private Optional<String> getServiceDefinition(String serviceId) {

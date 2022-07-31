@@ -13,7 +13,7 @@ import static java.util.stream.Collectors.toList;
 @Primary
 @Configuration
 public class BartapSwaggerUiConfigParameters extends SwaggerUiConfigParameters {
-    private static final String SERVICE_API_DOCS_URL_PREFIX = "/v3/api-docs/services/";
+    private static final String SERVICE_API_DOCS_URL_PREFIX = "/api/v3/api-docs/services/";
 
     private final ServiceDefinitionsContext definitionContext;
 
