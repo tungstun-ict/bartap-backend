@@ -3,11 +3,18 @@ package com.tungstun.common.messaging;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.listener.CommonLoggingErrorHandler;
+import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
@@ -37,9 +44,10 @@ import java.util.stream.Collectors;
  *      }
  *
  *      &#64;Bean
+ *      &#64;Override
  *      public KafkaListenerContainerFactory kafkaListenerContainerFactory() {
- *          KafkaListenerContainerFactory factory = ...
- *          factory.setSomeSetting(xyz);
+ *          var factory = super.kafkaListenerContainerFactory()
+ *          factory.setSomeNewSetting(xyz);
  *          ...
  *          return factory;
  *      }
@@ -52,26 +60,43 @@ public abstract class KafkaConfigBase {
     @Value("${spring.kafka.bootstrap-servers:localhost:9292}")
     protected String bootstrapServers;
 
+    @Autowired
+    @Lazy
+    private KafkaTemplate<String, Object> template;
 
     /**
-     * Creates a new KafkaMessageProducer instance for the provided topic with the default kafka template
+     * Creates a new KafkaMessageProducer instance for the provided topic with the autowired default kafka template
      */
     public KafkaMessageProducer createMessageProducer(String topic) {
-        return new KafkaMessageProducer(topic, defaultKafkaTemplate());
+        return new KafkaMessageProducer(topic, template);
     }
 
     /**
      * Creates a simple KafkaTemplate for producer configs.
      * KafkaTemplate keys are Strings and values can Object to allow custom kafka event classes.
      */
-    private KafkaTemplate<String, Object> defaultKafkaTemplate() {
+    @Bean
+    public KafkaTemplate<String, Object> defaultKafkaTemplate() {
         return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(configProps()));
+    }
+
+    /**
+     * KafkaListenerContainerFactory bean method with default settings for te MessageListenerContainer.
+     * Method can be overridden to add or overwrite set classes or properties
+     */
+    @Bean
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory(ConsumerFactory<String, Object> consumerFactory) {
+        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setCommonErrorHandler(new CommonLoggingErrorHandler());
+        factory.setConsumerFactory(consumerFactory);
+        return factory;
     }
 
     /**
      * Creates DefaultKafkaConsumerFactory for consumer configurations
      * Key and value deserializers are wrapped in ErrorHandlingDeserializer to catch thrown exceptions
      */
+    @Bean
     public ConsumerFactory<String, Object> defaultConsumerFactory() {
         return new DefaultKafkaConsumerFactory<>(
                 configProps(),
