@@ -19,6 +19,7 @@ public class KafkaMessageProducer {
     public void publish(Number id, Object data) {
         publish(String.valueOf(id), data);
     }
+
     public void publish(String id, Object data) {
         template.send(topic, id, data)
                 .addCallback(
@@ -27,5 +28,4 @@ public class KafkaMessageProducer {
                                 id, data, failure.getLocalizedMessage())
                 );
     }
-
 }

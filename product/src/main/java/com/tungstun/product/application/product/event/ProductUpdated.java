@@ -1,7 +1,9 @@
 package com.tungstun.product.application.product.event;
 
+import com.tungstun.common.messaging.Event;
 import com.tungstun.product.domain.product.Product;
 
+@Event
 public record ProductUpdated(
         Long id,
         Long barId,
