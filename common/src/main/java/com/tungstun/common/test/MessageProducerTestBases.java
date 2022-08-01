@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * Class contains static assertion methods to check key and the data's object-type
  * {@code topic} defines topic name to listen on for messages.
  */
-// Not a Component or other Bean, because it would be loaded during non-test runtme and break the application
+// Not a Component or other Bean, because it would be loaded during non-test runtime and break the application
 public class MessageProducerTestBases extends KafkaTestBase {
     protected BlockingQueue<ConsumerRecord<String, String>> records;
     protected KafkaMessageListenerContainer<String, String> container;
