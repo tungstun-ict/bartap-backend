@@ -17,7 +17,7 @@ public class Person {
     private final boolean deleted = Boolean.FALSE;
 
     @Id
-    @Column(name = "person_id")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "bar_id")

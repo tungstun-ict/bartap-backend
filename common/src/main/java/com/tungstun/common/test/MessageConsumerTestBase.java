@@ -4,6 +4,9 @@ import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
+
+import java.util.concurrent.Future;
 
 /**
  * Base Class for Consumer Tests.
@@ -32,6 +35,9 @@ public class MessageConsumerTestBase extends KafkaTestBase{
      * Publishes an event that is to be consumed in a test
      */
     protected void publishEvent(Number key, Object value) {
-        template.send(topic, String.valueOf(key), value);
+        Future<SendResult<String, Object>> future = template.send(topic, String.valueOf(key), value);
+        while (true) {
+            if (future.isDone()) return;
+        }
     }
 }

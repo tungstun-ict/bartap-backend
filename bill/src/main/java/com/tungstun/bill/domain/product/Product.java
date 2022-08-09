@@ -18,7 +18,7 @@ public class Product {
     private final boolean deleted = Boolean.FALSE;
 
     @Id
-    @Column(name = "product_id")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "bar_id")
