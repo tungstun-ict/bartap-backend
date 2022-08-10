@@ -42,8 +42,11 @@ public class BillCommandHandler {
     }
 
     public Long handle(@Valid CreateBill command) {
-        //todo check if person already has bill
         Person person = personQueryHandler.handle(new GetPerson(command.customerId()));
+        boolean anyMatch = repository.findAllOfSession(command.sessionId(), command.barId())
+                .stream()
+                .anyMatch(bill -> bill.getCustomer().getId().equals(person.getId()));
+        if (anyMatch) throw new IllegalArgumentException("Person already has an active bill in the session");
         Bill bill = repository.save(new Bill(command.barId(), command.sessionId(), person));
 
         producer.publish(bill.getId(), new BillCreated(bill.getId(), bill.getBarId(), bill.getSessionId(), bill.getCustomer().getId()));

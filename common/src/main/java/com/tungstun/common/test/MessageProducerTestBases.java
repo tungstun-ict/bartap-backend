@@ -25,13 +25,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * {@code topic} defines topic name to listen on for messages.
  */
 // Not a Component or other Bean, because it would be loaded during non-test runtime and break the application
-public class MessageProducerTestBases extends KafkaTestBase {
+public class MessageProducerTestBases extends EmbeddedKafkaTestBase {
     protected BlockingQueue<ConsumerRecord<String, String>> records;
     protected KafkaMessageListenerContainer<String, String> container;
 
     /**
      * Should be called in test class's {@code @BeforeEach setUp()} method
-     * */
+     */
     protected void setUp() {
         Map<String, Object> configs = new HashMap<>(
                 KafkaTestUtils.consumerProps("consumer", "false", embeddedKafkaBroker));

@@ -13,9 +13,9 @@ import java.util.concurrent.Future;
  * Class contains a way of publishing messages to a specified topic, to test a Consumer class.
  * {@code topic} defines topic name to publish messages to.
  * Class creates new topic if it does not exist yet with name of {@code topic}
- * */
+ */
 // Not a Component or other Bean, because it would be loaded during non-test runtime and break the application
-public class MessageConsumerTestBase extends KafkaTestBase{
+public class MessageConsumerTestBase extends EmbeddedKafkaTestBase {
     @Autowired
     private KafkaTemplate<String, Object> template;
 

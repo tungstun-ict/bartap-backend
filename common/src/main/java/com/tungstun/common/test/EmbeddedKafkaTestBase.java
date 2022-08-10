@@ -13,12 +13,12 @@ import org.springframework.test.annotation.DirtiesContext;
 // Not a Component or other Bean, because it would be loaded during non-test runtme and break the application
 @DirtiesContext
 @EmbeddedKafka(
-        partitions = KafkaTestBase.PARTITIONS,
+        partitions = EmbeddedKafkaTestBase.PARTITIONS,
         brokerProperties = {
                 "listeners=PLAINTEXT://${spring.kafka.bootstrap-servers:localhost:9092}"
         }
 )
-public abstract class KafkaTestBase {
+public abstract class EmbeddedKafkaTestBase {
     protected static final int PARTITIONS = 1;
 
     protected static String topic;
