@@ -4,12 +4,14 @@ import com.tungstun.bill.application.bill.command.*;
 import com.tungstun.bill.application.bill.event.BillCreated;
 import com.tungstun.bill.application.bill.event.BillDeleted;
 import com.tungstun.bill.application.bill.event.BillPayed;
+import com.tungstun.bill.application.person.PersonQueryHandler;
+import com.tungstun.bill.application.person.query.GetPerson;
+import com.tungstun.bill.application.product.ProductQueryHandler;
+import com.tungstun.bill.application.product.query.GetProduct;
 import com.tungstun.bill.domain.bill.Bill;
 import com.tungstun.bill.domain.bill.BillRepository;
 import com.tungstun.bill.domain.person.Person;
-import com.tungstun.bill.domain.person.PersonRepository;
 import com.tungstun.bill.domain.product.Product;
-import com.tungstun.bill.domain.product.ProductRepository;
 import com.tungstun.common.messaging.KafkaMessageProducer;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -23,14 +25,14 @@ import javax.validation.Valid;
 @Transactional
 public class BillCommandHandler {
     private final BillRepository repository;
-    private final ProductRepository productRepository;
-    private final PersonRepository personRepository;
+    private final ProductQueryHandler productQueryHandler;
+    private final PersonQueryHandler personQueryHandler;
     private final KafkaMessageProducer producer;
 
-    public BillCommandHandler(BillRepository repository, ProductRepository productRepository, PersonRepository personRepository, KafkaMessageProducer producer) {
+    public BillCommandHandler(BillRepository repository, ProductQueryHandler productQueryHandler, PersonQueryHandler personQueryHandler, KafkaMessageProducer producer) {
         this.repository = repository;
-        this.productRepository = productRepository;
-        this.personRepository = personRepository;
+        this.productQueryHandler = productQueryHandler;
+        this.personQueryHandler = personQueryHandler;
         this.producer = producer;
     }
 
@@ -39,14 +41,9 @@ public class BillCommandHandler {
                 .orElseThrow(() -> new EntityNotFoundException(String.format("No bill found with id %s", id)));
     }
 
-    private Person loadPerson(Long personId) {
-        return personRepository.findById(personId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("No bill found with id %s", personId)));
-    }
-
     public Long handle(@Valid CreateBill command) {
         //todo check if person already has bill
-        Person person = loadPerson(command.customerId());
+        Person person = personQueryHandler.handle(new GetPerson(command.customerId()));
         Bill bill = repository.save(new Bill(command.barId(), command.sessionId(), person));
 
         producer.publish(bill.getId(), new BillCreated(bill.getId(), bill.getBarId(), bill.getSessionId(), bill.getCustomer().getId()));
@@ -72,9 +69,8 @@ public class BillCommandHandler {
 
     public void handle(@Valid AddOrder command) {
         Bill bill = loadBill(command.id(), command.barId());
-        Product product = productRepository.findById(command.productId())
-                .orElseThrow(() -> new IllegalArgumentException(String.format("Product with id %s does not exist", command.productId())));
-        Person person = loadPerson(command.bartenderId());
+        Product product = productQueryHandler.handle(new GetProduct(command.productId()));
+        Person person = personQueryHandler.handle(new GetPerson(command.bartenderId()));
         bill.addOrder(product, command.amount(), person);
         repository.update(bill);
     }
