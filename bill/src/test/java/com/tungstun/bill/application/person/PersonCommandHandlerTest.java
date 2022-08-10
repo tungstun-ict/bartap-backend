@@ -1,61 +1,71 @@
-package com.tungstun.bill.port.messaging.in.person;
+package com.tungstun.bill.application.person;
 
+import com.tungstun.bill.application.person.command.CreatePerson;
+import com.tungstun.bill.application.person.command.DeletePerson;
+import com.tungstun.bill.application.person.command.UpdatePerson;
 import com.tungstun.bill.domain.person.Person;
-import com.tungstun.bill.port.messaging.in.person.message.PersonCreated;
-import com.tungstun.bill.port.messaging.in.person.message.PersonDeleted;
-import com.tungstun.bill.port.messaging.in.person.message.PersonUpdated;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import javax.transaction.Transactional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-class KafkaPersonMessageConsumerTest {
+@Transactional
+class PersonCommandHandlerTest {
     @Autowired
-    private KafkaPersonMessageConsumer consumer;
+    private PersonCommandHandler commandHandler;
     @Autowired
     private JpaRepository<Person, Long> repository;
 
+    @AfterEach
+    void tearDown() {
+        repository.deleteAll();
+    }
+
     @Test
-    void personCreated() {
-        PersonCreated event = new PersonCreated(
+    void createPerson() {
+        CreatePerson command = new CreatePerson(
                 123L,
                 321L,
                 "username"
         );
-        consumer.handlePersonCreated(event);
 
-        assertTrue(repository.findById(event.id()).isPresent());
+        commandHandler.handle(command);
+
+        assertTrue(repository.findById(command.id()).isPresent());
     }
 
     @Test
-    void personUpdated() {
+    void updatePerson() {
         Long id = repository.save(new Person(
                 123L,
                 456L,
                 "username"
         )).getId();
-        PersonUpdated event = new PersonUpdated(id, "newUsername");
+        UpdatePerson command = new UpdatePerson(id, "newUsername");
 
-        consumer.handlePersonUpdated(event);
+        commandHandler.handle(command);
 
         Person person = repository.findById(id).orElseThrow();
-        assertEquals(event.username(), person.getUsername());
+        assertEquals(command.username(), person.getUsername());
     }
 
     @Test
-    void personDeleted() {
+    void deletePerson() {
         Long id = repository.save(new Person(
                 123L,
                 456L,
                 "username"
         )).getId();
-        PersonDeleted event = new PersonDeleted(id);
+        DeletePerson command = new DeletePerson(id);
 
-        consumer.handlePersonDeleted(event);
+        commandHandler.handle(command);
         assertTrue(repository.findById(id).isEmpty());
     }
 }

@@ -25,8 +25,8 @@ public class PersonCommandHandler {
 
     public Person handle(@Valid CreatePerson command) {
         return repository.save(new Person(
-                command.barId(),
                 command.id(),
+                command.barId(),
                 command.username()
         ));
     }

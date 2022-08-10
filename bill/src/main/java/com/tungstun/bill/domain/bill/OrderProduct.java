@@ -4,6 +4,7 @@ import com.tungstun.common.money.Money;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
 
 @Embeddable
 public class OrderProduct {
@@ -16,7 +17,7 @@ public class OrderProduct {
     @Column(name = "brand")
     private String brand;
 
-    @Column(name = "price")
+    @Embedded
     private Money price;
 
     public OrderProduct() {

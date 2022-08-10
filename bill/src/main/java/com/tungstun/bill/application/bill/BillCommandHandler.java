@@ -45,6 +45,7 @@ public class BillCommandHandler {
     }
 
     public Long handle(@Valid CreateBill command) {
+        //todo check if person already has bill
         Person person = loadPerson(command.customerId());
         Bill bill = repository.save(new Bill(command.barId(), command.sessionId(), person));
 

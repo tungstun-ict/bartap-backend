@@ -1,10 +1,11 @@
-package com.tungstun.bill.port.messaging.in.product;
+package com.tungstun.bill.application.product;
 
+import com.tungstun.bill.application.product.command.CreateProduct;
+import com.tungstun.bill.application.product.command.DeleteProduct;
+import com.tungstun.bill.application.product.command.UpdateProduct;
 import com.tungstun.bill.domain.product.Product;
-import com.tungstun.bill.port.messaging.in.product.message.ProductCreated;
-import com.tungstun.bill.port.messaging.in.product.message.ProductDeleted;
-import com.tungstun.bill.port.messaging.in.product.message.ProductUpdated;
 import com.tungstun.common.money.Money;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,27 +18,32 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Transactional
-class KafkaProductMessageConsumerTest {
+class ProductCommandHandlerTest {
     @Autowired
-    private KafkaProductMessageConsumer consumer;
+    private ProductCommandHandler commandHandler;
     @Autowired
     private JpaRepository<Product, Long> repository;
 
+    @AfterEach
+    void tearDown() {
+        repository.deleteAll();
+    }
+
     @Test
     void productCreated() {
-        ProductCreated event = new ProductCreated(
+        CreateProduct command = new CreateProduct(
                 123L,
                 321L,
                 "product",
                 "brand",
                 330d,
-                2.5d,
                 "EUR",
                 "€"
         );
-        consumer.handleProductCreated(event);
 
-        assertTrue(repository.findById(event.id()).isPresent());
+        commandHandler.handle(command);
+
+        assertTrue(repository.findById(command.id()).isPresent());
     }
 
     @Test
@@ -49,22 +55,21 @@ class KafkaProductMessageConsumerTest {
                 "brand",
                 new Money(1)
         )).getId();
-        ProductUpdated event = new ProductUpdated(
+        UpdateProduct command = new UpdateProduct(
                 id,
                 "newProduct",
                 "newBrand",
                 330d,
-                2.5d,
                 "EUR",
                 "€"
         );
 
-        consumer.handleProductUpdated(event);
+        commandHandler.handle(command);
 
         Product product = repository.findById(id).orElseThrow();
-        assertEquals(event.name(), product.getName());
-        assertEquals(event.brand(), product.getBrand());
-        assertEquals(event.price(), product.getPrice().amount().doubleValue());
+        assertEquals(command.name(), product.getName());
+        assertEquals(command.brand(), product.getBrand());
+        assertEquals(command.price(), product.getPrice().amount().doubleValue());
     }
 
     @Test
@@ -76,9 +81,10 @@ class KafkaProductMessageConsumerTest {
                 "brand",
                 new Money(1)
         )).getId();
-        ProductDeleted event = new ProductDeleted(id);
+        DeleteProduct command = new DeleteProduct(id);
 
-        consumer.handleProductDeleted(event);
+        commandHandler.handle(command);
+
         assertTrue(repository.findById(id).isEmpty());
     }
 }

@@ -4,10 +4,7 @@ import com.tungstun.common.money.Money;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "product")
@@ -30,7 +27,7 @@ public class Product {
     @Column(name = "brand")
     private String brand;
 
-    @Column(name = "price")
+    @Embedded
     private Money price;
 
     public Product() {
