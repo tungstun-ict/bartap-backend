@@ -1,61 +1,57 @@
 package com.tungstun.bill.port.messaging.in.product;
 
-import com.tungstun.bill.domain.product.Product;
-import com.tungstun.bill.domain.product.ProductRepository;
+import com.tungstun.bill.application.product.ProductCommandHandler;
+import com.tungstun.bill.application.product.command.CreateProduct;
+import com.tungstun.bill.application.product.command.DeleteProduct;
+import com.tungstun.bill.application.product.command.UpdateProduct;
 import com.tungstun.bill.port.messaging.in.product.message.ProductCreated;
 import com.tungstun.bill.port.messaging.in.product.message.ProductDeleted;
 import com.tungstun.bill.port.messaging.in.product.message.ProductUpdated;
 import com.tungstun.common.messaging.KafkaMessageConsumer;
-import com.tungstun.common.money.Currency;
-import com.tungstun.common.money.Money;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-
 @Component
 @KafkaListener(id = "productMessageListener", topics = "product")
 public class KafkaProductMessageConsumer extends KafkaMessageConsumer {
-    private final ProductRepository repository;
+    private final ProductCommandHandler commandHandler;
 
-    public KafkaProductMessageConsumer(ProductRepository repository) {
-        this.repository = repository;
+    public KafkaProductMessageConsumer(ProductCommandHandler commandHandler) {
+        this.commandHandler = commandHandler;
     }
 
     @KafkaHandler
-    public void handleProductCreated(ProductCreated o) {
-        LOG.info("Received ProductCreated: {}", o);
-        repository.save(new Product(
-                o.id(),
-                o.barId(),
-                o.name(),
-                o.brand(),
-                new Money(
-                        BigDecimal.valueOf(o.price()),
-                        new Currency(o.currencySymbol(), o.currencyCode())
-                )
+    public void handleProductCreated(ProductCreated event) {
+        LOG.info("Received ProductCreated: {}", event);
+        commandHandler.handle(new CreateProduct(
+                event.id(),
+                event.barId(),
+                event.name(),
+                event.brand(),
+                event.price(),
+                event.currencySymbol(),
+                event.currencyCode()
         ));
     }
 
     @KafkaHandler
-    public void handleProductUpdated(ProductUpdated o) {
-        LOG.info("Received ProductUpdated: {}", o);
-        Product product = repository.findById(o.id())
-                .orElseThrow();
+    public void handleProductUpdated(ProductUpdated event) {
+        LOG.info("Received ProductUpdated: {}", event);
 
-        Money newPrice = new Money(
-                BigDecimal.valueOf(o.price()),
-                new Currency(o.currencySymbol(), o.currencyCode())
-        );
-        product.setPrice(newPrice);
-        product.setName(o.name());
-        product.setBrand(o.brand());
+        commandHandler.handle(new UpdateProduct(
+                event.id(),
+                event.name(),
+                event.brand(),
+                event.price(),
+                event.currencySymbol(),
+                event.currencyCode()
+        ));
     }
 
     @KafkaHandler
-    public void handleProductDeleted(ProductDeleted o) {
-        LOG.info("Received ProductDeleted: {}", o);
-        repository.delete(o.id());
+    public void handleProductDeleted(ProductDeleted event) {
+        LOG.info("Received ProductDeleted: {}", event);
+        commandHandler.handle(new DeleteProduct(event.id()));
     }
 }
