@@ -38,16 +38,24 @@ public class BarPreAuthorizationAspect {
         String barId = extractBarId(annotation.id(), methodSignature, pjp);
         String[] roles = annotation.roles();
 
-        BartapUserDetails bartapUserDetails = (BartapUserDetails) SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getPrincipal();
-        List<Authorization> authorizations = bartapUserDetails.getAuthorizations();
-        if (authorizations != null) {
+        try {
+            BartapUserDetails bartapUserDetails = (BartapUserDetails) SecurityContextHolder.getContext()
+                    .getAuthentication()
+                    .getPrincipal();
+
+            List<Authorization> authorizations = bartapUserDetails.getAuthorizations();
+            if (authorizations == null) throw new NotAuthorizedException("User not authorized for action or resource");
             authorizations.stream()
                     .filter(authorization -> authorization.barId().equals(barId))
-                    .filter(authorization -> Arrays.stream(roles).anyMatch(authorization.role()::equalsIgnoreCase))
+                    .filter(authorization -> {
+                        if (roles.length == 0) return true;
+                        return Arrays.stream(roles).anyMatch(authorization.role()::equalsIgnoreCase);
+                    })
                     .findAny()
-                    .orElseThrow(() -> new NotAuthorizedException("User not authorized for action or resource"));
+                    .orElseThrow();
+
+        } catch (RuntimeException e) {
+            throw new NotAuthorizedException("User not authorized for action or resource");
         }
         return pjp.proceed();
     }
