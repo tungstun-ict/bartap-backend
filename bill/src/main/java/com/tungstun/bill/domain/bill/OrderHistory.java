@@ -2,13 +2,14 @@ package com.tungstun.bill.domain.bill;
 
 import com.tungstun.bill.domain.person.Person;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
 import javax.persistence.OneToMany;
 import java.util.List;
 
 @Embeddable
 public class OrderHistory {
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<OrderHistoryEntry> history;
 
     public OrderHistory() {

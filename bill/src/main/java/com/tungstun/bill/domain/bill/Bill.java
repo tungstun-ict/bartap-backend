@@ -27,7 +27,7 @@ public class Bill {
     @ManyToOne
     private Person customer;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Order> orders;
 
     @Embedded

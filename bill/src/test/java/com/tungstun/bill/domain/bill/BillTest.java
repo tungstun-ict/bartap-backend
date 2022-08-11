@@ -16,14 +16,15 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BillTest {
-    private static final Person BARTENDER = new Person(123L, 321L, "bartender");
+    private static final Person CUSTOMER = new Person(123L, 321L, "customer");
+    private static final Person BARTENDER = new Person(321L, 321L, "bartender");
     private static final Product PRODUCT = new Product(123L, 123L, "name", "brand", new Money(1.5d));
 
     private Bill bill;
 
     @BeforeEach
     void setUp() {
-        bill = new Bill(123L, 456L, BARTENDER);
+        bill = new Bill(123L, 456L, CUSTOMER);
     }
 
     @Test
@@ -35,7 +36,7 @@ class BillTest {
     void addOrderWithoutProduct_Throws() {
         assertThrows(
                 IllegalArgumentException.class,
-                () -> bill.addOrder(null, 1, BARTENDER)
+                () -> bill.addOrder(null, 1, CUSTOMER)
         );
     }
 
@@ -52,19 +53,30 @@ class BillTest {
     void addOrderWithInvalidAmount_Throws(int amount) {
         assertThrows(
                 IllegalArgumentException.class,
-                () -> bill.addOrder(PRODUCT, amount, BARTENDER)
+                () -> bill.addOrder(PRODUCT, amount, CUSTOMER)
+        );
+    }
+
+    private static Stream<Arguments> personsAsBartender() {
+        return Stream.of(
+                Arguments.of(1, CUSTOMER),
+                Arguments.of(2, CUSTOMER),
+                Arguments.of(999, CUSTOMER),
+                Arguments.of(1, BARTENDER),
+                Arguments.of(2, BARTENDER),
+                Arguments.of(999, BARTENDER)
         );
     }
 
     @ParameterizedTest
-    @CsvSource({"1", "2", "999"})
-    void addOrder_AddsOrder(int amount) {
-        bill.addOrder(PRODUCT, amount, BARTENDER);
+    @MethodSource("personsAsBartender")
+    void addOrder_AddsOrder(int amount, Person person) {
+        bill.addOrder(PRODUCT, amount, person);
 
         assertEquals(1, bill.getOrders().size());
         assertEquals(PRODUCT.getId(), bill.getOrders().get(0).getProduct().getId());
         assertEquals(amount, bill.getOrders().get(0).getAmount());
-        assertEquals(BARTENDER, bill.getOrders().get(0).getBartender());
+        assertEquals(person, bill.getOrders().get(0).getBartender());
     }
 
     @Test
@@ -74,7 +86,7 @@ class BillTest {
 
     @Test
     void removeOrder_ReturnsTrueAndRemovesOrder() throws IllegalAccessException {
-        bill.addOrder(PRODUCT, 1, BARTENDER);
+        bill.addOrder(PRODUCT, 1, CUSTOMER);
         Order order = bill.getOrders().get(0);
         FieldUtils.writeField(order, "id", 123L, true); // Done to simulate a id generation usually done at persistence
         Long orderId = order.getId();
@@ -96,7 +108,7 @@ class BillTest {
     @MethodSource("totalPriceArgs")
     void totalPrice(Double expectedValue, Integer[] addProductAmounts) {
         for (Integer integer : addProductAmounts) {
-            bill.addOrder(PRODUCT, integer, BARTENDER);
+            bill.addOrder(PRODUCT, integer, CUSTOMER);
         }
 
         assertEquals(expectedValue, bill.totalPrice());
