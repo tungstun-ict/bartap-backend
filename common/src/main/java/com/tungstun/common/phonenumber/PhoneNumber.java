@@ -6,6 +6,7 @@ import com.google.i18n.phonenumbers.Phonenumber;
 
 import javax.persistence.Embeddable;
 import java.io.Serializable;
+import java.util.Objects;
 
 import static com.google.i18n.phonenumbers.NumberParseException.ErrorType.NOT_A_NUMBER;
 
@@ -50,5 +51,18 @@ public class PhoneNumber implements Serializable {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PhoneNumber that = (PhoneNumber) o;
+        return Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }
