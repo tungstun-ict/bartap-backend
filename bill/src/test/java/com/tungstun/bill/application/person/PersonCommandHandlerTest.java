@@ -66,6 +66,7 @@ class PersonCommandHandlerTest {
         DeletePerson command = new DeletePerson(id);
 
         commandHandler.handle(command);
+
         assertTrue(repository.findById(id).isEmpty());
     }
 }
