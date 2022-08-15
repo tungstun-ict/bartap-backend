@@ -5,6 +5,7 @@ import com.tungstun.common.messaging.KafkaMessageProducer;
 import com.tungstun.common.security.jwt.JwtValidator;
 import com.tungstun.security.application.user.command.*;
 import com.tungstun.security.application.user.event.UserCreated;
+import com.tungstun.security.application.user.event.UserDeleted;
 import com.tungstun.security.application.user.event.UserUpdated;
 import com.tungstun.security.domain.jwt.JwtTokenGenerator;
 import com.tungstun.security.domain.user.User;
@@ -77,12 +78,20 @@ public class UserCommandHandler {
         ));
     }
 
+    public void handle(@Valid DeleteUser command) {
+        User user = (User) queryHandler.loadUserByUsername(command.username());
+        userRepository.delete(user);
+
+        producer.publish(user.getId(), new UserDeleted(user.getId()));
+    }
+
     public Map<String, String> handle(@Valid LoginUser command) throws LoginException {
         User user = (User) queryHandler.loadUserByUsername(command.username());
         user.canAuthenticate();
         if (!passwordEncoder.matches(command.password(), user.getPassword())) {
             throw new LoginException("Incorrect password");
         }
+
         return Map.of(
                 "token_type", "bearer",
                 "access_token", jwtTokenGenerator.createAccessToken(user),
