@@ -7,11 +7,12 @@ import com.tungstun.person.application.person.command.UpdatePerson;
 import com.tungstun.person.application.person.event.PersonCreated;
 import com.tungstun.person.application.person.event.PersonDeleted;
 import com.tungstun.person.application.person.event.PersonUpdated;
+import com.tungstun.person.application.user.UserQueryHandler;
+import com.tungstun.person.application.user.query.GetUser;
 import com.tungstun.person.domain.person.Person;
 import com.tungstun.person.domain.person.PersonBuilder;
 import com.tungstun.person.domain.person.PersonRepository;
 import com.tungstun.person.domain.user.User;
-import com.tungstun.person.domain.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -24,12 +25,12 @@ import javax.validation.Valid;
 @Transactional
 public class PersonCommandHandler {
     private final PersonRepository repository;
-    private final UserRepository userRepository;
+    private final UserQueryHandler userQueryHandler;
     private final KafkaMessageProducer producer;
 
-    public PersonCommandHandler(PersonRepository repository, UserRepository userRepository, KafkaMessageProducer producer) {
+    public PersonCommandHandler(PersonRepository repository, UserQueryHandler userQueryHandler, KafkaMessageProducer producer) {
         this.repository = repository;
-        this.userRepository = userRepository;
+        this.userQueryHandler = userQueryHandler;
         this.producer = producer;
     }
 
@@ -38,21 +39,23 @@ public class PersonCommandHandler {
                 .orElseThrow(() -> new EntityNotFoundException(String.format("No person found with id %s", id)));
     }
 
-    private User loadUser(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("No user found with id %s", userId)));
-    }
-
     public Long handle(@Valid CreatePerson command) {
         PersonBuilder personBuilder = new PersonBuilder(command.barId())
                 .setName(command.name());
         if (command.userId() != null) {
-            User user = loadUser(command.userId());
+            User user = userQueryHandler.handle(new GetUser(command.userId()));
             personBuilder.setUser(user);
         }
         Person person = repository.save(personBuilder.build());
 
-        producer.publish(person.getId(), new PersonCreated(person.getId(), person.getBarId(), person.getUser().getId(), person.getName()));
+        Long userId = person.getUser() != null
+                ? person.getUser().getId()
+                : null;
+        producer.publish(person.getId(), new PersonCreated(
+                person.getId(),
+                person.getBarId(),
+                userId,
+                person.getName()));
 
         return person.getId();
     }
